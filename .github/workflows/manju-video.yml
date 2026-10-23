@@ -18,8 +18,12 @@ jobs:
           python-version: '3.11'
       - run: |
           sudo apt-get update -qq
-          sudo apt-get install -y python3-pil python3-numpy ffmpeg fonts-noto-cjk
+          sudo apt-get install -y python3-pil python3-numpy ffmpeg fonts-noto-cjk espeak
           /usr/bin/python3 manju/render_video.py
+          printf '%s\n' '千年星渊，正在苏醒。' '而他终于听见命运的召唤。' '林澈，你真的要进去吗？' '这一次，我不会再逃。' '黑暗吞没高塔，星火划破长夜。' '以星为刃，斩开黑夜！' '星渊觉醒，第一集，觉醒。' > /tmp/manju-voice.txt
+          espeak -v zh -s 135 -f /tmp/manju-voice.txt -w /tmp/manju-voice.wav
+          ffmpeg -y -loglevel error -i manju/demo.mp4 -i /tmp/manju-voice.wav -filter_complex '[0:a]volume=0.30[m];[1:a]volume=1.6,adelay=800[v];[m][v]amix=inputs=2:duration=first,alimiter=limit=0.90[a]' -map 0:v -map '[a]' -c:v copy -c:a aac -b:a 128k -movflags +faststart manju/voiced.mp4
+          mv manju/voiced.mp4 manju/demo.mp4
       - name: Commit generated MP4
         run: |
           git config user.name "github-actions[bot]"

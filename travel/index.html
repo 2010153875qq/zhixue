@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>龙行九州 · 全球旅游攻略平台</title>
+<style>
+  :root {
+    --pink: #ff2442;
+    --pink-soft: #ffe8ec;
+    --pink-deep: #e01e3a;
+    --coral: #ff6b6b;
+    --warm: #fff7f2;
+    --cream: #fffaf7;
+    --sand: #f5ebe0;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --card: #ffffff;
+    --shadow: 0 8px 28px rgba(255, 36, 66, 0.08);
+    --shadow-hover: 0 14px 40px rgba(255, 36, 66, 0.16);
+    --radius: 18px;
+    --gold: #d4a017;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans SC", "Source Han Sans SC", system-ui, -apple-system, sans-serif;
+    background: var(--warm);
+    color: var(--ink);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 56px 24px 48px;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255, 107, 107, 0.35), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 90% 10%, rgba(255, 36, 66, 0.28), transparent 50%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255, 184, 108, 0.25), transparent 55%),
+      linear-gradient(160deg, #fff0f3 0%, #ffe8d6 45%, #fff7f2 100%);
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid rgba(255,36,66,0.15);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--pink);
+    font-weight: 600;
+    margin-bottom: 18px;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    background: linear-gradient(120deg, #ff2442 0%, #ff6b6b 50%, #ff9a3c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: clamp(14px, 2.2vw, 17px);
+    max-width: 640px;
+    margin: 0 auto 28px;
+  }
+
+  .search-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    padding: 16px 20px 16px 52px;
+    border: none;
+    border-radius: 999px;
+    font-size: 16px;
+    background: #fff;
+    box-shadow: var(--shadow);
+    outline: none;
+    transition: box-shadow 0.2s;
+    font-family: inherit;
+  }
+
+  .search-wrap input:focus {
+    box-shadow: 0 0 0 3px rgba(255,36,66,0.2), var(--shadow-hover);
+  }
+
+  .search-wrap .icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    pointer-events: none;
+  }
+
+  .hero-deco {
+    position: absolute;
+    font-size: 48px;
+    opacity: 0.15;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hero-deco.a { top: 20px; left: 8%; }
+  .hero-deco.b { top: 40px; right: 10%; font-size: 36px; }
+  .hero-deco.c { bottom: 20px; left: 18%; font-size: 32px; }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .chip {
+    border: 1.5px solid rgba(255,36,66,0.18);
+    background: #fff;
+    color: var(--muted);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: inherit;
+  }
+
+  .chip:hover { border-color: var(--pink); color: var(--pink); }
+  .chip.active {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(255,36,66,0.3);
+  }
+
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .stats-bar strong { color: var(--pink); font-size: 18px; }
+  .stats-bar .stat-pill {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.22s, box-shadow 0.22s;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.03);
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card-cover {
+    height: 140px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 14px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+
+  .card-cover .emoji {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    font-size: 36px;
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  }
+
+  .card-cover .tag {
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .g1 { background: linear-gradient(135deg, #ff6b6b, #ff2442 60%, #c9184a); }
+  .g2 { background: linear-gradient(135deg, #ff9a3c, #ff6b35 50%, #e85d04); }
+  .g3 { background: linear-gradient(135deg, #52b788, #2d6a4f 60%, #1b4332); }
+  .g4 { background: linear-gradient(135deg, #ff85a1, #ff4d6d 55%, #c9184a); }
+  .g5 { background: linear-gradient(135deg, #4cc9f0, #4361ee 55%, #3a0ca3); }
+  .g6 { background: linear-gradient(135deg, #f4a261, #e76f51 55%, #bc4749); }
+  .g7 { background: linear-gradient(135deg, #90e0ef, #00b4d8 50%, #0077b6); }
+  .g8 { background: linear-gradient(135deg, #b8e0d2, #95d5b2 50%, #40916c); }
+  .g9 { background: linear-gradient(135deg, #e63946, #9d0208 55%, #370617); }
+  .g10 { background: linear-gradient(135deg, #48cae4, #0077b6 55%, #023e8a); }
+  .g11 { background: linear-gradient(135deg, #f72585, #7209b7 55%, #3a0ca3); }
+  .g12 { background: linear-gradient(135deg, #80ed99, #38b000 55%, #008000); }
+  .g13 { background: linear-gradient(135deg, #ffba08, #faa307 50%, #dc2f02); }
+  .g14 { background: linear-gradient(135deg, #a0c4ff, #4895ef 55%, #4361ee); }
+  .g15 { background: linear-gradient(135deg, #cdb4db, #b5838d 55%, #6d6875); }
+  .g16 { background: linear-gradient(135deg, #ffd6a5, #fdffb6 40%, #caffbf); }
+  .g17 { background: linear-gradient(135deg, #9b5de5, #f15bb5 55%, #fee440); }
+  .g18 { background: linear-gradient(135deg, #00bbf9, #00f5d4 55%, #9b5de5); }
+
+  .card-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .likes {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--pink-soft);
+    color: var(--pink);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .editor-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(120deg, #fff3cd, #ffe8a3);
+    color: #8a6d00;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+    border: 1px solid rgba(212,160,23,0.35);
+  }
+
+  .card-excerpt {
+    font-size: 13px;
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .card-footer {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #999;
+    gap: 8px;
+  }
+
+  .dest-pill {
+    background: var(--sand);
+    color: #8b5a2b;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty .big { font-size: 48px; margin-bottom: 12px; }
+
+  .knowledge {
+    margin-top: 56px;
+    padding: 36px 28px;
+    border-radius: 24px;
+    background: linear-gradient(145deg, #fff 0%, #fff5f7 100%);
+    border: 1px solid rgba(255,36,66,0.1);
+    box-shadow: var(--shadow);
+  }
+
+  .knowledge h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .knowledge .sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .know-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .know-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: transform 0.2s;
+  }
+  .know-card:hover { transform: translateY(-2px); }
+
+  .know-card .num {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(120deg, var(--pink), #ff9a3c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.1;
+  }
+
+  .know-card .unit {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 6px 0 8px;
+  }
+
+  .know-card .desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,10,15,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+    opacity: 1;
+  }
+
+  .modal {
+    background: #fff;
+    border-radius: 24px 24px 20px 20px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    transform: translateY(40px);
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  .modal-backdrop.open .modal { transform: translateY(0); }
+
+  .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 22px 24px 16px;
+    background: linear-gradient(180deg, #fff 70%, rgba(255,255,255,0.95));
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .modal-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    flex: 1;
+  }
+
+  .close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--sand);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .close-btn:hover { background: var(--pink-soft); color: var(--pink); }
+
+  .modal-body { padding: 8px 24px 28px; }
+
+  .modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .modal-meta span {
+    background: var(--warm);
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: var(--muted);
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 800;
+    margin: 18px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+  }
+
+  .route-day {
+    background: var(--cream);
+    border-left: 3px solid var(--pink);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-radius: 0 12px 12px 0;
+    font-size: 14px;
+  }
+
+  .route-day strong {
+    color: var(--pink);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  .tip-list, .q-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tip-list li, .q-list li {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    position: relative;
+    padding-left: 36px;
+  }
+
+  .tip-list li::before {
+    content: "💡";
+    position: absolute;
+    left: 12px;
+    top: 10px;
+  }
+
+  .q-list li::before {
+    content: "❓";
+    position: absolute;
+    left: 12px;
+    top: 10px;
+  }
+
+  .content-block {
+    background: var(--cream);
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .xhs-link, .editor-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .xhs-link {
+    background: var(--pink);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(255,36,66,0.3);
+    transition: transform 0.15s, background 0.15s;
+  }
+  .xhs-link:hover {
+    background: var(--pink-deep);
+    transform: translateY(-1px);
+  }
+
+  .editor-note {
+    background: linear-gradient(120deg, #fff3cd, #ffe8a3);
+    color: #8a6d00;
+    border: 1px solid rgba(212,160,23,0.4);
+  }
+
+  footer {
+    text-align: center;
+    padding: 28px 20px 40px;
+    color: #aaa;
+    font-size: 12px;
+  }
+  footer a { color: var(--pink); text-decoration: none; }
+
+  @media (max-width: 560px) {
+    .hero { padding: 36px 14px 28px; }
+    .search-wrap { margin: -18px 12px 16px; }
+    .search-box { padding: 12px 14px; gap: 8px; }
+    .search-box input { font-size: 16px; } /* avoid iOS zoom */
+    .filters { padding: 0 12px 8px; gap: 6px; }
+    .chip { padding: 7px 12px; font-size: 12px; }
+    .stats-bar { margin: 4px 12px 8px; padding: 10px 12px; font-size: 12px; flex-wrap: wrap; gap: 8px; }
+    .grid { padding: 8px 12px 28px; grid-template-columns: 1fr; gap: 12px; }
+    .card-title { font-size: 15px; }
+    .knowledge { padding: 28px 14px; }
+    .know-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal-backdrop { padding: 0; align-items: flex-end; }
+    .modal { border-radius: 24px 24px 0 0; max-height: 92vh; width: 100%; max-width: 100%; }
+    .modal-cover { padding: 22px 16px 18px; }
+    .modal-body { padding: 16px; }
+    footer { padding: 20px 14px 32px; }
+  }
+  @media (max-width: 380px) {
+    .know-grid { grid-template-columns: 1fr; }
+  }
+
+
+  .worth-list, .pitfall-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .worth-list li, .pitfall-list li {
+    padding: 10px 14px 10px 36px;
+    border-radius: 12px;
+    font-size: 14px;
+    position: relative;
+    border: 1px solid transparent;
+  }
+  .worth-list li {
+    background: #f0fdf4;
+    border-color: rgba(34,197,94,0.18);
+    color: #14532d;
+  }
+  .worth-list li::before {
+    content: "✅";
+    position: absolute;
+    left: 12px;
+    top: 10px;
+  }
+  .pitfall-list li {
+    background: #fff7ed;
+    border-color: rgba(249,115,22,0.22);
+    color: #7c2d12;
+  }
+  .pitfall-list li::before {
+    content: "⚠️";
+    position: absolute;
+    left: 12px;
+    top: 10px;
+  }
+  .pitfall-empty {
+    background: #f8fafc;
+    border: 1px dashed rgba(0,0,0,0.1);
+    color: var(--muted);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+  }
+  .section-title.worth { color: #15803d; }
+  .section-title.pitfall { color: #c2410c; }
+
+  /* ===== Dragon Intro — epic ===== */
+  #dragonIntro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 100% 80% at 50% 35%, #7a0c18 0%, #3d0610 35%, #1a0308 65%, #050102 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.7s ease, visibility 0.7s;
+  }
+  #dragonIntro.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #dragonIntro.hidden { display: none; }
+
+  .intro-sky {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .intro-sky .mist {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 55% 35% at 15% 75%, rgba(220,60,40,0.35), transparent 70%),
+      radial-gradient(ellipse 45% 30% at 85% 25%, rgba(255,200,80,0.22), transparent 70%),
+      radial-gradient(ellipse 70% 50% at 50% 110%, rgba(0,0,0,0.65), transparent 55%),
+      radial-gradient(ellipse 30% 20% at 50% 40%, rgba(255,160,40,0.15), transparent 70%);
+  }
+  .intro-sky .stars span {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #ffd89a;
+    border-radius: 50%;
+    opacity: 0.55;
+    box-shadow: 0 0 4px #ffd89a;
+    animation: twinkle 2.4s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+  }
+
+  .cloud {
+    position: absolute;
+    opacity: 0.4;
+    filter: blur(1.5px);
+    animation: driftCloud linear infinite;
+  }
+  .cloud svg { display: block; width: 100%; height: auto; }
+  @keyframes driftCloud {
+    from { transform: translateX(0); }
+    to { transform: translateX(130vw); }
+  }
+
+  .spark {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: #ffe9a0;
+    box-shadow: 0 0 8px 2px rgba(255,200,80,0.8);
+    animation: sparkFloat 3s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes sparkFloat {
+    0% { opacity: 0; transform: translateY(0) scale(0.5); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
+  }
+
+  .aura-ring {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    width: 280px;
+    height: 280px;
+    margin: -140px 0 0 -140px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,200,80,0.15);
+    box-shadow:
+      0 0 60px 20px rgba(255,120,40,0.12),
+      inset 0 0 40px rgba(255,180,60,0.08);
+    animation: auraPulse 2.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .aura-ring.r2 {
+    width: 420px; height: 420px;
+    margin: -210px 0 0 -210px;
+    animation-delay: 0.4s;
+    opacity: 0.6;
+  }
+  @keyframes auraPulse {
+    0%, 100% { transform: scale(0.92); opacity: 0.4; }
+    50% { transform: scale(1.08); opacity: 0.85; }
+  }
+
+  #dragonStage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .intro-title {
+    position: absolute;
+    bottom: 16%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #ffe8c0;
+    font-weight: 800;
+    letter-spacing: 0.32em;
+    font-size: clamp(18px, 4vw, 30px);
+    text-shadow:
+      0 0 30px rgba(255,120,40,0.7),
+      0 0 60px rgba(255,60,20,0.4),
+      0 2px 10px rgba(0,0,0,0.7);
+    opacity: 0;
+    animation: titleIn 1.2s 0.5s ease forwards;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .intro-title small {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.5em;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    color: rgba(255,220,180,0.8);
+  }
+  @keyframes titleIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(16px) scale(0.96); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  }
+
+  .skip-intro {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,220,180,0.4);
+    color: #ffe8c0;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .skip-intro:hover {
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.04);
+  }
+
+  body.intro-lock { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- Dragon Intro Overlay -->
+<div id="dragonIntro" role="dialog" aria-label="开场动画" aria-modal="true">
+  <button type="button" class="skip-intro" id="skipIntro">跳过</button>
+  <div class="intro-sky">
+    <div class="mist"></div>
+    <div class="stars" id="introStars"></div>
+    <div class="aura-ring"></div>
+    <div class="aura-ring r2"></div>
+    <div id="sparks"></div>
+    <div class="cloud" style="top:12%; left:-35%; width:340px; animation-duration:26s; animation-delay:-3s; opacity:0.32;">
+      <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><path fill="#c45c4a" d="M20 40c0-14 12-26 28-26 4-10 14-16 26-16 16 0 28 10 30 24 8-4 18-2 24 6 8 10 6 24-4 30H28c-12 0-20-8-8-18z"/></svg>
+    </div>
+    <div class="cloud" style="top:58%; left:-45%; width:420px; animation-duration:34s; animation-delay:-10s; opacity:0.26;">
+      <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><path fill="#8a2a2a" d="M10 42c2-16 18-28 36-26 6-12 20-18 34-16 18 2 30 14 32 28 10-6 24-2 28 10 4 12-2 24-16 26H26C10 64 4 52 10 42z"/></svg>
+    </div>
+    <div class="cloud" style="top:28%; left:-55%; width:260px; animation-duration:20s; animation-delay:-7s; opacity:0.38;">
+      <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><path fill="#d4784a" d="M30 38c0-12 10-22 24-22 4-8 12-14 22-14 14 0 24 8 26 20 6-4 16-2 20 6 6 8 4 20-4 24H36c-10 0-16-6-6-14z"/></svg>
+    </div>
+    <div class="cloud" style="top:72%; left:-30%; width:300px; animation-duration:30s; animation-delay:-15s; opacity:0.22;">
+      <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><path fill="#a03020" d="M15 40c0-12 14-24 30-22 5-9 16-14 28-12 15 2 26 12 28 24 8-5 20-1 24 8 5 11 0 22-14 24H30c-12 0-18-8-15-22z"/></svg>
+    </div>
+  </div>
+  <svg id="dragonStage" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="inkGold" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#fff8d0" stop-opacity="0"/>
+        <stop offset="15%" stop-color="#ffe566"/>
+        <stop offset="45%" stop-color="#ffb020"/>
+        <stop offset="70%" stop-color="#ff4a2a"/>
+        <stop offset="100%" stop-color="#d01020" stop-opacity="0.2"/>
+      </linearGradient>
+      <linearGradient id="ribbonA" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fff4a8"/>
+        <stop offset="40%" stop-color="#ffb020"/>
+        <stop offset="100%" stop-color="#ff2d2d"/>
+      </linearGradient>
+      <linearGradient id="ribbonB" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff9a2d" stop-opacity="0.2"/>
+        <stop offset="50%" stop-color="#ffe566"/>
+        <stop offset="100%" stop-color="#ff4a1a" stop-opacity="0.35"/>
+      </linearGradient>
+      <radialGradient id="orbGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fff"/>
+        <stop offset="35%" stop-color="#ffe9a0"/>
+        <stop offset="100%" stop-color="#ff4400" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="10" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="auraGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="14" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="inkBlur" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="1.8"/>
+      </filter>
+    </defs>
+    <!-- abstract light trails -->
+    <path id="trailWide" fill="none" stroke="rgba(255,160,40,0.22)" stroke-width="36" stroke-linecap="round" filter="url(#auraGlow)"/>
+    <path id="trailMid" fill="none" stroke="url(#inkGold)" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+    <path id="trailFine" fill="none" stroke="#fff8e0" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
+    <g id="ribbonGroup" filter="url(#glow)">
+      <path id="ribbonMain" fill="url(#ribbonA)" opacity="0.92"/>
+      <path id="ribbonSoft" fill="url(#ribbonB)" opacity="0.55" filter="url(#inkBlur)"/>
+      <path id="ribbonAccent" fill="none" stroke="#ffe9a8" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+    </g>
+    <g id="geoMarks"></g>
+    <g id="inkDots"></g>
+    <circle id="leadOrb" r="14" fill="url(#orbGlow)" filter="url(#softGlow)"/>
+  </svg>
+  <div class="intro-title">龙行九州 · 旅启新程<small>全国 · 全球旅游攻略平台</small></div>
+</div>
+
+<header class="hero">
+  <span class="hero-deco a">🏔️</span>
+  <span class="hero-deco b">✈️</span>
+  <span class="hero-deco c">🗺️</span>
+  <div class="hero-badge">🐉 龙行九州 · 全国 + 全球旅游攻略</div>
+  <h1>发现下一趟心动旅程</h1>
+  <p>覆盖中国各大区域与热门出境目的地：精选小红书笔记 + 编辑推荐攻略，路线、贴士、最佳季节一站汇总</p>
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="search" id="searchInput" placeholder="搜索目的地、攻略标题或贴士关键词…" autocomplete="off" aria-label="搜索攻略">
+  </div>
+</header>
+
+<main>
+  <div class="filters" id="filters" role="tablist" aria-label="地区筛选">
+    <button class="chip active" data-cat="全部">全部</button>
+    <button class="chip" data-cat="湖南">湖南</button>
+    <button class="chip" data-cat="西南">西南</button>
+    <button class="chip" data-cat="西北">西北</button>
+    <button class="chip" data-cat="华东">华东</button>
+    <button class="chip" data-cat="华北">华北</button>
+    <button class="chip" data-cat="华南">华南</button>
+    <button class="chip" data-cat="东北">东北</button>
+    <button class="chip" data-cat="境外">境外</button>
+  </div>
+
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-pill"><strong id="countNum">0</strong> 条攻略</div>
+    <div class="stat-pill">🇨🇳 国内 <strong id="cnCount">0</strong></div>
+    <div class="stat-pill">🌍 境外 <strong id="intlCount">0</strong></div>
+    <div class="stat-pill">📕 小红书 <strong id="xhsCount">0</strong></div>
+    <div class="stat-pill">⭐ 编辑推荐 <strong id="edCount">0</strong></div>
+  </div>
+
+  <div class="grid" id="guideGrid"></div>
+
+  <section class="knowledge" id="knowledge">
+    <h2>🇨🇳 中国旅游小知识</h2>
+    <p class="sub">来自小红书笔记整理（省级与地级数据有民政部来源互证；5A 数量仅供参考）</p>
+    <div class="know-grid">
+      <div class="know-card">
+        <div class="num">34</div>
+        <div class="unit">个省级行政区</div>
+        <div class="desc">23 个省（含台湾省）、5 个自治区、4 个直辖市、2 个特别行政区</div>
+      </div>
+      <div class="know-card">
+        <div class="num">333</div>
+        <div class="unit">个地级行政区</div>
+        <div class="desc">293 个地级市、30 个自治州、7 个地区、3 个盟（另有「337 城」说法含 4 直辖市）</div>
+      </div>
+      <div class="know-card">
+        <div class="num">≈358</div>
+        <div class="unit">家 5A 级景区</div>
+        <div class="desc">笔记数字仅供参考；另有 17 家拟新晋公示中（如广州塔、茶卡盐湖等）</div>
+      </div>
+      <div class="know-card">
+        <div class="num">244</div>
+        <div class="unit">处国家级风景名胜区</div>
+        <div class="desc">与 5A 景区体系不同，二者不可直接等同</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  小红书公开笔记 + 编辑推荐整理 · 仅供参考 · 出行请以官方最新信息为准<br>
+  <a href="#knowledge">中国旅游小知识</a> · 龙行九州 · 全球旅游攻略平台
+</footer>
+
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="close-btn" id="closeModal" aria-label="关闭">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+
+const GUIDES = [{"id": 1,"title": "湖南冷门秘境：矮寨奇观旅游区","author": "唐简","likes": 6214,"source": "xiaohongshu","dest": "湘西吉首","duration": "2天1夜","categories": ["湖南"],"emoji": "🌉","gradient": "g1","season": "春秋最佳，夏季注意防晒防雨","excerpt": "德夯苗寨 + 矮寨大桥经典两日线，悬崖栈道看世界级峡谷奇观。","route": [{"day": "Day 1","text": "德夯苗寨 → 九龙溪溯溪 → 流纱瀑布 → 玉泉溪峡谷 → 峡谷星空露营基地"},{"day": "Day 2","text": "悬崖栈道 → 矮寨大桥 → 天问台 → 吉斗苗寨"}],"tips": ["高铁到吉首东，再打车 / 拼车 / 18 路公交约 1 小时","长沙高铁约 1.5 小时可达","穿防滑鞋，带薄外套和换洗衣物","游客中心可免费寄存行李","雨后栈道湿滑，注意安全","五景点联票 120 元，3 天有效","德夯寨内客栈便宜实惠"],"questions": ["老人小孩能否坐电梯？","费用大概多少？","国庆人多吗？","离长沙多远？","只有一天怎么玩？"],"url": "https://www.xiaohongshu.com/explore/6a7e9fd0000000003300e8f8","highlights": ["德夯苗寨","矮寨大桥","悬崖栈道","流纱瀑布","五景点联票 120 元（3 天有效）"],"pitfalls": ["雨后栈道湿滑，注意安全","穿防滑鞋，带薄外套和换洗衣物"]},{"id": 2,"title": "如果只去一次湖南看这篇就够了","author": "RAT的小红薯","likes": 4042,"source": "xiaohongshu","dest": "长沙 + 张家界","duration": "5天（长沙2天+张家界3天）","categories": ["湖南"],"emoji": "🏞️","gradient": "g2","season": "春秋气候舒适；暑期人多需提前约票","excerpt": "长沙两日经典 + 张家界三天深度，预算约 2000+ 元（不含往返大交通）。","route": [{"day": "Day 1 长沙","text": "岳麓山索道 → 爱晚亭 → 岳麓书院 → 杜甫江阁夜景（19 点亮灯）"},{"day": "Day 2 长沙","text": "湖南省博物馆（提前预约，直奔 3 楼马王堆）→ 橘子洲 → 黄兴路 / 坡子街"},{"day": "Day 3 张家界","text": "天门山（张家界西站乘 17 路公交，买 C 线只走西线）"},{"day": "Day 4 张家界","text": "森林公园 A 线"},{"day": "Day 5 张家界","text": "南门 → 黄石寨 → 金鞭溪 → 十里画廊"}],"tips": ["用「张家界旅游助手」小程序预约入园","武陵源汽车站有免费车到南门","建议住森林公园东门附近","雨衣鞋套山下买，山上贵很多","预算约 2000+ 元，不含往返大交通"],"questions": ["只有 2 天张家界砍哪里？（答：天门山）","能否全程索道不爬山？（可以）","带老人怎么安排？","门票买 A 线还是 B 线？"],"url": "https://www.xiaohongshu.com/explore/6a2d460f000000000702cbe3","highlights": ["岳麓山 / 岳麓书院","湖南省博物馆马王堆","杜甫江阁夜景","天门山 + 武陵源森林公园"],"pitfalls": ["热门景点需提前预约（张家界旅游助手小程序）","雨衣鞋套山下买，山上贵很多"]},{"id": 3,"title": "《国家地理》没骗我！湖南被低估的小城","author": "陈小凡","likes": 2522,"source": "xiaohongshu","dest": "湘西花垣 · 茶峒古镇（边城）","duration": "一日游","categories": ["湖南"],"emoji": "🛶","gradient": "g3","season": "春秋最佳，夏日可傍晚看日落","excerpt": "湘渝黔三省交界的边城茶峒，拉拉渡、三省界碑、翠翠岛看日落。","route": [{"day": "路线","text": "茶峒老街 → 拉拉渡 → 重庆洪安古镇 → 三省界碑 → 翠翠岛 → 白塔 → 清水江 → 日落"}],"tips": ["长沙自驾约 4 小时","古镇免费开放","拉拉渡 2 元","坐船另收费"],"questions": ["和凤凰比怎么样？","没车方便吗？","商业化重不重？"],"url": "https://www.xiaohongshu.com/explore/6aa796fd00000000290141ba","highlights": ["拉拉渡","三省界碑","翠翠岛看日落","古镇免费开放"],"pitfalls": []},{"id": 4,"title": "长沙避坑提醒","author": "溏心蛋挞崽","likes": 1486,"source": "xiaohongshu","dest": "长沙","duration": "实用贴士","categories": ["湖南"],"emoji": "⚠️","gradient": "g4","season": "四季皆可，暑期注意博物馆预约","excerpt": "IFS 露台、岳麓山门、博物馆预约、文和友免排队……本地人避坑合集。","route": [],"tips": ["IFS 国金中心 7 楼露台搜「7 号门」","爱晚亭 / 岳麓书院导航「岳麓山南门」，索道走「岳麓山东门」","岳麓书院需预约，门票 40 元，学生半价","地铁 2 号线到橘子洲，观光车往返 40 元（学生 20）","杜甫江阁登阁提前 3 天预约，18 元","湖南省博物馆周一闭馆，16 点停止入场，节假日提前 5 天预约","文和友走海信商场电梯可免排队","太平街导航解放西路入口","潮宗街导航永清巷"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6ab88606000000000200d215","highlights": ["IFS 国金中心 7 楼露台（搜「7 号门」）","岳麓山南门去爱晚亭 / 书院，东门走索道","文和友走海信商场电梯可免排队"],"pitfalls": ["湖南省博物馆周一闭馆，16 点停止入场，节假日提前 5 天预约","岳麓书院需预约（40 元，学生半价）","杜甫江阁登阁需提前 3 天预约"]},{"id": 5,"title": "杭州出发 4 小时高铁直达 27 城","author": "可思今天去哪玩","likes": 1128,"source": "xiaohongshu","dest": "华东多城","duration": "路线清单","categories": ["华东"],"emoji": "🚄","gradient": "g5","season": "四季皆可，清明与国庆需提前订票","excerpt": "上海、苏州、南京、黄山、景德镇、南昌、武汉、长沙、福州、泉州、厦门等 27 城高铁可达。","route": [],"content": "杭州出发高铁约 4 小时可直达 27 座城市，包括上海、苏州、南京、黄山、景德镇、南昌、武汉、长沙、福州、泉州、厦门等。近程适合周末短途，远程适合长假安排。","tips": ["近程城市（绍兴、宁波、苏州）适合周末","远程城市适合长假出行"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a8eed900000000008010dc3","highlights": ["杭州出发高铁约 4 小时可达 27 城","近程适合周末，远程适合长假"],"pitfalls": []},{"id": 6,"title": "长沙暑假景点排行榜","author": "天庭在逃仙女","likes": 1083,"source": "xiaohongshu","dest": "长沙","duration": "新手向","categories": ["湖南"],"emoji": "🏆","gradient": "g6","season": "暑假人多，务必提前预约","excerpt": "新手向景点排行：橘子洲、岳麓山、湖南省博物馆必去，其余可选。","route": [],"content": "长沙暑假景点排行，适合第一次来长沙的游客。核心推荐：橘子洲、岳麓山、湖南省博物馆。","tips": ["核心三件套：橘子洲、岳麓山、湖南省博物馆","博物馆预约难，务必提前抢"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a5dfb890000000011006229","highlights": ["橘子洲","岳麓山","湖南省博物馆（核心三件套）"],"pitfalls": ["暑假人多，博物馆预约难，务必提前抢"]},{"id": 7,"title": "张家界 + 凤凰古城 + 长沙 独自四日游","author": "椰咪","likes": 965,"source": "xiaohongshu","dest": "张家界 · 凤凰 · 长沙","duration": "4天 · 约 2900 元（上海出发）","categories": ["湖南"],"emoji": "🎒","gradient": "g7","season": "春秋最佳；雨季注意防滑","excerpt": "独自四日游完整费用明细：机票、住宿、门票拆解清楚，约 2900 元。","route": [{"day": "Day 1","text": "天门山西线环线，后住武陵源东门"},{"day": "Day 2","text": "武陵源东门 B 线，点将台和天子山最美"},{"day": "Day 3","text": "南门 / 黄石寨 / 金鞭溪后前往凤凰"},{"day": "Day 4","text": "长沙文和友、黄兴路，卧铺返程"}],"tips": ["机票 419 元","张家界西 → 凤凰火车 93 元","凤凰 → 长沙南 209 元","返程卧铺 350 元","张家界 2 晚住宿 336 元","凤凰 1 晚 183 元","天门山门票 259 + 36 元","武陵源门票 398 元（含三索一梯）","总花费约 2900 元（上海出发）"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6aae2a22000000002b025505","highlights": ["天门山西线","武陵源点将台 / 天子山","费用明细清晰（上海出发约 2900 元）"],"pitfalls": ["雨季注意防滑"]},{"id": 8,"title": "长沙免费资源攻略","author": "niki","likes": 846,"source": "xiaohongshu","dest": "长沙","duration": "免费清单","categories": ["湖南"],"emoji": "🆓","gradient": "g8","season": "四季皆可","excerpt": "长沙免费景点与资源清单，岳麓山可当天预约，旺季建议提前。","route": [],"content": "整理长沙可免费体验的景点与资源，适合预算有限或想省钱的旅行者。","tips": ["岳麓山可当天预约","旺季建议提前预约，避免满额"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a97af0a000000002b010dc7","highlights": ["长沙免费景点与资源清单","岳麓山可当天预约"],"pitfalls": ["旺季建议提前预约，避免满额"]},{"id": 9,"title": "北京经典四日：故宫长城颐和园","author": "编辑推荐","likes": 0,"source": "editor","dest": "北京","duration": "4天","categories": ["华北"],"emoji": "🏯","gradient": "g9","season": "春秋最佳（3–5月、9–11月），避开暑期与国庆高峰","excerpt": "皇城气象与长城壮阔并存，博物馆与胡同夜生活一网打尽。","route": [{"day": "Day 1","text": "天安门 → 故宫博物院 → 景山俯瞰紫禁城 → 南锣鼓巷 / 什刹海"},{"day": "Day 2","text": "八达岭或慕田峪长城（建议慕田峪人少景美）→ 鸟巢水立方外景"},{"day": "Day 3","text": "颐和园 → 圆明园遗址 → 清华 / 北大校园（需预约）"},{"day": "Day 4","text": "国家博物馆或首都博物馆 → 王府井 / 三里屯放松"}],"tips": ["故宫需提前预约，建议开馆即入","地铁四通八达，下载「北京一卡通」或用手机支付","长城选工作日更舒适","住宿可住东城区方便逛皇城","冬春季干燥，带润唇膏和保湿"],"questions": [],"content": null,"url": null,"highlights": ["故宫博物院","八达岭 / 慕田峪长城","颐和园","景山俯瞰紫禁城"],"pitfalls": ["故宫需提前预约，建议开馆即入"]},{"id": 10,"title": "上海外滩魔都周末","author": "编辑推荐","likes": 0,"source": "editor","dest": "上海","duration": "2–3天","categories": ["华东"],"emoji": "🌃","gradient": "g10","season": "四季皆宜；樱花季（3–4月）与圣诞灯光特别出片","excerpt": "外滩天际线、武康路弄堂与迪士尼童话，一座城多种节奏。","route": [{"day": "Day 1","text": "外滩晨跑 / 夜景 → 南京路步行街 → 豫园 · 城隍庙"},{"day": "Day 2","text": "武康路 · 安福路 → 田子坊 → 陆家嘴观光（上海中心 / 东方明珠）"},{"day": "Day 3","text": "可选迪士尼乐园，或朱家角古镇半日"}],"tips": ["地铁是首选，避开高峰时段","外滩夜景免费，建议傍晚至 21 点","迪士尼建议买早鸟票并排项目顺序","住宿徐汇 / 黄浦交通便利","许多咖啡馆可作休息点"],"questions": [],"content": null,"url": null,"highlights": ["外滩夜景（免费）","武康路 / 安福路","陆家嘴观光"],"pitfalls": ["地铁避开高峰时段"]},{"id": 11,"title": "西安古城与兵马俑","author": "编辑推荐","likes": 0,"source": "editor","dest": "西安","duration": "3–4天","categories": ["西北"],"emoji": "terracotta","gradient": "g11","season": "春秋最舒适；冬季雾霾偶发，注意口罩","excerpt": "十三朝古都：兵马俑、城墙骑行、回民街美食一条龙。","route": [{"day": "Day 1","text": "钟鼓楼 → 回民街 / 永兴坊美食 → 城墙骑行（东南门租车）"},{"day": "Day 2","text": "兵马俑博物馆（早班车）→ 华清宫 → 回市区"},{"day": "Day 3","text": "大雁塔 · 大唐不夜城夜景 → 陕西历史博物馆（需预约）"},{"day": "Day 4","text": "可选法门寺或华山一日"}],"tips": ["兵马俑建议跟景区直通车，省换乘","城墙骑行傍晚光线好","羊肉泡馍、肉夹馍别错过","陕历博预约紧张，提前抢票","夏日干燥炎热，多补水"],"questions": [],"content": null,"url": null,"highlights": ["兵马俑","城墙骑行","大唐不夜城夜景","陕西历史博物馆"],"pitfalls": ["陕历博预约紧张，提前抢票"]},{"id": 12,"title": "成都慢生活与大熊猫","author": "编辑推荐","likes": 0,"source": "editor","dest": "成都","duration": "3–4天","categories": ["西南"],"emoji": "🐼","gradient": "g12","season": "春秋最佳；冬季可见雪山，夏季避暑可选周边","excerpt": "吃喝玩逛节奏超慢：熊猫基地、宽窄巷子、都江堰一日够味。","route": [{"day": "Day 1","text": "熊猫基地早场 → 宽窄巷子 → 锦里夜景"},{"day": "Day 2","text": "武侯祠 → 杜甫草堂 → 太古里逛街喝咖啡"},{"day": "Day 3","text": "都江堰 + 青城山一日游"},{"day": "Day 4","text": "可选乐山大佛 / 峨眉山，或市区火锅收尾"}],"tips": ["熊猫基地越早越好，熊猫更活跃","地铁 + 打车组合最省心","火锅别空腹，备藿香正气","春熙路附近住宿吃逛方便","都江堰景区不大，可半日"],"questions": [],"content": null,"url": null,"highlights": ["熊猫基地早场","宽窄巷子 / 锦里夜景","都江堰 + 青城山"],"pitfalls": ["熊猫基地越早越好（下午不活跃）","火锅别空腹，备藿香正气"]},{"id": 13,"title": "重庆山城立体漫游","author": "编辑推荐","likes": 0,"source": "editor","dest": "重庆","duration": "3天","categories": ["西南"],"emoji": "🏙️","gradient": "g13","season": "春秋舒适；夏日湿热，夜间江景更美","excerpt": "洪崖洞、轻轨穿楼、两江游船，立体山城出片率拉满。","route": [{"day": "Day 1","text": "解放碑 → 洪崖洞夜景 → 千厮门大桥夜拍"},{"day": "Day 2","text": "李子坝轻轨穿楼 → 鹅岭二厂 → 磁器口古镇"},{"day": "Day 3","text": "武隆天生三桥 / 仙女山（可选），或两江游船"}],"tips": ["洪崖洞建议夜景，白天相对普通","轻轨 2 号线李子坝站打卡","山城爬坡多，穿舒适鞋","火锅与小面是灵魂","住渝中区方便夜景"],"questions": [],"content": null,"url": null,"highlights": ["洪崖洞夜景","李子坝轻轨穿楼","两江游船"],"pitfalls": ["洪崖洞建议夜景，白天相对普通","山城爬坡多，穿舒适鞋"]},{"id": 14,"title": "云南大理丽江双古城","author": "编辑推荐","likes": 0,"source": "editor","dest": "大理 · 丽江","duration": "5–6天","categories": ["西南"],"emoji": "🏔️","gradient": "g3","season": "3–5月、9–11月最佳；雨季 partial 道路可能受影响","excerpt": "苍山洱海与玉龙雪山，古城慢生活与索道登顶组合拳。","route": [{"day": "Day 1–2 大理","text": "大理古城 → 洱海骑行 / 包车环湖 → 喜洲古镇 · 双廊"},{"day": "Day 3","text": "大理前往丽江（高铁约 2 小时）"},{"day": "Day 4–5 丽江","text": "丽江古城 → 玉龙雪山（印象丽江 / 蓝月谷）→ 束河古镇"},{"day": "Day 6","text": "可选泸沽湖或返程"}],"tips": ["玉龙雪山需吸氧与防晒，高原反应提前适应","洱海生态环保，勿乱丢垃圾","古城客栈提前订，旺季涨价明显","丽江到雪山建议跟团或包车","昼夜温差大，备薄羽绒服"],"questions": [],"content": null,"url": null,"highlights": ["洱海骑行 / 环湖","玉龙雪山 / 蓝月谷","大理古城 / 丽江古城"],"pitfalls": ["玉龙雪山需吸氧与防晒，注意高原反应","古城客栈旺季涨价明显，提前订"]},{"id": 15,"title": "西藏拉萨初识高原","author": "编辑推荐","likes": 0,"source": "editor","dest": "拉萨 · 西藏","duration": "5–7天","categories": ["西南"],"emoji": "🛕","gradient": "g14","season": "5–10月为旅游季；冬季寒冷但人少景净","excerpt": "布达拉宫、大昭寺、羊湖：第一次进藏的经典入门线。","route": [{"day": "Day 1–2","text": "抵达适应高原 → 大昭寺 · 八廓街慢走"},{"day": "Day 3","text": "布达拉宫（务必提前预约）"},{"day": "Day 4","text": "羊卓雍错一日"},{"day": "Day 5+","text": "可选日喀则或林芝桃花（季节限定）"}],"tips": ["提前一周以上适应，备红景天 / 遵医嘱","布达拉宫预约很难，尽早抢","防晒指数极高，墨镜帽子必备","忌剧烈运动与饮酒","尊重宗教礼仪，转经顺时针"],"questions": [],"content": null,"url": null,"highlights": ["布达拉宫","大昭寺 / 八廓街","羊卓雍错"],"pitfalls": ["布达拉宫预约很难，尽早抢","忌剧烈运动与饮酒，提前适应高原"]},{"id": 16,"title": "新疆伊犁或南北疆精选","author": "编辑推荐","likes": 0,"source": "editor","dest": "新疆","duration": "7–10天","categories": ["西北"],"emoji": "🏜️","gradient": "g13","season": "6–9月伊犁花海；9–10月喀纳斯金秋","excerpt": "独库公路、喀纳斯、赛里木湖：中国西北的旷野美学。","route": [{"day": "北疆示例","text": "乌鲁木齐 → 天山天池 → 喀纳斯 / 禾木 → 魔鬼城"},{"day": "伊犁示例","text": "赛里木湖 → 那拉提 → 巴音布鲁克 → 独库公路（季节开放）"}],"tips": ["路程长，建议包车或跟靠谱团","防晒 + 保湿 + 防风","独库公路通常 6–10 月开放，以路况公告为准","证件随身，部分区域需边防证","注意安全驾驶"],"questions": [],"content": null,"url": null,"highlights": ["赛里木湖","那拉提","喀纳斯 / 禾木","独库公路（季节开放）"],"pitfalls": ["路程长，建议包车或跟靠谱团","独库公路通常 6–10 月开放，以路况公告为准"]},{"id": 17,"title": "桂林阳朔山水四日","author": "编辑推荐","likes": 0,"source": "editor","dest": "桂林 · 阳朔","duration": "4天","categories": ["华南"],"emoji": "🛶","gradient": "g7","season": "4–10月适宜；雨季漓江景致更灵动","excerpt": "漓江竹筏、西街夜色、十里画廊骑行，经典桂林印象。","route": [{"day": "Day 1","text": "抵达桂林 → 两江四湖夜游 / 象鼻山"},{"day": "Day 2","text": "漓江竹筏（杨堤—兴坪段性价比高）→ 阳朔西街"},{"day": "Day 3","text": "十里画廊骑行 → 遇龙河 → 可选银子岩"},{"day": "Day 4","text": "返桂林或高铁离开"}],"tips": ["漓江选杨堤到兴坪，比全程游船灵活","阳朔骑行注意电动车规范","暑期多雨带雨衣","住西街附近方便夜生活","米粉和啤酒鱼必试"],"questions": [],"content": null,"url": null,"highlights": ["漓江竹筏（杨堤—兴坪）","阳朔西街","十里画廊骑行"],"pitfalls": ["暑期多雨带雨衣","阳朔骑行注意电动车规范"]},{"id": 18,"title": "厦门鼓浪屿海岛慢游","author": "编辑推荐","likes": 0,"source": "editor","dest": "厦门","duration": "3天","categories": ["华东"],"emoji": "🏝️","gradient": "g10","season": "春秋最舒适；暑期湿热台风季需关注天气","excerpt": "鼓浪屿万国建筑、曾厝垵文创与环岛路骑行。","route": [{"day": "Day 1","text": "中山路 → 轮渡鼓浪屿 → 日光岩 · 别墅建筑群"},{"day": "Day 2","text": "曾厝垵 → 厦大芙蓉隧道 / 白城沙滩 → 环岛路骑行"},{"day": "Day 3","text": "南普陀寺 → 沙坡尾 → 返程"}],"tips": ["鼓浪屿船票提前订，上岛后步行或电瓶车","厦大校园需预约","海鲜注意新鲜与价目表","住岛内或轮渡附近方便","夏日防晒必备"],"questions": [],"content": null,"url": null,"highlights": ["鼓浪屿万国建筑","曾厝垵","环岛路骑行"],"pitfalls": ["鼓浪屿船票提前订","厦大校园需预约","海鲜注意新鲜与价目表"]},{"id": 19,"title": "杭州西湖与灵隐","author": "编辑推荐","likes": 0,"source": "editor","dest": "杭州","duration": "2–3天","categories": ["华东"],"emoji": "🌸","gradient": "g8","season": "3–4月烟雨与柳浪；秋季桂花飘香","excerpt": "断桥残雪、雷峰塔、灵隐禅意，南宋古都气质拉满。","route": [{"day": "Day 1","text": "断桥 → 白堤 → 苏堤 → 雷峰塔 → 河坊街"},{"day": "Day 2","text": "灵隐寺 · 飞来峰 → 西溪湿地 或 宋城"},{"day": "Day 3","text": "可选千岛湖或龙井村茶园"}],"tips": ["西湖免费，骑行或步行最浪漫","灵隐需门票，早去人少","地铁到龙翔桥 / 龙安桥方便","龙井茶可茶园品鉴","雨天带伞，烟雨西湖也很美"],"questions": [],"content": null,"url": null,"highlights": ["西湖骑行 / 步行","灵隐寺 · 飞来峰","龙井村茶园"],"pitfalls": ["灵隐需门票，早去人少"]},{"id": 20,"title": "南京六朝古都速览","author": "编辑推荐","likes": 0,"source": "editor","dest": "南京","duration": "2–3天","categories": ["华东"],"emoji": "🏛️","gradient": "g15","season": "春秋宜人；梅花山冬末春初梅花盛开","excerpt": "中山陵、夫子庙秦淮、博物院：历史厚度与江城烟火。","route": [{"day": "Day 1","text": "中山陵 → 美龄宫 → 明孝陵"},{"day": "Day 2","text": "夫子庙 · 秦淮河夜游 → 老门东"},{"day": "Day 3","text": "南京博物院 → 玄武湖 或 总统府"}],"tips": ["中山陵台阶多，量力而行","南博预约，展品质高","秦淮河夜游提前买船票","地铁覆盖主要景点","鸭血粉丝与盐水鸭别错过"],"questions": [],"content": null,"url": null,"highlights": ["中山陵","夫子庙 · 秦淮河夜游","南京博物院"],"pitfalls": ["中山陵台阶多，量力而行","南博需预约","秦淮河夜游提前买船票"]},{"id": 21,"title": "青岛海边啤酒节气质","author": "编辑推荐","likes": 0,"source": "editor","dest": "青岛","duration": "2–3天","categories": ["华东"],"emoji": "🌊","gradient": "g7","season": "5–10月适宜；夏季可赶啤酒节氛围","excerpt": "栈桥、八大关、老牌德式建筑与海鲜烧烤一条街。","route": [{"day": "Day 1","text": "栈桥 → 鲁迅公园 → 小青岛 → 信号山夜景"},{"day": "Day 2","text": "八大关别墅区 → 第二海水浴场 → 啤酒博物馆"},{"day": "Day 3","text": "崂山景区（太清 / 仰口）或金沙滩"}],"tips": ["海鲜市场砍价或选餐厅更稳妥","八大关适合慢走拍照","崂山需预留半天以上","海风大，备薄外套","住市南区方便海边"],"questions": [],"content": null,"url": null,"highlights": ["栈桥 / 八大关","啤酒博物馆","崂山"],"pitfalls": ["海鲜市场砍价或选餐厅更稳妥","崂山需预留半天以上"]},{"id": 22,"title": "哈尔滨冰雪与中央大街","author": "编辑推荐","likes": 0,"source": "editor","dest": "哈尔滨","duration": "3天","categories": ["东北"],"emoji": "❄️","gradient": "g14","season": "12–2月看冰雪大世界；夏季可避暑松花江","excerpt": "冰雪大世界、中央大街、索菲亚教堂：东北冬日童话。","route": [{"day": "Day 1","text": "中央大街 → 索菲亚教堂 → 防洪纪念塔 · 松花江"},{"day": "Day 2","text": "冰雪大世界或兆麟公园冰灯（季节限定）"},{"day": "Day 3","text": "可选伏尔加庄园 或 雪乡跟团（路远）"}],"tips": ["极寒装备：羽绒服、雪地靴、暖宝宝","冰雪大世界门票较贵，可傍晚入场看灯","室内外温差大，注意增减衣","红肠、马迭尔冰棍（冬天也吃）","打车比公交暖得多"],"questions": [],"content": null,"url": null,"highlights": ["中央大街 / 索菲亚教堂","冰雪大世界（季节限定）"],"pitfalls": ["极寒需羽绒服、雪地靴、暖宝宝","冰雪大世界门票较贵，可傍晚入场看灯"]},{"id": 23,"title": "贵州黄果树与村寨","author": "编辑推荐","likes": 0,"source": "editor","dest": "贵州","duration": "4–5天","categories": ["西南"],"emoji": "💧","gradient": "g3","season": "4–10月瀑布水量丰；夏季凉爽宜避暑","excerpt": "黄果树大瀑布、荔波小七孔、西江千户苗寨，多彩贵州。","route": [{"day": "Day 1–2","text": "贵阳 → 黄果树瀑布 → 龙宫（可选）"},{"day": "Day 3–4","text": "荔波小七孔 / 大七孔"},{"day": "Day 5","text": "西江千户苗寨夜景 → 返程"}],"tips": ["贵州多雨，雨具必备","村寨夜景美，注意保管财物","高铁网络完善，贵阳为枢纽","酸汤鱼与丝娃娃推荐","瀑布观景穿防滑鞋"],"questions": [],"content": null,"url": null,"highlights": ["黄果树大瀑布","荔波小七孔","西江千户苗寨夜景"],"pitfalls": ["贵州多雨，雨具必备","瀑布观景穿防滑鞋"]},{"id": 24,"title": "敦煌丝路千年","author": "编辑推荐","likes": 0,"source": "editor","dest": "敦煌 · 甘肃","duration": "3–4天","categories": ["西北"],"emoji": "🕌","gradient": "g2","season": "4–10月适宜；夏季沙漠炎热，早晚温差大","excerpt": "莫高窟、鸣沙山月牙泉、雅丹：丝路遗梦。","route": [{"day": "Day 1","text": "莫高窟（含数字展示中心）"},{"day": "Day 2","text": "鸣沙山 · 月牙泉骑骆驼看日落"},{"day": "Day 3","text": "可选雅丹魔鬼城 或 玉门关 / 阳关"},{"day": "Day 4","text": "博物馆补课 → 返程"}],"tips": ["莫高窟务必提前在「门票预约网」抢票","沙漠防晒防风沙眼镜","驼队夕阳场最出片","住宿敦煌市区方便","多喝水防干燥"],"questions": [],"content": null,"url": null,"highlights": ["莫高窟（含数字展示中心）","鸣沙山 · 月牙泉日落","雅丹魔鬼城"],"pitfalls": ["莫高窟务必提前在门票预约网抢票","沙漠防晒防风沙"]},{"id": 25,"title": "内蒙古草原与响沙湾","author": "编辑推荐","likes": 0,"source": "editor","dest": "内蒙古","duration": "4–5天","categories": ["华北"],"emoji": "🐴","gradient": "g12","season": "6–9月绿草期；冬季可看冰雪那达慕（偶发）","excerpt": "呼伦贝尔或希拉穆仁草原、响沙湾沙漠体验，开敞苍穹。","route": [{"day": "草原线","text": "呼和浩特 / 海拉尔 → 草原度假区骑马 · 篝火"},{"day": "沙漠线","text": "鄂尔多斯响沙湾一日：滑沙、缆车、沙漠酒店（可选）"}],"tips": ["选正规牧家乐，注意安全须知","防晒与驱蚊都很重要","草原夜晚凉，备外套","骑马选有经验向导","尊重当地民俗与草场保护"],"questions": [],"content": null,"url": null,"highlights": ["草原骑马 · 篝火","响沙湾滑沙 / 沙漠酒店"],"pitfalls": ["选正规牧家乐，注意安全须知","草原夜晚凉，备外套"]},{"id": 26,"title": "海南三亚度假","author": "编辑推荐","likes": 0,"source": "editor","dest": "三亚","duration": "4–5天","categories": ["华南"],"emoji": "🏖️","gradient": "g18","season": "11–3月为旺季舒适；夏秋注意台风预警","excerpt": "亚龙湾、蜈支洲岛、热带雨林：阳光沙滩一价全包气质。","route": [{"day": "Day 1","text": "抵达亚龙湾 / 海棠湾安顿，海滩放松"},{"day": "Day 2","text": "蜈支洲岛一日（潜水 / 海底观光）"},{"day": "Day 3","text": "天涯海角 或 椰梦长廊 → 第一市场海鲜"},{"day": "Day 4","text": "呀诺达雨林 或 免税城购物"}],"tips": ["岛屿门票含往返船，水上项目另计","海鲜建议市场买酒店加工","强防晒，防水手机袋实用","旺季酒店提前锁价","关注台风路径"],"questions": [],"content": null,"url": null,"highlights": ["亚龙湾 / 海棠湾海滩","蜈支洲岛","呀诺达雨林"],"pitfalls": ["关注台风路径","旺季酒店提前锁价","水上项目另计费"]},{"id": 27,"title": "东京京都关西关东入门","author": "编辑推荐","likes": 0,"source": "editor","dest": "日本 · 东京 / 京都","duration": "6–8天","categories": ["境外"],"emoji": "🗼","gradient": "g9","season": "3–4月樱花、11月红叶；避开黄金周","excerpt": "浅草寺、涩谷、清水寺、伏见稻荷：第一次访日的黄金组合。","route": [{"day": "东京 3–4天","text": "浅草 → 东京晴空塔 → 涩谷 · 新宿 → 迪士尼或团队实验室（可选）"},{"day": "京都 2–3天","text": "清水寺 → 祇园 → 伏见稻荷千本鸟居 → 岚山"}],"tips": ["交通：Suica / ICOCA 交通卡","药妆与电器可对比退税点","京都寺庙多，穿舒适步行鞋","提前预约热门餐厅","遵守垃圾分类与安静礼仪"],"questions": [],"content": null,"url": null,"highlights": ["浅草 / 涩谷","清水寺 / 伏见稻荷","岚山"],"pitfalls": ["避开黄金周","京都寺庙多，穿舒适步行鞋"]},{"id": 28,"title": "曼谷清迈泰北泰南氛围","author": "编辑推荐","likes": 0,"source": "editor","dest": "泰国 · 曼谷 / 清迈","duration": "5–7天","categories": ["境外"],"emoji": "🛕","gradient": "g13","season": "11–2月干季最舒适；雨季景点人少价低","excerpt": "大皇宫、考山路、清迈尼人村与美食街头：性价比假期。","route": [{"day": "曼谷","text": "大皇宫 · 玉佛寺 → 郑王庙 → 夜市（拉差达 / 亚洲）"},{"day": "清迈","text": "古城寺庙骑行 → 周日夜市 → 可选大象保护营（拒表演）"}],"tips": ["办好签证或免签政策以官方为准","街边小吃选人气摊","寺庙着装需遮肩膝","Grab 打车方便","注意财物与景区「自愿捐赠」陷阱"],"questions": [],"content": null,"url": null,"highlights": ["大皇宫 · 玉佛寺","郑王庙","清迈周日夜市"],"pitfalls": ["注意财物与景区「自愿捐赠」陷阱","寺庙着装需遮肩膝"]},{"id": 29,"title": "首尔韩流与古宫","author": "编辑推荐","likes": 0,"source": "editor","dest": "韩国 · 首尔","duration": "4–5天","categories": ["境外"],"emoji": "🎎","gradient": "g11","season": "3–5月、9–11月舒适；冬季可滑雪周边","excerpt": "景福宫、明洞、弘大与汉江公园：逛街美食与古意并存。","route": [{"day": "Day 1–2","text": "景福宫 · 北村韩屋 → 仁寺洞"},{"day": "Day 3","text": "明洞购物 → 南山塔"},{"day": "Day 4","text": "弘大 · 合井 → 汉江公园野餐"},{"day": "Day 5","text": "可选釜山或济州延伸"}],"tips": ["T-money 交通卡通用","韩妆试色与退税流程熟悉一下","宫苑可穿韩服免费入园（部分）","地铁标识清晰","辛拉面与炸鸡啤酒经典"],"questions": [],"content": null,"url": null,"highlights": ["景福宫 · 北村韩屋","明洞 / 弘大","汉江公园"],"pitfalls": []},{"id": 30,"title": "新加坡花园城市速览","author": "编辑推荐","likes": 0,"source": "editor","dest": "新加坡","duration": "3–4天","categories": ["境外"],"emoji": "🦁","gradient": "g12","season": "全年皆可，雨季阵雨多但很快过去","excerpt": "滨海湾花园、圣淘沙、牛车水：高效干净的城市度假。","route": [{"day": "Day 1","text": "滨海湾金沙 → 花园城市（Supertree）夜场"},{"day": "Day 2","text": "圣淘沙 / 环球影城"},{"day": "Day 3","text": "牛车水 · 阿拉伯街 → 乌节路"},{"day": "Day 4","text": "动物园或滨海人工岛"}],"tips": ["地铁 MRT 极其方便","口香糖禁令等法规需遵守","餐饮贵，可选食阁性价比高","天气湿热，备换洗衣物","电子入境卡提前填"],"questions": [],"content": null,"url": null,"highlights": ["滨海湾花园 Supertree 夜场","圣淘沙 / 环球影城","食阁性价比高"],"pitfalls": ["餐饮贵，可选食阁","遵守口香糖禁令等法规"]},{"id": 31,"title": "巴黎艺术与塞纳河","author": "编辑推荐","likes": 0,"source": "editor","dest": "法国 · 巴黎","duration": "4–5天","categories": ["境外"],"emoji": "🗼","gradient": "g5","season": "4–6月、9–10月宜人；夏季游客爆满","excerpt": "卢浮宫、埃菲尔、蒙马特：艺术之都经典打卡。","route": [{"day": "Day 1","text": "埃菲尔铁塔 → 塞纳河游船 → 战神广场日落"},{"day": "Day 2","text": "卢浮宫（半日够经典三宝）→ 杜乐丽 → 奥赛（可选）"},{"day": "Day 3","text": "蒙马特圣心堂 → 拾艺街 → 歌剧院区域逛街"},{"day": "Day 4","text": "凡尔赛一日 或 拉丁区咖啡馆"}],"tips": ["博物馆闭馆日多在周二，提前查","地铁 + 步行组合最佳","小心小偷高发区","餐厅午餐套餐更划算","提前网购热门票避免排队"],"questions": [],"content": null,"url": null,"highlights": ["埃菲尔铁塔 / 塞纳河游船","卢浮宫","蒙马特圣心堂"],"pitfalls": ["博物馆闭馆日多在周二，提前查","小心小偷高发区"]},{"id": 32,"title": "罗马废墟与梵蒂冈","author": "编辑推荐","likes": 0,"source": "editor","dest": "意大利 · 罗马","duration": "3–4天","categories": ["境外"],"emoji": "🏛️","gradient": "g6","season": "4–6月、9–10月最佳；盛夏炎热干燥","excerpt": "斗兽场、许愿池、梵蒂冈博物馆：永恒之城密度极高。","route": [{"day": "Day 1","text": "斗兽场 · 古罗马广场 → 威尼斯广场"},{"day": "Day 2","text": "梵蒂冈博物馆 · 西斯廷 → 圣彼得大教堂"},{"day": "Day 3","text": "特莱维喷泉 → 西班牙阶梯 → 万神殿"},{"day": "Day 4","text": "可选一日庞贝或佛罗伦萨火车往返"}],"tips": ["斗兽场与梵蒂冈务必预约","着装进教堂需遮肩膝","喷泉边喝水免费且安全（饮用喷泉）","小心「友谊手绳」骗局","Gelato 选天然配色摊"],"questions": [],"content": null,"url": null,"highlights": ["斗兽场 · 古罗马广场","梵蒂冈博物馆 · 西斯廷","特莱维喷泉"],"pitfalls": ["斗兽场与梵蒂冈务必预约","小心「友谊手绳」骗局","着装进教堂需遮肩膝"]},{"id": 33,"title": "瑞士雪山火车之旅","author": "编辑推荐","likes": 0,"source": "editor","dest": "瑞士","duration": "5–7天","categories": ["境外"],"emoji": "🏔️","gradient": "g14","season": "6–9月徒步；冬春季滑雪与冰雪童话","excerpt": "因特拉肯、少女峰、琉森湖：明信片场景连续剧。","route": [{"day": "经典","text": "苏黎世 / 日内瓦入境 → 琉森 → 因特拉肯 → 少女峰地区 → 策马特（可选）"}],"tips": ["Swiss Travel Pass 视行程划算度计算","山顶天气多变，分层穿衣","预算较高，超市买午餐可省","火车准点率极高","少女峰可改克莱内夏伊德格省预算"],"questions": [],"content": null,"url": null,"highlights": ["琉森","因特拉肯 / 少女峰","火车准点率极高"],"pitfalls": ["预算较高，超市买午餐可省","山顶天气多变，分层穿衣"]},{"id": 34,"title": "冰岛环岛极光与冰川","author": "编辑推荐","likes": 0,"source": "editor","dest": "冰岛","duration": "7–10天","categories": ["境外"],"emoji": "🌌","gradient": "g18","season": "6–8月午夜太阳；9–3月追极光（天气看脸）","excerpt": "金圈、黑沙滩、冰川徒步与极光：地球边缘的震撼。","route": [{"day": "金圈","text": "辛格维利尔 → 盖锡尔 → 黄金瀑布"},{"day": "南岸","text": "黑沙滩 → 杰古沙龙冰湖 → 可选冰川徒步"},{"day": "延伸","text": "环岛或西峡湾需更多天数与四驱经验"}],"tips": ["租车注意风保险与碎石险","天气 App 紧盯，道路可能关闭","极光无保证，多留几个夜晚","物资贵，入境可带部分食品","尊重自然，勿越屏障拍照"],"questions": [],"content": null,"url": null,"highlights": ["金圈（辛格维利尔 / 盖锡尔 / 黄金瀑布）","黑沙滩 / 杰古沙龙冰湖","极光（季节）"],"pitfalls": ["极光无保证，多留几个夜晚","租车注意风保险与碎石险","天气导致道路可能关闭"]},{"id": 35,"title": "新西兰南岛风光","author": "编辑推荐","likes": 0,"source": "editor","dest": "新西兰 · 南岛","duration": "8–12天","categories": ["境外"],"emoji": "🥝","gradient": "g8","season": "12–3月暖季；冬季南岛滑雪场开放","excerpt": "皇后镇、米尔福德峡湾、马特胡峰：大自然拉满片。","route": [{"day": "示意","text": "基督城 → 特卡波 / 普卡基 → 皇后镇 → 米尔福德 → 弗朗兹约瑟夫冰川（可选）"}],"tips": ["自驾为主，注意靠左行驶","营地与民宿提前订","防蚊液（南岛部分区域）","峡湾天气多变，备雨具","签证与生物检疫严格，勿带鲜货"],"questions": [],"content": null,"url": null,"highlights": ["皇后镇","米尔福德峡湾","马特胡峰一带风光"],"pitfalls": ["自驾注意靠左行驶","签证与生物检疫严格，勿带鲜货"]},{"id": 36,"title": "马尔代夫岛礁度假","author": "编辑推荐","likes": 0,"source": "editor","dest": "马尔代夫","duration": "4–6天","categories": ["境外"],"emoji": "🏝️","gradient": "g16","season": "12–4月旱季海水更清；雨季价格更友好","excerpt": "水屋、浮潜与私人沙滩：彻底躺平的海岛假期。","route": [{"day": "节奏","text": "抵达马累转水飞 / 快艇上岛 → 浮潜 → 日落钓 → 水上餐厅（可选）"}],"tips": ["全包套餐算清含不含浮潜与酒水","选岛看位置：北马累环礁交通方便","强防晒与reef-safe防晒霜","尊重伊斯兰文化着装（马累市区）","蜜月可问酒店布置"],"questions": [],"content": null,"url": null,"highlights": ["水屋 / 浮潜","私人沙滩日落"],"pitfalls": ["全包套餐算清含不含浮潜与酒水","马累市区尊重伊斯兰文化着装"]},{"id": 37,"title": "昆明+大理+丽江6天旅游攻略","author": "泰开💕乐芭","likes": 7716,"source": "xiaohongshu","dest": "昆明 · 大理 · 丽江","duration": "6天","categories": ["西南"],"emoji": "🏔️","gradient": "g3","season": "春秋最佳","excerpt": "昆明花市夜市 → 大理古城海西 → 丽江雪山蓝月谷，六天经典滇西线。","route": [{"day": "Day 1 昆明","text": "翠湖 → 滇池 → 海洪湿地 → 斗南花市 → 双桥夜市"},{"day": "Day 2–3 大理","text": "大理古城 → 龙龛码头 → S弯 → 苍洱大道 → 喜洲"},{"day": "Day 4–6 丽江","text": "丽江古城 + 束河 → 白沙 → 玉龙雪山云杉坪 / 蓝月谷"}],"tips": ["昆明→大理高铁 145–155 元，提前买","大理→丽江坐大巴比高铁方便","昆明住火车站附近；大理、丽江住古城附近，别住古城里","斗南花市晚市 22:30 后，外面买花约 10 元 3–4 把"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69a88061000000002203937a","highlights": ["白沙古镇（能看雪山人少）","云杉坪","蓝月谷","海西骑行","龙龛码头"],"pitfalls": ["别住大理古城里","丽江古城、束河商业化重，晚上逛更好","龙龛码头人多，往前走几步","伴手礼货比三家","避雷五花肉卷芝士火鸡面、舂鸡脚"]},{"id": 38,"title": "云南5天4晚人均1k攻略","author": "吱吱喵喵","likes": 4558,"source": "xiaohongshu","dest": "大理 · 丽江 · 香格里拉","duration": "5天4晚 · 人均约1k","categories": ["西南"],"emoji": "🌄","gradient": "g12","season": "注意冬季云杉坪草木枯黄","excerpt": "人均一千玩转大理海西、丽江雪山日照金山与香格里拉松赞林寺。","route": [{"day": "Day 1","text": "大理站官方巴士 5 元到古城"},{"day": "Day 2","text": "龙龛码头 → 共享电车海西廊道（才村 / S湾 / 廊桥）→ 喜洲 → 19:30 大巴丽江"},{"day": "Day 3","text": "甘海子看日照金山 → 云杉坪 → 蓝月谷"},{"day": "Day 4","text": "高铁香格里拉（车上约 40 分钟可看虎跳峡）→ 独克宗 → 松赞林寺 → 龟山公园转经筒"},{"day": "Day 5","text": "返程"}],"tips": ["海西廊道不能开车，用共享电车","看日照金山提前 30–40 分钟到，氧气和门票先买","香格里拉选供氧酒店"],"questions": [],"url": "https://www.xiaohongshu.com/explore/695e6c82000000002103e860","highlights": ["日照金山","云杉坪","松赞林寺","高铁上看虎跳峡"],"pitfalls": ["云杉坪冬季草是枯的","海西不能开车"]},{"id": 39,"title": "北京五天四夜旅游攻略","author": "欢乐大摆锤","likes": 3286,"source": "xiaohongshu","dest": "北京","duration": "5天4夜","categories": ["华北"],"emoji": "🏯","gradient": "g9","season": "春秋最佳；热门场馆均需预约","excerpt": "升旗、国博、故宫到长城、雍和宫、颐和园，五天四夜经典皇城线。","route": [{"day": "Day 1","text": "天安门升旗（免费预约）→ 国博（免费预约）→ 故宫（60 元预约）→ 景山（2 元）→ 前门大栅栏"},{"day": "Day 2","text": "天坛联票 28 元 → 三里屯 → 798（免费）"},{"day": "Day 3","text": "八达岭（40 元预约；北京北 / 清河高铁 20–30 分钟或 877 路）"},{"day": "Day 4","text": "雍和宫 25 元 → 国子监孔庙 30 元 → 南锣鼓巷 → 什刹海 → 恭王府 40 元"},{"day": "Day 5","text": "颐和园 30 元 / 圆明园 25 元 / 玉渊潭 三选一"}],"tips": ["热门馆都要预约","长城放中间一天","景山正午后再去，否则光线太强"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69df526a000000002103852c","highlights": ["升旗","故宫","景山俯瞰","颐和园"],"pitfalls": ["不预约进不去","景山上午光线强"]},{"id": 40,"title": "第一次去北京保姆级攻略","author": "素以为绚兮","likes": 3002,"source": "xiaohongshu","dest": "北京","duration": "4天","categories": ["华北"],"emoji": "🗺️","gradient": "g14","season": "四季皆可，注意预约与步行量","excerpt": "四天覆盖故宫长城天坛颐和园，附住宿地铁线与必吃推荐。","route": [{"day": "Day 1","text": "天安门 → 故宫 → 景山 → 北海"},{"day": "Day 2","text": "颐和园 → 孔庙国子监 → 南锣 → 什刹海"},{"day": "Day 3","text": "八达岭 → 明十三陵 → 鸟巢水立方夜景"},{"day": "Day 4","text": "天坛 → 圆明园 → 清华北大（免费预约）"}],"tips": ["住宿优先 2 / 4 / 5 号线崇文门、前门附近","带身份证，穿舒服鞋","必吃烤鸭、炸酱面、铜锅涮肉"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a8abef60000000018019c81","highlights": ["故宫","长城","天坛","颐和园"],"pitfalls": ["不预约排队久","步行量大"]},{"id": 41,"title": "成都3天2夜人均800+","author": "Herocuii","likes": 9151,"source": "xiaohongshu","dest": "成都","duration": "3天2夜 · 人均800+","categories": ["西南"],"emoji": "🐼","gradient": "g12","season": "春秋舒适；熊猫基地务必早到","excerpt": "春熙路太古里吃逛 + 熊猫基地 + 青城山都江堰，人均八百出头。","route": [{"day": "Day 1","text": "春熙路 → IFS → 太古里 → 文殊院 → 望平街 → 九眼桥"},{"day": "Day 2","text": "熊猫基地 → 成都博物馆（免费）→ 宽窄巷子 → 东郊记忆 → 锦里"},{"day": "Day 3","text": "青城山 → 都江堰 → 南桥夜景"}],"tips": ["熊猫基地 7:30 前到，否则排队久","住春熙路附近；去青城山那天建议前一晚住过去","美食：玉林串串香 / 谭豆花 / 蹄花"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a7185c70000000005029814","highlights": ["IFS 七楼爬墙熊猫","早看熊猫","锦里夜灯笼","都江堰南桥夜景"],"pitfalls": ["下午熊猫睡觉","市区当天往返青城山、都江堰很赶"]},{"id": 42,"title": "J人6h整理成都手写攻略","author": "夜殇🥕","likes": 8731,"source": "xiaohongshu","dest": "成都","duration": "3天","categories": ["西南"],"emoji": "📝","gradient": "g8","season": "旺季提前半个月订酒店","excerpt": "手写详版：人民公园盖碗茶、玉林路、奎星楼街，附大量避坑。","route": [{"day": "Day 1","text": "春熙路 → IFS → 太古里 → 人民公园盖碗茶 → 玉林路"},{"day": "Day 2","text": "熊猫基地 55 元 → 东郊记忆 → 文殊院 → 武侯祠 50 元 → 锦里"},{"day": "Day 3","text": "成都博物馆 → 宽窄巷子 → 奎星楼街 → 青羊宫 10 元 → 泡桐树街"}],"tips": ["天府机场远，地铁 18 号线约 50 分钟；双流更近","住二环内地铁口即可，不一定住春熙路","旺季提前半个月订"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a9b9035000000002802c083","highlights": ["人民公园喝茶掏耳朵","玉林路晚上","奎星楼街","泡桐树街"],"pitfalls": ["春熙路卡通人偶合影要钱，别理","锦里、宽窄巷子小吃看看就好，去玉林路或建设路吃","文殊院门口算命别信","景区熊猫玩偶比超市贵","火锅等位超 1 小时换店","特产去超市或菜市场买","酒店多看差评实拍"]},{"id": 43,"title": "为了这15张图飞了一趟西安","author": "Angie","likes": 12000,"source": "xiaohongshu","dest": "西安","duration": "3天 · 出片机位","categories": ["西北"],"emoji": "📷","gradient": "g11","season": "夜景机位全天可拍，部分茶咖需点单","excerpt": "大雁塔、钟楼、广仁寺等免费 / 低价机位合集，专为出片党准备。","route": [{"day": "Day 1","text": "钟楼周边机位（开元商城 5 楼看钟楼夜景等）"},{"day": "Day 2","text": "大慈恩寺遗址公园北门 → 大雁塔 → 大悦城 4 楼 → 大唐不夜城"},{"day": "Day 3","text": "广仁寺 → 洒金桥 → 西安博物院 → 小雁塔"}],"tips": ["免费机位：大慈恩寺遗址公园北门、大雁塔南广场、大悦城 4 楼看大雁塔、开元商城 5 楼看钟楼夜景、广仁寺、安仁坊","永宁门城楼 54 元","第一次来兵马俑必看，可加华清宫、骊山、长恨歌"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a4a37b00000000011011663","highlights": ["兵马俑","大唐不夜城夜景","免费机位"],"pitfalls": ["部分茶咖机位需点单"]},{"id": 44,"title": "西安三天两晚实用攻略","author": "一个俗人","likes": 4834,"source": "xiaohongshu","dest": "西安","duration": "3天2晚","categories": ["西北"],"emoji": "terracotta","gradient": "g2","season": "春秋舒适；大唐不夜城务必晚上去","excerpt": "陕历博、兵马俑、长恨歌、城墙骑行，三天两晚实用排期。","route": [{"day": "Day 1","text": "陕历博（提前蹲点预约）→ 大雁塔 → 晚上大唐不夜城"},{"day": "Day 2","text": "兵马俑 120 元（门口现找导游 20–50 元可谈）→ 骊山（兵马俑票含，观光车 15 元）→ 华清宫 → 长恨歌（建议中区第一场）→ 钟鼓楼夜景"},{"day": "Day 3","text": "城墙（永宁门上可骑车）→ 西安博物院 / 小雁塔 → 碑林 85 元"}],"tips": ["美食：洒金桥 / 回民街 / 永兴坊都差不多","推荐甑糕、泡馍、biangbiang 面"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a100abe000000000702bf19","highlights": ["陕历博","长恨歌","城墙骑行","晚上的大唐不夜城"],"pitfalls": ["大唐不夜城白天没氛围，一定晚上去","钟鼓楼没必要买票上去，开元商城 4 楼免费看","兴庆宫爱心树除了拍照没什么，可不去","导游门口现找谈价"]},{"id": 45,"title": "新疆5日游手绘攻略","author": "一人食","likes": 5990,"source": "xiaohongshu","dest": "新疆","duration": "5天","categories": ["西北"],"emoji": "🏜️","gradient": "g13","season": "昼夜温差大，注意保暖","excerpt": "天池、沙漠公路、五彩滩、那拉提到赛里木湖，五日手绘北疆线。","route": [{"day": "Day 1","text": "乌鲁木齐国际大巴扎 → 红山夜市"},{"day": "Day 2","text": "天山天池 → S101 丹霞"},{"day": "Day 3","text": "S21 沙漠公路 → 五彩滩 → 布尔津夜市"},{"day": "Day 4","text": "那拉提空中草原 → 河谷草原 → 草原星空"},{"day": "Day 5","text": "赛里木湖环湖 → 果子沟大桥"}],"tips": ["昼夜温差大，注意保暖，多喝水"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a45c81b00000000150269ef","highlights": ["赛里木湖","那拉提","天池","五彩滩"],"pitfalls": ["行程跨度大，城市间衔接需自行规划"]},{"id": 46,"title": "新疆公交自由行详细路线消费清单","author": "山河笔鉴旅行攻略","likes": 479,"source": "xiaohongshu","dest": "新疆","duration": "7天 · 合计约3756元（含往返机票）","categories": ["西北"],"emoji": "🚌","gradient": "g6","season": "独库公路通行季留意路况与拥堵","excerpt": "七天公交游：吐鲁番到赛里木湖、喀拉峻、那拉提、独库南段，费用透明。","route": [{"day": "Day 1","text": "吐鲁番坎儿井 38 元 → 交河故城 70 元 → 葡萄沟"},{"day": "Day 2","text": "夜卧铺 → 赛里木湖 129 元"},{"day": "Day 3","text": "喀拉峻 140 元 → 八卦城"},{"day": "Day 4","text": "那拉提空中草原 135 元"},{"day": "Day 5","text": "盘龙古道 → 独库南段到库车"},{"day": "Day 6–7","text": "龟兹博物馆 / 巴州博物馆（免费）"}],"tips": ["合计约 3756 元含往返机票；不含机票不到 2000 元","那拉提门票管两天"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a6cc1fc0000000005031da4","highlights": ["赛里木湖","独库公路","喀拉峻"],"pitfalls": ["独库公路易堵车，作者因此取消喀什行程","八卦城太极坛展览馆 35 元口碑不好"]},{"id": 47,"title": "9天8晚关西微穷游攻略明细","author": "笑笑xixixi","likes": 2705,"source": "xiaohongshu","dest": "日本 · 关西","duration": "9天8晚 · 合计7274元","categories": ["境外"],"emoji": "🗼","gradient": "g9","season": "淡季价格更友好","excerpt": "京都青旅 + 大阪酒店 + 环球影城，明细到便利店早餐的关西微穷游。","route": [{"day": "行程","text": "京都 2 天 → 宇治 → 奈良 → 环球影城 → 大阪 2 天"}],"tips": ["合计 7274 元：机票 2758（中转）、签证 849、京都青旅约 124/晚、大阪酒店约 195/晚（淡季）、环球影城 324（关西周游券）、吃饭 870（便利店早餐约 20，松屋 / 吉野家约 35）","淡季才便宜","清水寺 500 日元","按行程选周游券"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6aa0fbaf000000002601519e","highlights": ["京都","宇治","奈良","阿倍野展望台"],"pitfalls": ["当地特色餐厅人均 100+ 易超预算","青旅可能遇吵闹室友"]},{"id": 48,"title": "东京+北海道7天6晚8000块","author": "环游是种趣","likes": 2359,"source": "xiaohongshu","dest": "日本 · 东京 / 北海道","duration": "7天6晚 · 约8000元","categories": ["境外"],"emoji": "❄️","gradient": "g14","season": "雪季；青池点灯等季节限定","excerpt": "东京夜景飞札幌，小樽、美瑛温泉与青池点灯，雪季七天约八千。","route": [{"day": "Day 1","text": "六本木 Hills 夜景"},{"day": "Day 2","text": "浅草寺 → 飞札幌"},{"day": "Day 3","text": "中岛公园滑雪 → First Love 取景地"},{"day": "Day 4","text": "钱函 → 小樽天狗山 → 运河 LeTAO"},{"day": "Day 5","text": "美瑛温泉 → 白须瀑布 → 青池点灯"},{"day": "Day 6","text": "美瑛 → 札幌大通公园"}],"tips": ["东京住浅草青旅约 198/晚","札幌东横含早","美瑛温泉酒店一泊二食，门口就是白须瀑布"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a92dddb0000000025012df0","highlights": ["小樽","青池点灯","美瑛温泉","六本木夜景"],"pitfalls": ["美瑛到旭川 JR 不能刷西瓜卡","一兰拉面取号后别离开现场，现场排反而快"]},{"id": 49,"title": "曼谷+芭提雅6天5晚带父母攻略","author": "小红薯的小白猴mo","likes": 4173,"source": "xiaohongshu","dest": "泰国 · 曼谷 / 芭提雅","duration": "6天5晚","categories": ["境外"],"emoji": "🏝️","gradient": "g18","season": "干季更舒适；注意末班船时间","excerpt": "带父母友好：格兰岛果冻海、真理寺、大皇宫郑王庙与夜市。","route": [{"day": "Day 1","text": "机场大巴去芭提雅"},{"day": "Day 2","text": "格兰岛（大船 30 泰铢；双条车去 Tien Beach，人少水清）"},{"day": "Day 3","text": "真理寺 → 回曼谷 → 朱拉隆功夜市"},{"day": "Day 4","text": "橙色旗船 21 泰铢 → 大皇宫 → 郑王庙 → ICONSIAM"},{"day": "Day 5","text": "三象神 → Jodd Fairs 夜市"},{"day": "Day 6","text": "机场快线返程"}],"tips": ["备 Grab / 谷歌地图 / BKK Rail","泰铢 + 支付宝 / 微信"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69b9709b000000002301ff97","highlights": ["Tien Beach 果冻海","真理寺","郑王庙","ICONSIAM 室内水上市场"],"pitfalls": ["镶金条大佛不推荐去","格兰岛下午 3 点回码头，17 点末班船","机场大巴现场买更灵活，别急着线上订","曼谷堵车，优先 BTS / MRT"]},{"id": 50,"title": "泰国3天3晚费用明细人均2697","author": "黑米Rémi","likes": 2068,"source": "xiaohongshu","dest": "泰国 · 曼谷 / 芭提雅","duration": "3天3晚 · 人均2697","categories": ["境外"],"emoji": "💰","gradient": "g13","season": "注意芭提雅回曼谷巴士售罄时间","excerpt": "酒店含早、大皇宫三象神、出海三岛团，人均 2697 费用拆解。","route": [{"day": "费用拆解","text": "酒店人均 346 含早；大皇宫 + 三象神 223；吃饭 461；打车 257（四人更省）；芭提雅出海三岛团 430 含接送浮潜"}],"tips": ["四人同行打车更省","出海三岛团含接送与浮潜"],"questions": [],"url": "https://www.xiaohongshu.com/explore/696e99280000000022009a92","highlights": ["大皇宫","三象神","出海三岛团","Som som seafood 海鲜"],"pitfalls": ["ICONSIAM 的 Ios'niyom 偏贵且难找（码头侧门进左转）","芭提雅回曼谷末班巴士 22 点，但 20 点票就卖完，需提前安排或拼车","Som som 两人点三个菜就够"]}];
+
+let activeCat = "全部";
+let searchQ = "";
+
+function formatLikes(n) {
+  if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, "") + "万";
+  return n.toLocaleString("zh-CN");
+}
+
+function isEditor(g) { return g.source === "editor"; }
+
+function matches(g) {
+  const catOk = activeCat === "全部" || g.categories.includes(activeCat);
+  if (!catOk) return false;
+  if (!searchQ) return true;
+  const q = searchQ.toLowerCase();
+  const hay = [
+    g.title, g.author, g.dest, g.excerpt, g.duration, g.season || "",
+    ...(g.tips || []),
+    ...(g.questions || []),
+    ...(g.route || []).map(r => r.day + " " + r.text),
+    ...(g.highlights || []),
+    ...(g.pitfalls || []),
+    g.content || "",
+    ...(g.categories || []),
+    isEditor(g) ? "编辑推荐" : "小红书"
+  ].join(" ").toLowerCase();
+  return hay.includes(q);
+}
+
+function updateStats(list) {
+  document.getElementById("countNum").textContent = list.length;
+  const all = GUIDES;
+  document.getElementById("cnCount").textContent = all.filter(g => !g.categories.includes("境外")).length;
+  document.getElementById("intlCount").textContent = all.filter(g => g.categories.includes("境外")).length;
+  document.getElementById("xhsCount").textContent = all.filter(g => g.source === "xiaohongshu").length;
+  document.getElementById("edCount").textContent = all.filter(g => g.source === "editor").length;
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function render() {
+  const grid = document.getElementById("guideGrid");
+  const list = GUIDES.filter(matches);
+  updateStats(list);
+
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty"><div class="big">🔎</div><p>没有找到匹配的攻略，换个关键词试试吧</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(g => {
+    const badge = isEditor(g)
+      ? `<span class="editor-badge">⭐ 编辑推荐</span>`
+      : `<span class="likes">❤️ ${formatLikes(g.likes)}</span><span>@${escapeHtml(g.author)}</span>`;
+    return `
+    <article class="card" data-id="${g.id}" tabindex="0" role="button" aria-label="查看攻略：${escapeHtml(g.title)}">
+      <div class="card-cover ${g.gradient}">
+        <span class="emoji">${g.emoji}</span>
+        <span class="tag">${escapeHtml(g.duration)}</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">${escapeHtml(g.title)}</h3>
+        <div class="card-meta">${badge}</div>
+        <p class="card-excerpt">${escapeHtml(g.excerpt)}</p>
+        <div class="card-footer">
+          <span class="dest-pill">📍 ${escapeHtml(g.dest)}</span>
+          <span>点击查看 →</span>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+
+  grid.querySelectorAll(".card").forEach(el => {
+    const open = () => openModal(+el.dataset.id);
+    el.addEventListener("click", open);
+    el.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+    });
+  });
+}
+
+function openModal(id) {
+  const g = GUIDES.find(x => x.id === id);
+  if (!g) return;
+
+  document.getElementById("modalTitle").textContent = g.title;
+
+  let html = `<div class="modal-meta">`;
+  if (isEditor(g)) {
+    html += `<span class="editor-badge">⭐ 编辑推荐</span>`;
+  } else {
+    html += `<span class="likes">📕 小红书</span>`;
+    html += `<span>✍️ ${escapeHtml(g.author)}</span>`;
+    html += `<span class="likes">❤️ ${formatLikes(g.likes)} 赞</span>`;
+  }
+  html += `
+      <span>📍 ${escapeHtml(g.dest)}</span>
+      <span>⏱️ ${escapeHtml(g.duration)}</span>
+      <span>🗓️ ${escapeHtml(g.season || "四季皆可")}</span>
+      <span>🏷️ ${escapeHtml((g.categories||[]).join(" · "))}</span>
+    </div>`;
+
+  if (g.content) {
+    html += `<div class="section-title">📝 内容概要</div><div class="content-block">${escapeHtml(g.content)}</div>`;
+  }
+
+  if (g.route && g.route.length) {
+    html += `<div class="section-title">🗺️ 推荐路线 / 亮点</div>`;
+    html += g.route.map(r => `<div class="route-day"><strong>${escapeHtml(r.day)}</strong>${escapeHtml(r.text)}</div>`).join("");
+  }
+
+  if (g.tips && g.tips.length) {
+    html += `<div class="section-title">✨ 实用贴士（交通 / 住宿 / 省钱）</div><ul class="tip-list">`;
+    html += g.tips.map(t => `<li>${escapeHtml(t)}</li>`).join("");
+    html += `</ul>`;
+  }
+
+  // ✅ 值得去 / ⚠️ 踩雷 — every modal
+  const highs = Array.isArray(g.highlights) ? g.highlights : [];
+  const pits = Array.isArray(g.pitfalls) ? g.pitfalls : [];
+  html += `<div class="section-title worth">✅ 值得去 / 必玩</div>`;
+  if (highs.length) {
+    html += `<ul class="worth-list">` + highs.map(t => `<li>${escapeHtml(t)}</li>`).join("") + `</ul>`;
+  } else {
+    html += `<div class="pitfall-empty">暂无单独标注，可参考上方路线与贴士</div>`;
+  }
+  html += `<div class="section-title pitfall">⚠️ 踩雷 / 避坑</div>`;
+  if (pits.length) {
+    html += `<ul class="pitfall-list">` + pits.map(t => `<li>${escapeHtml(t)}</li>`).join("") + `</ul>`;
+  } else {
+    html += `<div class="pitfall-empty">暂无踩雷记录</div>`;
+  }
+
+  if (g.questions && g.questions.length) {
+    html += `<div class="section-title">💬 用户最关心</div><ul class="q-list">`;
+    html += g.questions.map(q => `<li>${escapeHtml(q)}</li>`).join("");
+    html += `</ul>`;
+  }
+
+  if (g.season) {
+    html += `<div class="section-title">🌤️ 最佳季节</div><div class="content-block">${escapeHtml(g.season)}</div>`;
+  }
+
+  if (isEditor(g)) {
+    html += `<div class="editor-note">⭐ 本篇为平台编辑推荐，非小红书原笔记</div>`;
+  } else if (g.url) {
+    html += `<a class="xhs-link" href="${escapeHtml(g.url)}" target="_blank" rel="noopener noreferrer">📕 打开小红书原笔记</a>`;
+  }
+
+  document.getElementById("modalBody").innerHTML = html;
+  const backdrop = document.getElementById("modalBackdrop");
+  backdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("modalBackdrop").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest(".chip");
+  if (!btn) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  btn.classList.add("active");
+  activeCat = btn.dataset.cat;
+  render();
+});
+
+document.getElementById("searchInput").addEventListener("input", e => {
+  searchQ = e.target.value.trim();
+  render();
+});
+
+document.getElementById("closeModal").addEventListener("click", closeModal);
+document.getElementById("modalBackdrop").addEventListener("click", e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+});
+
+/* ===== Abstract Calligraphic Intro ===== */
+(function () {
+  const intro = document.getElementById("dragonIntro");
+  if (!intro) return;
+
+  document.body.classList.add("intro-lock");
+
+  const stars = document.getElementById("introStars");
+  if (stars) {
+    let s = "";
+    for (let i = 0; i < 55; i++) {
+      const x = Math.random() * 100;
+      const y = Math.random() * 75;
+      const d = (Math.random() * 2.5).toFixed(2);
+      const sz = (1 + Math.random() * 2.8).toFixed(1);
+      s += `<span style="left:${x}%;top:${y}%;width:${sz}px;height:${sz}px;animation-delay:${d}s"></span>`;
+    }
+    stars.innerHTML = s;
+  }
+
+  const sparks = document.getElementById("sparks");
+  if (sparks) {
+    let sp = "";
+    for (let i = 0; i < 22; i++) {
+      const x = 8 + Math.random() * 84;
+      const y = 25 + Math.random() * 45;
+      const d = (Math.random() * 2).toFixed(2);
+      const dur = (2.5 + Math.random() * 2).toFixed(2);
+      sp += `<div class="spark" style="left:${x}%;top:${y}%;animation-delay:${d}s;animation-duration:${dur}s"></div>`;
+    }
+    sparks.innerHTML = sp;
+  }
+
+  const trailWide = document.getElementById("trailWide");
+  const trailMid = document.getElementById("trailMid");
+  const trailFine = document.getElementById("trailFine");
+  const ribbonMain = document.getElementById("ribbonMain");
+  const ribbonSoft = document.getElementById("ribbonSoft");
+  const ribbonAccent = document.getElementById("ribbonAccent");
+  const geoMarks = document.getElementById("geoMarks");
+  const inkDots = document.getElementById("inkDots");
+  const leadOrb = document.getElementById("leadOrb");
+
+  const N = 64;
+  const DURATION = 4000;
+  const FADE = 700;
+  let start = performance.now();
+  let finished = false;
+  let raf = 0;
+
+  function sampleSpine(tProg, time) {
+    const baseX = -260 + tProg * 1720;
+    const baseY = 348 - Math.sin(tProg * Math.PI) * 95;
+    const pts = [];
+    for (let i = 0; i < N; i++) {
+      const u = i / (N - 1);
+      const x = baseX - (1 - u) * 680;
+      const wave = Math.sin(u * Math.PI * 3.2 - time * 0.0065) * (28 + u * 18);
+      const wave2 = Math.sin(u * Math.PI * 1.6 + time * 0.004) * 12;
+      const y = baseY + wave + wave2 + Math.sin(tProg * Math.PI * 2 + u * 2) * 10;
+      pts.push({ x, y, u });
+    }
+    return pts;
+  }
+
+  function tangents(pts) {
+    const out = [];
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[Math.max(0, i - 1)];
+      const b = pts[Math.min(pts.length - 1, i + 1)];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      out.push({ dx: dx / len, dy: dy / len, ang: Math.atan2(dy, dx) });
+    }
+    return out;
+  }
+
+  function buildRibbon(pts, tangs, halfWFn, offset = 0) {
+    const left = [], right = [];
+    for (let i = 0; i < pts.length; i++) {
+      const w = halfWFn(pts[i].u);
+      const nx = -tangs[i].dy, ny = tangs[i].dx;
+      const ox = pts[i].x + nx * offset;
+      const oy = pts[i].y + ny * offset;
+      left.push(`${ox + nx * w},${oy + ny * w}`);
+      right.push(`${ox - nx * w},${oy - ny * w}`);
+    }
+    return `M${left.join(" L")} L${right.reverse().join(" L")} Z`;
+  }
+
+  function poly(cx, cy, r, sides, rot) {
+    const pts = [];
+    for (let i = 0; i < sides; i++) {
+      const a = rot + (Math.PI * 2 * i) / sides;
+      pts.push(`${cx + Math.cos(a) * r},${cy + Math.sin(a) * r}`);
+    }
+    return pts.join(" ");
+  }
+
+  function frame(now) {
+    if (finished) return;
+    const elapsed = now - start;
+    const tProg = Math.min(1, elapsed / DURATION);
+    const ease = tProg < 0.5
+      ? 2 * tProg * tProg
+      : 1 - Math.pow(-2 * tProg + 2, 2) / 2;
+
+    const pts = sampleSpine(ease, now);
+    const tangs = tangents(pts);
+
+    // calligraphy pressure: thicker mid-stroke, tapered ends
+    const halfW = (u) => {
+      const press = Math.sin(u * Math.PI);
+      if (u < 0.08) return 1.5 + u * 40;
+      if (u > 0.9) return 10 - (u - 0.9) * 70;
+      return 6 + press * 16 + Math.sin(u * Math.PI * 5 + now * 0.004) * 2.5;
+    };
+    const softW = (u) => halfW(u) * 1.55 + 8;
+
+    ribbonMain.setAttribute("d", buildRibbon(pts, tangs, halfW));
+    ribbonSoft.setAttribute("d", buildRibbon(pts, tangs, softW, 4));
+
+    // fine accent stroke along spine
+    const accent = pts.map((p, i) => {
+      const nx = -tangs[i].dy, ny = tangs[i].dx;
+      const off = 3 + Math.sin(p.u * 12 + now * 0.008) * 2;
+      return `${p.x + nx * off},${p.y + ny * off}`;
+    });
+    ribbonAccent.setAttribute("d", `M${accent.join(" L")}`);
+
+    // light trails
+    const trailPts = pts.filter((_, i) => i % 2 === 0).map(p => `${p.x},${p.y}`);
+    const dTrail = `M${trailPts.join(" L")}`;
+    if (trailWide) {
+      trailWide.setAttribute("d", dTrail);
+      trailWide.setAttribute("opacity", String(0.2 + Math.sin(now * 0.005) * 0.08));
+    }
+    if (trailMid) trailMid.setAttribute("d", dTrail);
+    if (trailFine) {
+      const fine = pts.map((p, i) => {
+        const nx = -tangs[i].dy, ny = tangs[i].dx;
+        return `${p.x - nx * 2},${p.y - ny * 2}`;
+      });
+      trailFine.setAttribute("d", `M${fine.join(" L")}`);
+    }
+
+    // geometric marks: diamonds, triangles, circles along the flow
+    let geo = "";
+    for (let i = 4; i < N - 4; i += 5) {
+      const p = pts[i];
+      const a = tangs[i].ang;
+      const pulse = 0.7 + 0.3 * Math.sin(now * 0.006 + i);
+      const r = (5 + p.u * 7) * pulse;
+      const kind = i % 3;
+      const op = 0.35 + p.u * 0.45;
+      if (kind === 0) {
+        geo += `<circle cx="${p.x}" cy="${p.y}" r="${r * 0.55}" fill="none" stroke="#ffe9a8" stroke-width="1.4" opacity="${op}"/>`;
+        geo += `<circle cx="${p.x}" cy="${p.y}" r="${r * 0.18}" fill="#fff8e0" opacity="${op}"/>`;
+      } else if (kind === 1) {
+        geo += `<polygon points="${poly(p.x, p.y, r, 4, a + Math.PI / 4)}" fill="none" stroke="#ffb020" stroke-width="1.3" opacity="${op}"/>`;
+      } else {
+        geo += `<polygon points="${poly(p.x, p.y, r * 0.9, 3, a)}" fill="rgba(255,180,60,0.25)" stroke="#ff4a2a" stroke-width="1.1" opacity="${op}"/>`;
+      }
+    }
+    geoMarks.innerHTML = geo;
+
+    // ink-wash particles drifting off the stroke
+    let dots = "";
+    for (let i = 2; i < N - 2; i += 3) {
+      const p = pts[i];
+      const nx = -tangs[i].dy, ny = tangs[i].dx;
+      const drift = 12 + Math.sin(now * 0.005 + i) * 10;
+      const side = (i % 6 === 0) ? 1 : -1;
+      const dx = p.x + nx * drift * side;
+      const dy = p.y + ny * drift * side;
+      const rr = 1.2 + (i % 4) * 0.7;
+      const op = 0.25 + 0.35 * Math.abs(Math.sin(now * 0.004 + i * 0.3));
+      dots += `<circle cx="${dx}" cy="${dy}" r="${rr}" fill="#ffd76a" opacity="${op}" filter="url(#inkBlur)"/>`;
+      if (i % 6 === 0) {
+        dots += `<circle cx="${dx + nx * 8}" cy="${dy + ny * 8}" r="${rr * 0.6}" fill="#ff4a1a" opacity="${op * 0.6}"/>`;
+      }
+    }
+    inkDots.innerHTML = dots;
+
+    // leading light orb at stroke tip
+    const tip = pts[N - 1];
+    leadOrb.setAttribute("cx", tip.x);
+    leadOrb.setAttribute("cy", tip.y);
+    const orbR = 10 + Math.sin(now * 0.01) * 4;
+    leadOrb.setAttribute("r", orbR);
+
+    const bob = Math.sin(now * 0.003) * 4;
+    document.getElementById("ribbonGroup").setAttribute("transform", `translate(0,${bob})`);
+
+    if (tProg >= 1) {
+      endIntro();
+      return;
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  function endIntro() {
+    if (finished) return;
+    finished = true;
+    cancelAnimationFrame(raf);
+    intro.classList.add("fade-out");
+    document.body.classList.remove("intro-lock");
+    setTimeout(() => {
+      intro.classList.add("hidden");
+      intro.setAttribute("aria-hidden", "true");
+    }, FADE + 50);
+  }
+
+  document.getElementById("skipIntro").addEventListener("click", endIntro);
+  document.addEventListener("keydown", function onKey(e) {
+    if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+      if (!finished) {
+        endIntro();
+        document.removeEventListener("keydown", onKey);
+      }
+    }
+  });
+
+  raf = requestAnimationFrame(frame);
+})();
+
+render();
+</script>
+</body>
+</html>

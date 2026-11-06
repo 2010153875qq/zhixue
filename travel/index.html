@@ -1047,6 +1047,107 @@
     .studio-logo .studio-sub { letter-spacing: 0.22em; text-indent: 0.22em; }
     .intro-title { letter-spacing: 0.2em; text-indent: 0.2em; }
   }
+
+  /* ===== Nationwide city browser ===== */
+  .mode-bar {
+    display: flex; justify-content: center; gap: 8px;
+    flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .mode-btn {
+    border: 1.5px solid rgba(255,36,66,0.2);
+    background: #fff; color: var(--muted);
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: all .18s;
+  }
+  .mode-btn.active {
+    background: linear-gradient(120deg, #ff2442, #ff6b6b);
+    color: #fff; border-color: transparent;
+    box-shadow: 0 4px 14px rgba(255,36,66,0.3);
+  }
+  .prov-scroll {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding: 4px 2px 12px; margin-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .prov-scroll .chip { flex: 0 0 auto; white-space: nowrap; }
+  .view-hint {
+    text-align: center; color: var(--muted); font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .city-list { display: flex; flex-direction: column; gap: 12px; }
+  .city-card {
+    background: #fff; border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .city-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; cursor: pointer;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .city-head:hover { background: #fff7f8; }
+  .city-emoji { font-size: 28px; line-height: 1; }
+  .city-info { flex: 1; min-width: 0; }
+  .city-name { font-size: 17px; font-weight: 750; color: var(--ink); }
+  .city-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .city-chevron {
+    color: var(--pink); font-weight: 700; font-size: 18px;
+    transition: transform .2s;
+  }
+  .city-card.open .city-chevron { transform: rotate(90deg); }
+  .spot-list {
+    display: none; padding: 0 12px 14px;
+    border-top: 1px dashed rgba(255,36,66,0.12);
+  }
+  .city-card.open .spot-list { display: block; }
+  .spot-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 10px 8px; border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .spot-item:last-child { border-bottom: none; }
+  .spot-mark {
+    flex: 0 0 auto; font-size: 13px; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px; margin-top: 2px;
+  }
+  .spot-mark.worth { background: #e8f8ef; color: #1a7f4b; }
+  .spot-mark.pit { background: #fff0e8; color: #c2410c; }
+  .spot-body { flex: 1; min-width: 0; }
+  .spot-name { font-weight: 700; font-size: 15px; }
+  .spot-tip { font-size: 13px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+  .prov-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px; margin-bottom: 24px;
+  }
+  .prov-tile {
+    background: #fff; border: 1px solid rgba(255,36,66,0.1);
+    border-radius: 14px; padding: 14px 12px; text-align: center;
+    cursor: pointer; transition: .18s; font-family: inherit;
+  }
+  .prov-tile:hover { border-color: var(--pink); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .prov-tile .pn { font-weight: 750; font-size: 15px; color: var(--ink); }
+  .prov-tile .pc { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .load-more {
+    display: block; margin: 18px auto 8px;
+    background: #fff; border: 1.5px solid rgba(255,36,66,0.25);
+    color: var(--pink); font-weight: 700; font-size: 14px;
+    padding: 12px 28px; border-radius: 999px; cursor: pointer;
+    font-family: inherit;
+  }
+  .badge-src {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    border-radius: 999px; background: var(--pink-soft); color: var(--pink);
+    font-weight: 650; margin-left: 6px;
+  }
+  @media (max-width: 560px) {
+    .mode-btn { padding: 8px 14px; font-size: 13px; }
+    .city-name { font-size: 16px; }
+    .prov-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .prov-tile { padding: 12px 8px; }
+  }
+
 </style>
 </head>
 <body>
@@ -1136,68 +1237,104 @@
   <span class="hero-deco a">🏔️</span>
   <span class="hero-deco b">✈️</span>
   <span class="hero-deco c">🗺️</span>
-  <div class="hero-badge">🐉 龙行九州 · 全国 + 全球旅游攻略</div>
+  <div class="hero-badge">🐉 龙行九州 · 全国 34 省市区县景点 + 全球攻略</div>
   <h1>发现下一趟心动旅程</h1>
-  <p>覆盖中国各大区域与热门出境目的地：精选小红书笔记 + 编辑推荐攻略，路线、贴士、最佳季节一站汇总</p>
+  <p>覆盖中国全部省级行政区与地级城市主要景点：✅值得去 / ⚠️踩雷避坑，小红书精选 + 编辑推荐</p>
   <div class="search-wrap">
     <span class="icon">🔍</span>
-    <input type="search" id="searchInput" placeholder="搜索目的地、攻略标题或贴士关键词…" autocomplete="off" aria-label="搜索攻略">
+    <input type="search" id="searchInput" placeholder="搜索城市、景点、攻略…例如 乌鲁木齐" autocomplete="off" aria-label="搜索">
   </div>
 </header>
 
 <main>
-  <div class="filters" id="filters" role="tablist" aria-label="地区筛选">
-    <button class="chip active" data-cat="全部">全部</button>
-    <button class="chip" data-cat="湖南">湖南</button>
-    <button class="chip" data-cat="西南">西南</button>
-    <button class="chip" data-cat="西北">西北</button>
-    <button class="chip" data-cat="华东">华东</button>
-    <button class="chip" data-cat="华北">华北</button>
-    <button class="chip" data-cat="华南">华南</button>
-    <button class="chip" data-cat="东北">东北</button>
-    <button class="chip" data-cat="境外">境外</button>
+  <div class="mode-bar" role="tablist" aria-label="浏览模式">
+    <button class="mode-btn active" data-mode="nation" type="button">🇨🇳 全国景点</button>
+    <button class="mode-btn" data-mode="guides" type="button">📕 精选攻略</button>
+    <button class="mode-btn" data-mode="intl" type="button">🌍 境外</button>
+  </div>
+
+  <div class="prov-scroll" id="provFilters" role="tablist" aria-label="省份筛选">
+    <button class="chip active" data-prov="全部" type="button">全部省份</button>
+    <button class="chip" data-prov="北京" type="button">北京</button>
+    <button class="chip" data-prov="天津" type="button">天津</button>
+    <button class="chip" data-prov="河北" type="button">河北</button>
+    <button class="chip" data-prov="山西" type="button">山西</button>
+    <button class="chip" data-prov="内蒙古" type="button">内蒙古</button>
+    <button class="chip" data-prov="辽宁" type="button">辽宁</button>
+    <button class="chip" data-prov="吉林" type="button">吉林</button>
+    <button class="chip" data-prov="黑龙江" type="button">黑龙江</button>
+    <button class="chip" data-prov="上海" type="button">上海</button>
+    <button class="chip" data-prov="江苏" type="button">江苏</button>
+    <button class="chip" data-prov="浙江" type="button">浙江</button>
+    <button class="chip" data-prov="安徽" type="button">安徽</button>
+    <button class="chip" data-prov="福建" type="button">福建</button>
+    <button class="chip" data-prov="江西" type="button">江西</button>
+    <button class="chip" data-prov="山东" type="button">山东</button>
+    <button class="chip" data-prov="河南" type="button">河南</button>
+    <button class="chip" data-prov="湖北" type="button">湖北</button>
+    <button class="chip" data-prov="湖南" type="button">湖南</button>
+    <button class="chip" data-prov="广东" type="button">广东</button>
+    <button class="chip" data-prov="广西" type="button">广西</button>
+    <button class="chip" data-prov="海南" type="button">海南</button>
+    <button class="chip" data-prov="重庆" type="button">重庆</button>
+    <button class="chip" data-prov="四川" type="button">四川</button>
+    <button class="chip" data-prov="贵州" type="button">贵州</button>
+    <button class="chip" data-prov="云南" type="button">云南</button>
+    <button class="chip" data-prov="西藏" type="button">西藏</button>
+    <button class="chip" data-prov="陕西" type="button">陕西</button>
+    <button class="chip" data-prov="甘肃" type="button">甘肃</button>
+    <button class="chip" data-prov="青海" type="button">青海</button>
+    <button class="chip" data-prov="宁夏" type="button">宁夏</button>
+    <button class="chip" data-prov="新疆" type="button">新疆</button>
+    <button class="chip" data-prov="台湾" type="button">台湾</button>
+    <button class="chip" data-prov="香港" type="button">香港</button>
+    <button class="chip" data-prov="澳门" type="button">澳门</button>
   </div>
 
   <div class="stats-bar" id="statsBar">
-    <div class="stat-pill"><strong id="countNum">0</strong> 条攻略</div>
-    <div class="stat-pill">🇨🇳 国内 <strong id="cnCount">0</strong></div>
-    <div class="stat-pill">🌍 境外 <strong id="intlCount">0</strong></div>
-    <div class="stat-pill">📕 小红书 <strong id="xhsCount">0</strong></div>
-    <div class="stat-pill">⭐ 编辑推荐 <strong id="edCount">0</strong></div>
+    <div class="stat-pill"><strong id="statProv">0</strong> 省</div>
+    <div class="stat-pill"><strong id="statCity">0</strong> 城</div>
+    <div class="stat-pill"><strong id="statSpot">0</strong> 景点</div>
+    <div class="stat-pill">✅ <strong id="statWorth">0</strong></div>
+    <div class="stat-pill">⚠️ <strong id="statPit">0</strong></div>
+    <div class="stat-pill">📕 攻略 <strong id="statGuide">0</strong></div>
   </div>
 
-  <div class="grid" id="guideGrid"></div>
+  <p class="view-hint" id="viewHint">点省份看城市，再点城市展开景点；标注来自编辑精选</p>
+
+  <div id="nationView"></div>
+  <div class="grid" id="guideGrid" style="display:none"></div>
 
   <section class="knowledge" id="knowledge">
     <h2>🇨🇳 中国旅游小知识</h2>
-    <p class="sub">来自小红书笔记整理（省级与地级数据有民政部来源互证；5A 数量仅供参考）</p>
+    <p class="sub">省级与地级以公开行政区划为准；景点为编辑精选主要看点，非穷尽名录</p>
     <div class="know-grid">
       <div class="know-card">
         <div class="num">34</div>
         <div class="unit">个省级行政区</div>
-        <div class="desc">23 个省（含台湾省）、5 个自治区、4 个直辖市、2 个特别行政区</div>
+        <div class="desc">23 省（含台湾）、5 自治区、4 直辖市、2 特别行政区</div>
       </div>
       <div class="know-card">
-        <div class="num">333</div>
+        <div class="num">333+</div>
         <div class="unit">个地级行政区</div>
-        <div class="desc">293 个地级市、30 个自治州、7 个地区、3 个盟（另有「337 城」说法含 4 直辖市）</div>
+        <div class="desc">地级市 / 自治州 / 地区 / 盟；本站按旅游常用城市收录</div>
       </div>
       <div class="know-card">
-        <div class="num">≈358</div>
-        <div class="unit">家 5A 级景区</div>
-        <div class="desc">笔记数字仅供参考；另有 17 家拟新晋公示中（如广州塔、茶卡盐湖等）</div>
+        <div class="num">✅ / ⚠️</div>
+        <div class="unit">值得去 · 踩雷</div>
+        <div class="desc">每个景点均标注，附一句实用理由或避坑提示</div>
       </div>
       <div class="know-card">
-        <div class="num">244</div>
-        <div class="unit">处国家级风景名胜区</div>
-        <div class="desc">与 5A 景区体系不同，二者不可直接等同</div>
+        <div class="num">📱</div>
+        <div class="unit">手机友好</div>
+        <div class="desc">省份横滑 + 城市懒加载展开，流量友好</div>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  小红书公开笔记 + 编辑推荐整理 · 仅供参考 · 出行请以官方最新信息为准<br>
+  小红书公开笔记 + 编辑精选整理 · 仅供参考 · 出行请以官方最新信息为准<br>
   <a href="#knowledge">中国旅游小知识</a> · 龙行九州 · 全球旅游攻略平台
 </footer>
 
@@ -1214,83 +1351,82 @@
 <script>
 
 const GUIDES = [{"id": 1,"title": "湖南冷门秘境：矮寨奇观旅游区","author": "唐简","likes": 6214,"source": "xiaohongshu","dest": "湘西吉首","duration": "2天1夜","categories": ["湖南"],"emoji": "🌉","gradient": "g1","season": "春秋最佳，夏季注意防晒防雨","excerpt": "德夯苗寨 + 矮寨大桥经典两日线，悬崖栈道看世界级峡谷奇观。","route": [{"day": "Day 1","text": "德夯苗寨 → 九龙溪溯溪 → 流纱瀑布 → 玉泉溪峡谷 → 峡谷星空露营基地"},{"day": "Day 2","text": "悬崖栈道 → 矮寨大桥 → 天问台 → 吉斗苗寨"}],"tips": ["高铁到吉首东，再打车 / 拼车 / 18 路公交约 1 小时","长沙高铁约 1.5 小时可达","穿防滑鞋，带薄外套和换洗衣物","游客中心可免费寄存行李","雨后栈道湿滑，注意安全","五景点联票 120 元，3 天有效","德夯寨内客栈便宜实惠"],"questions": ["老人小孩能否坐电梯？","费用大概多少？","国庆人多吗？","离长沙多远？","只有一天怎么玩？"],"url": "https://www.xiaohongshu.com/explore/6a7e9fd0000000003300e8f8","highlights": ["德夯苗寨","矮寨大桥","悬崖栈道","流纱瀑布","五景点联票 120 元（3 天有效）"],"pitfalls": ["雨后栈道湿滑，注意安全","穿防滑鞋，带薄外套和换洗衣物"]},{"id": 2,"title": "如果只去一次湖南看这篇就够了","author": "RAT的小红薯","likes": 4042,"source": "xiaohongshu","dest": "长沙 + 张家界","duration": "5天（长沙2天+张家界3天）","categories": ["湖南"],"emoji": "🏞️","gradient": "g2","season": "春秋气候舒适；暑期人多需提前约票","excerpt": "长沙两日经典 + 张家界三天深度，预算约 2000+ 元（不含往返大交通）。","route": [{"day": "Day 1 长沙","text": "岳麓山索道 → 爱晚亭 → 岳麓书院 → 杜甫江阁夜景（19 点亮灯）"},{"day": "Day 2 长沙","text": "湖南省博物馆（提前预约，直奔 3 楼马王堆）→ 橘子洲 → 黄兴路 / 坡子街"},{"day": "Day 3 张家界","text": "天门山（张家界西站乘 17 路公交，买 C 线只走西线）"},{"day": "Day 4 张家界","text": "森林公园 A 线"},{"day": "Day 5 张家界","text": "南门 → 黄石寨 → 金鞭溪 → 十里画廊"}],"tips": ["用「张家界旅游助手」小程序预约入园","武陵源汽车站有免费车到南门","建议住森林公园东门附近","雨衣鞋套山下买，山上贵很多","预算约 2000+ 元，不含往返大交通"],"questions": ["只有 2 天张家界砍哪里？（答：天门山）","能否全程索道不爬山？（可以）","带老人怎么安排？","门票买 A 线还是 B 线？"],"url": "https://www.xiaohongshu.com/explore/6a2d460f000000000702cbe3","highlights": ["岳麓山 / 岳麓书院","湖南省博物馆马王堆","杜甫江阁夜景","天门山 + 武陵源森林公园"],"pitfalls": ["热门景点需提前预约（张家界旅游助手小程序）","雨衣鞋套山下买，山上贵很多"]},{"id": 3,"title": "《国家地理》没骗我！湖南被低估的小城","author": "陈小凡","likes": 2522,"source": "xiaohongshu","dest": "湘西花垣 · 茶峒古镇（边城）","duration": "一日游","categories": ["湖南"],"emoji": "🛶","gradient": "g3","season": "春秋最佳，夏日可傍晚看日落","excerpt": "湘渝黔三省交界的边城茶峒，拉拉渡、三省界碑、翠翠岛看日落。","route": [{"day": "路线","text": "茶峒老街 → 拉拉渡 → 重庆洪安古镇 → 三省界碑 → 翠翠岛 → 白塔 → 清水江 → 日落"}],"tips": ["长沙自驾约 4 小时","古镇免费开放","拉拉渡 2 元","坐船另收费"],"questions": ["和凤凰比怎么样？","没车方便吗？","商业化重不重？"],"url": "https://www.xiaohongshu.com/explore/6aa796fd00000000290141ba","highlights": ["拉拉渡","三省界碑","翠翠岛看日落","古镇免费开放"],"pitfalls": []},{"id": 4,"title": "长沙避坑提醒","author": "溏心蛋挞崽","likes": 1486,"source": "xiaohongshu","dest": "长沙","duration": "实用贴士","categories": ["湖南"],"emoji": "⚠️","gradient": "g4","season": "四季皆可，暑期注意博物馆预约","excerpt": "IFS 露台、岳麓山门、博物馆预约、文和友免排队……本地人避坑合集。","route": [],"tips": ["IFS 国金中心 7 楼露台搜「7 号门」","爱晚亭 / 岳麓书院导航「岳麓山南门」，索道走「岳麓山东门」","岳麓书院需预约，门票 40 元，学生半价","地铁 2 号线到橘子洲，观光车往返 40 元（学生 20）","杜甫江阁登阁提前 3 天预约，18 元","湖南省博物馆周一闭馆，16 点停止入场，节假日提前 5 天预约","文和友走海信商场电梯可免排队","太平街导航解放西路入口","潮宗街导航永清巷"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6ab88606000000000200d215","highlights": ["IFS 国金中心 7 楼露台（搜「7 号门」）","岳麓山南门去爱晚亭 / 书院，东门走索道","文和友走海信商场电梯可免排队"],"pitfalls": ["湖南省博物馆周一闭馆，16 点停止入场，节假日提前 5 天预约","岳麓书院需预约（40 元，学生半价）","杜甫江阁登阁需提前 3 天预约"]},{"id": 5,"title": "杭州出发 4 小时高铁直达 27 城","author": "可思今天去哪玩","likes": 1128,"source": "xiaohongshu","dest": "华东多城","duration": "路线清单","categories": ["华东"],"emoji": "🚄","gradient": "g5","season": "四季皆可，清明与国庆需提前订票","excerpt": "上海、苏州、南京、黄山、景德镇、南昌、武汉、长沙、福州、泉州、厦门等 27 城高铁可达。","route": [],"content": "杭州出发高铁约 4 小时可直达 27 座城市，包括上海、苏州、南京、黄山、景德镇、南昌、武汉、长沙、福州、泉州、厦门等。近程适合周末短途，远程适合长假安排。","tips": ["近程城市（绍兴、宁波、苏州）适合周末","远程城市适合长假出行"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a8eed900000000008010dc3","highlights": ["杭州出发高铁约 4 小时可达 27 城","近程适合周末，远程适合长假"],"pitfalls": []},{"id": 6,"title": "长沙暑假景点排行榜","author": "天庭在逃仙女","likes": 1083,"source": "xiaohongshu","dest": "长沙","duration": "新手向","categories": ["湖南"],"emoji": "🏆","gradient": "g6","season": "暑假人多，务必提前预约","excerpt": "新手向景点排行：橘子洲、岳麓山、湖南省博物馆必去，其余可选。","route": [],"content": "长沙暑假景点排行，适合第一次来长沙的游客。核心推荐：橘子洲、岳麓山、湖南省博物馆。","tips": ["核心三件套：橘子洲、岳麓山、湖南省博物馆","博物馆预约难，务必提前抢"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a5dfb890000000011006229","highlights": ["橘子洲","岳麓山","湖南省博物馆（核心三件套）"],"pitfalls": ["暑假人多，博物馆预约难，务必提前抢"]},{"id": 7,"title": "张家界 + 凤凰古城 + 长沙 独自四日游","author": "椰咪","likes": 965,"source": "xiaohongshu","dest": "张家界 · 凤凰 · 长沙","duration": "4天 · 约 2900 元（上海出发）","categories": ["湖南"],"emoji": "🎒","gradient": "g7","season": "春秋最佳；雨季注意防滑","excerpt": "独自四日游完整费用明细：机票、住宿、门票拆解清楚，约 2900 元。","route": [{"day": "Day 1","text": "天门山西线环线，后住武陵源东门"},{"day": "Day 2","text": "武陵源东门 B 线，点将台和天子山最美"},{"day": "Day 3","text": "南门 / 黄石寨 / 金鞭溪后前往凤凰"},{"day": "Day 4","text": "长沙文和友、黄兴路，卧铺返程"}],"tips": ["机票 419 元","张家界西 → 凤凰火车 93 元","凤凰 → 长沙南 209 元","返程卧铺 350 元","张家界 2 晚住宿 336 元","凤凰 1 晚 183 元","天门山门票 259 + 36 元","武陵源门票 398 元（含三索一梯）","总花费约 2900 元（上海出发）"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6aae2a22000000002b025505","highlights": ["天门山西线","武陵源点将台 / 天子山","费用明细清晰（上海出发约 2900 元）"],"pitfalls": ["雨季注意防滑"]},{"id": 8,"title": "长沙免费资源攻略","author": "niki","likes": 846,"source": "xiaohongshu","dest": "长沙","duration": "免费清单","categories": ["湖南"],"emoji": "🆓","gradient": "g8","season": "四季皆可","excerpt": "长沙免费景点与资源清单，岳麓山可当天预约，旺季建议提前。","route": [],"content": "整理长沙可免费体验的景点与资源，适合预算有限或想省钱的旅行者。","tips": ["岳麓山可当天预约","旺季建议提前预约，避免满额"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a97af0a000000002b010dc7","highlights": ["长沙免费景点与资源清单","岳麓山可当天预约"],"pitfalls": ["旺季建议提前预约，避免满额"]},{"id": 9,"title": "北京经典四日：故宫长城颐和园","author": "编辑推荐","likes": 0,"source": "editor","dest": "北京","duration": "4天","categories": ["华北"],"emoji": "🏯","gradient": "g9","season": "春秋最佳（3–5月、9–11月），避开暑期与国庆高峰","excerpt": "皇城气象与长城壮阔并存，博物馆与胡同夜生活一网打尽。","route": [{"day": "Day 1","text": "天安门 → 故宫博物院 → 景山俯瞰紫禁城 → 南锣鼓巷 / 什刹海"},{"day": "Day 2","text": "八达岭或慕田峪长城（建议慕田峪人少景美）→ 鸟巢水立方外景"},{"day": "Day 3","text": "颐和园 → 圆明园遗址 → 清华 / 北大校园（需预约）"},{"day": "Day 4","text": "国家博物馆或首都博物馆 → 王府井 / 三里屯放松"}],"tips": ["故宫需提前预约，建议开馆即入","地铁四通八达，下载「北京一卡通」或用手机支付","长城选工作日更舒适","住宿可住东城区方便逛皇城","冬春季干燥，带润唇膏和保湿"],"questions": [],"content": null,"url": null,"highlights": ["故宫博物院","八达岭 / 慕田峪长城","颐和园","景山俯瞰紫禁城"],"pitfalls": ["故宫需提前预约，建议开馆即入"]},{"id": 10,"title": "上海外滩魔都周末","author": "编辑推荐","likes": 0,"source": "editor","dest": "上海","duration": "2–3天","categories": ["华东"],"emoji": "🌃","gradient": "g10","season": "四季皆宜；樱花季（3–4月）与圣诞灯光特别出片","excerpt": "外滩天际线、武康路弄堂与迪士尼童话，一座城多种节奏。","route": [{"day": "Day 1","text": "外滩晨跑 / 夜景 → 南京路步行街 → 豫园 · 城隍庙"},{"day": "Day 2","text": "武康路 · 安福路 → 田子坊 → 陆家嘴观光（上海中心 / 东方明珠）"},{"day": "Day 3","text": "可选迪士尼乐园，或朱家角古镇半日"}],"tips": ["地铁是首选，避开高峰时段","外滩夜景免费，建议傍晚至 21 点","迪士尼建议买早鸟票并排项目顺序","住宿徐汇 / 黄浦交通便利","许多咖啡馆可作休息点"],"questions": [],"content": null,"url": null,"highlights": ["外滩夜景（免费）","武康路 / 安福路","陆家嘴观光"],"pitfalls": ["地铁避开高峰时段"]},{"id": 11,"title": "西安古城与兵马俑","author": "编辑推荐","likes": 0,"source": "editor","dest": "西安","duration": "3–4天","categories": ["西北"],"emoji": "terracotta","gradient": "g11","season": "春秋最舒适；冬季雾霾偶发，注意口罩","excerpt": "十三朝古都：兵马俑、城墙骑行、回民街美食一条龙。","route": [{"day": "Day 1","text": "钟鼓楼 → 回民街 / 永兴坊美食 → 城墙骑行（东南门租车）"},{"day": "Day 2","text": "兵马俑博物馆（早班车）→ 华清宫 → 回市区"},{"day": "Day 3","text": "大雁塔 · 大唐不夜城夜景 → 陕西历史博物馆（需预约）"},{"day": "Day 4","text": "可选法门寺或华山一日"}],"tips": ["兵马俑建议跟景区直通车，省换乘","城墙骑行傍晚光线好","羊肉泡馍、肉夹馍别错过","陕历博预约紧张，提前抢票","夏日干燥炎热，多补水"],"questions": [],"content": null,"url": null,"highlights": ["兵马俑","城墙骑行","大唐不夜城夜景","陕西历史博物馆"],"pitfalls": ["陕历博预约紧张，提前抢票"]},{"id": 12,"title": "成都慢生活与大熊猫","author": "编辑推荐","likes": 0,"source": "editor","dest": "成都","duration": "3–4天","categories": ["西南"],"emoji": "🐼","gradient": "g12","season": "春秋最佳；冬季可见雪山，夏季避暑可选周边","excerpt": "吃喝玩逛节奏超慢：熊猫基地、宽窄巷子、都江堰一日够味。","route": [{"day": "Day 1","text": "熊猫基地早场 → 宽窄巷子 → 锦里夜景"},{"day": "Day 2","text": "武侯祠 → 杜甫草堂 → 太古里逛街喝咖啡"},{"day": "Day 3","text": "都江堰 + 青城山一日游"},{"day": "Day 4","text": "可选乐山大佛 / 峨眉山，或市区火锅收尾"}],"tips": ["熊猫基地越早越好，熊猫更活跃","地铁 + 打车组合最省心","火锅别空腹，备藿香正气","春熙路附近住宿吃逛方便","都江堰景区不大，可半日"],"questions": [],"content": null,"url": null,"highlights": ["熊猫基地早场","宽窄巷子 / 锦里夜景","都江堰 + 青城山"],"pitfalls": ["熊猫基地越早越好（下午不活跃）","火锅别空腹，备藿香正气"]},{"id": 13,"title": "重庆山城立体漫游","author": "编辑推荐","likes": 0,"source": "editor","dest": "重庆","duration": "3天","categories": ["西南"],"emoji": "🏙️","gradient": "g13","season": "春秋舒适；夏日湿热，夜间江景更美","excerpt": "洪崖洞、轻轨穿楼、两江游船，立体山城出片率拉满。","route": [{"day": "Day 1","text": "解放碑 → 洪崖洞夜景 → 千厮门大桥夜拍"},{"day": "Day 2","text": "李子坝轻轨穿楼 → 鹅岭二厂 → 磁器口古镇"},{"day": "Day 3","text": "武隆天生三桥 / 仙女山（可选），或两江游船"}],"tips": ["洪崖洞建议夜景，白天相对普通","轻轨 2 号线李子坝站打卡","山城爬坡多，穿舒适鞋","火锅与小面是灵魂","住渝中区方便夜景"],"questions": [],"content": null,"url": null,"highlights": ["洪崖洞夜景","李子坝轻轨穿楼","两江游船"],"pitfalls": ["洪崖洞建议夜景，白天相对普通","山城爬坡多，穿舒适鞋"]},{"id": 14,"title": "云南大理丽江双古城","author": "编辑推荐","likes": 0,"source": "editor","dest": "大理 · 丽江","duration": "5–6天","categories": ["西南"],"emoji": "🏔️","gradient": "g3","season": "3–5月、9–11月最佳；雨季 partial 道路可能受影响","excerpt": "苍山洱海与玉龙雪山，古城慢生活与索道登顶组合拳。","route": [{"day": "Day 1–2 大理","text": "大理古城 → 洱海骑行 / 包车环湖 → 喜洲古镇 · 双廊"},{"day": "Day 3","text": "大理前往丽江（高铁约 2 小时）"},{"day": "Day 4–5 丽江","text": "丽江古城 → 玉龙雪山（印象丽江 / 蓝月谷）→ 束河古镇"},{"day": "Day 6","text": "可选泸沽湖或返程"}],"tips": ["玉龙雪山需吸氧与防晒，高原反应提前适应","洱海生态环保，勿乱丢垃圾","古城客栈提前订，旺季涨价明显","丽江到雪山建议跟团或包车","昼夜温差大，备薄羽绒服"],"questions": [],"content": null,"url": null,"highlights": ["洱海骑行 / 环湖","玉龙雪山 / 蓝月谷","大理古城 / 丽江古城"],"pitfalls": ["玉龙雪山需吸氧与防晒，注意高原反应","古城客栈旺季涨价明显，提前订"]},{"id": 15,"title": "西藏拉萨初识高原","author": "编辑推荐","likes": 0,"source": "editor","dest": "拉萨 · 西藏","duration": "5–7天","categories": ["西南"],"emoji": "🛕","gradient": "g14","season": "5–10月为旅游季；冬季寒冷但人少景净","excerpt": "布达拉宫、大昭寺、羊湖：第一次进藏的经典入门线。","route": [{"day": "Day 1–2","text": "抵达适应高原 → 大昭寺 · 八廓街慢走"},{"day": "Day 3","text": "布达拉宫（务必提前预约）"},{"day": "Day 4","text": "羊卓雍错一日"},{"day": "Day 5+","text": "可选日喀则或林芝桃花（季节限定）"}],"tips": ["提前一周以上适应，备红景天 / 遵医嘱","布达拉宫预约很难，尽早抢","防晒指数极高，墨镜帽子必备","忌剧烈运动与饮酒","尊重宗教礼仪，转经顺时针"],"questions": [],"content": null,"url": null,"highlights": ["布达拉宫","大昭寺 / 八廓街","羊卓雍错"],"pitfalls": ["布达拉宫预约很难，尽早抢","忌剧烈运动与饮酒，提前适应高原"]},{"id": 16,"title": "新疆伊犁或南北疆精选","author": "编辑推荐","likes": 0,"source": "editor","dest": "新疆","duration": "7–10天","categories": ["西北"],"emoji": "🏜️","gradient": "g13","season": "6–9月伊犁花海；9–10月喀纳斯金秋","excerpt": "独库公路、喀纳斯、赛里木湖：中国西北的旷野美学。","route": [{"day": "北疆示例","text": "乌鲁木齐 → 天山天池 → 喀纳斯 / 禾木 → 魔鬼城"},{"day": "伊犁示例","text": "赛里木湖 → 那拉提 → 巴音布鲁克 → 独库公路（季节开放）"}],"tips": ["路程长，建议包车或跟靠谱团","防晒 + 保湿 + 防风","独库公路通常 6–10 月开放，以路况公告为准","证件随身，部分区域需边防证","注意安全驾驶"],"questions": [],"content": null,"url": null,"highlights": ["赛里木湖","那拉提","喀纳斯 / 禾木","独库公路（季节开放）"],"pitfalls": ["路程长，建议包车或跟靠谱团","独库公路通常 6–10 月开放，以路况公告为准"]},{"id": 17,"title": "桂林阳朔山水四日","author": "编辑推荐","likes": 0,"source": "editor","dest": "桂林 · 阳朔","duration": "4天","categories": ["华南"],"emoji": "🛶","gradient": "g7","season": "4–10月适宜；雨季漓江景致更灵动","excerpt": "漓江竹筏、西街夜色、十里画廊骑行，经典桂林印象。","route": [{"day": "Day 1","text": "抵达桂林 → 两江四湖夜游 / 象鼻山"},{"day": "Day 2","text": "漓江竹筏（杨堤—兴坪段性价比高）→ 阳朔西街"},{"day": "Day 3","text": "十里画廊骑行 → 遇龙河 → 可选银子岩"},{"day": "Day 4","text": "返桂林或高铁离开"}],"tips": ["漓江选杨堤到兴坪，比全程游船灵活","阳朔骑行注意电动车规范","暑期多雨带雨衣","住西街附近方便夜生活","米粉和啤酒鱼必试"],"questions": [],"content": null,"url": null,"highlights": ["漓江竹筏（杨堤—兴坪）","阳朔西街","十里画廊骑行"],"pitfalls": ["暑期多雨带雨衣","阳朔骑行注意电动车规范"]},{"id": 18,"title": "厦门鼓浪屿海岛慢游","author": "编辑推荐","likes": 0,"source": "editor","dest": "厦门","duration": "3天","categories": ["华东"],"emoji": "🏝️","gradient": "g10","season": "春秋最舒适；暑期湿热台风季需关注天气","excerpt": "鼓浪屿万国建筑、曾厝垵文创与环岛路骑行。","route": [{"day": "Day 1","text": "中山路 → 轮渡鼓浪屿 → 日光岩 · 别墅建筑群"},{"day": "Day 2","text": "曾厝垵 → 厦大芙蓉隧道 / 白城沙滩 → 环岛路骑行"},{"day": "Day 3","text": "南普陀寺 → 沙坡尾 → 返程"}],"tips": ["鼓浪屿船票提前订，上岛后步行或电瓶车","厦大校园需预约","海鲜注意新鲜与价目表","住岛内或轮渡附近方便","夏日防晒必备"],"questions": [],"content": null,"url": null,"highlights": ["鼓浪屿万国建筑","曾厝垵","环岛路骑行"],"pitfalls": ["鼓浪屿船票提前订","厦大校园需预约","海鲜注意新鲜与价目表"]},{"id": 19,"title": "杭州西湖与灵隐","author": "编辑推荐","likes": 0,"source": "editor","dest": "杭州","duration": "2–3天","categories": ["华东"],"emoji": "🌸","gradient": "g8","season": "3–4月烟雨与柳浪；秋季桂花飘香","excerpt": "断桥残雪、雷峰塔、灵隐禅意，南宋古都气质拉满。","route": [{"day": "Day 1","text": "断桥 → 白堤 → 苏堤 → 雷峰塔 → 河坊街"},{"day": "Day 2","text": "灵隐寺 · 飞来峰 → 西溪湿地 或 宋城"},{"day": "Day 3","text": "可选千岛湖或龙井村茶园"}],"tips": ["西湖免费，骑行或步行最浪漫","灵隐需门票，早去人少","地铁到龙翔桥 / 龙安桥方便","龙井茶可茶园品鉴","雨天带伞，烟雨西湖也很美"],"questions": [],"content": null,"url": null,"highlights": ["西湖骑行 / 步行","灵隐寺 · 飞来峰","龙井村茶园"],"pitfalls": ["灵隐需门票，早去人少"]},{"id": 20,"title": "南京六朝古都速览","author": "编辑推荐","likes": 0,"source": "editor","dest": "南京","duration": "2–3天","categories": ["华东"],"emoji": "🏛️","gradient": "g15","season": "春秋宜人；梅花山冬末春初梅花盛开","excerpt": "中山陵、夫子庙秦淮、博物院：历史厚度与江城烟火。","route": [{"day": "Day 1","text": "中山陵 → 美龄宫 → 明孝陵"},{"day": "Day 2","text": "夫子庙 · 秦淮河夜游 → 老门东"},{"day": "Day 3","text": "南京博物院 → 玄武湖 或 总统府"}],"tips": ["中山陵台阶多，量力而行","南博预约，展品质高","秦淮河夜游提前买船票","地铁覆盖主要景点","鸭血粉丝与盐水鸭别错过"],"questions": [],"content": null,"url": null,"highlights": ["中山陵","夫子庙 · 秦淮河夜游","南京博物院"],"pitfalls": ["中山陵台阶多，量力而行","南博需预约","秦淮河夜游提前买船票"]},{"id": 21,"title": "青岛海边啤酒节气质","author": "编辑推荐","likes": 0,"source": "editor","dest": "青岛","duration": "2–3天","categories": ["华东"],"emoji": "🌊","gradient": "g7","season": "5–10月适宜；夏季可赶啤酒节氛围","excerpt": "栈桥、八大关、老牌德式建筑与海鲜烧烤一条街。","route": [{"day": "Day 1","text": "栈桥 → 鲁迅公园 → 小青岛 → 信号山夜景"},{"day": "Day 2","text": "八大关别墅区 → 第二海水浴场 → 啤酒博物馆"},{"day": "Day 3","text": "崂山景区（太清 / 仰口）或金沙滩"}],"tips": ["海鲜市场砍价或选餐厅更稳妥","八大关适合慢走拍照","崂山需预留半天以上","海风大，备薄外套","住市南区方便海边"],"questions": [],"content": null,"url": null,"highlights": ["栈桥 / 八大关","啤酒博物馆","崂山"],"pitfalls": ["海鲜市场砍价或选餐厅更稳妥","崂山需预留半天以上"]},{"id": 22,"title": "哈尔滨冰雪与中央大街","author": "编辑推荐","likes": 0,"source": "editor","dest": "哈尔滨","duration": "3天","categories": ["东北"],"emoji": "❄️","gradient": "g14","season": "12–2月看冰雪大世界；夏季可避暑松花江","excerpt": "冰雪大世界、中央大街、索菲亚教堂：东北冬日童话。","route": [{"day": "Day 1","text": "中央大街 → 索菲亚教堂 → 防洪纪念塔 · 松花江"},{"day": "Day 2","text": "冰雪大世界或兆麟公园冰灯（季节限定）"},{"day": "Day 3","text": "可选伏尔加庄园 或 雪乡跟团（路远）"}],"tips": ["极寒装备：羽绒服、雪地靴、暖宝宝","冰雪大世界门票较贵，可傍晚入场看灯","室内外温差大，注意增减衣","红肠、马迭尔冰棍（冬天也吃）","打车比公交暖得多"],"questions": [],"content": null,"url": null,"highlights": ["中央大街 / 索菲亚教堂","冰雪大世界（季节限定）"],"pitfalls": ["极寒需羽绒服、雪地靴、暖宝宝","冰雪大世界门票较贵，可傍晚入场看灯"]},{"id": 23,"title": "贵州黄果树与村寨","author": "编辑推荐","likes": 0,"source": "editor","dest": "贵州","duration": "4–5天","categories": ["西南"],"emoji": "💧","gradient": "g3","season": "4–10月瀑布水量丰；夏季凉爽宜避暑","excerpt": "黄果树大瀑布、荔波小七孔、西江千户苗寨，多彩贵州。","route": [{"day": "Day 1–2","text": "贵阳 → 黄果树瀑布 → 龙宫（可选）"},{"day": "Day 3–4","text": "荔波小七孔 / 大七孔"},{"day": "Day 5","text": "西江千户苗寨夜景 → 返程"}],"tips": ["贵州多雨，雨具必备","村寨夜景美，注意保管财物","高铁网络完善，贵阳为枢纽","酸汤鱼与丝娃娃推荐","瀑布观景穿防滑鞋"],"questions": [],"content": null,"url": null,"highlights": ["黄果树大瀑布","荔波小七孔","西江千户苗寨夜景"],"pitfalls": ["贵州多雨，雨具必备","瀑布观景穿防滑鞋"]},{"id": 24,"title": "敦煌丝路千年","author": "编辑推荐","likes": 0,"source": "editor","dest": "敦煌 · 甘肃","duration": "3–4天","categories": ["西北"],"emoji": "🕌","gradient": "g2","season": "4–10月适宜；夏季沙漠炎热，早晚温差大","excerpt": "莫高窟、鸣沙山月牙泉、雅丹：丝路遗梦。","route": [{"day": "Day 1","text": "莫高窟（含数字展示中心）"},{"day": "Day 2","text": "鸣沙山 · 月牙泉骑骆驼看日落"},{"day": "Day 3","text": "可选雅丹魔鬼城 或 玉门关 / 阳关"},{"day": "Day 4","text": "博物馆补课 → 返程"}],"tips": ["莫高窟务必提前在「门票预约网」抢票","沙漠防晒防风沙眼镜","驼队夕阳场最出片","住宿敦煌市区方便","多喝水防干燥"],"questions": [],"content": null,"url": null,"highlights": ["莫高窟（含数字展示中心）","鸣沙山 · 月牙泉日落","雅丹魔鬼城"],"pitfalls": ["莫高窟务必提前在门票预约网抢票","沙漠防晒防风沙"]},{"id": 25,"title": "内蒙古草原与响沙湾","author": "编辑推荐","likes": 0,"source": "editor","dest": "内蒙古","duration": "4–5天","categories": ["华北"],"emoji": "🐴","gradient": "g12","season": "6–9月绿草期；冬季可看冰雪那达慕（偶发）","excerpt": "呼伦贝尔或希拉穆仁草原、响沙湾沙漠体验，开敞苍穹。","route": [{"day": "草原线","text": "呼和浩特 / 海拉尔 → 草原度假区骑马 · 篝火"},{"day": "沙漠线","text": "鄂尔多斯响沙湾一日：滑沙、缆车、沙漠酒店（可选）"}],"tips": ["选正规牧家乐，注意安全须知","防晒与驱蚊都很重要","草原夜晚凉，备外套","骑马选有经验向导","尊重当地民俗与草场保护"],"questions": [],"content": null,"url": null,"highlights": ["草原骑马 · 篝火","响沙湾滑沙 / 沙漠酒店"],"pitfalls": ["选正规牧家乐，注意安全须知","草原夜晚凉，备外套"]},{"id": 26,"title": "海南三亚度假","author": "编辑推荐","likes": 0,"source": "editor","dest": "三亚","duration": "4–5天","categories": ["华南"],"emoji": "🏖️","gradient": "g18","season": "11–3月为旺季舒适；夏秋注意台风预警","excerpt": "亚龙湾、蜈支洲岛、热带雨林：阳光沙滩一价全包气质。","route": [{"day": "Day 1","text": "抵达亚龙湾 / 海棠湾安顿，海滩放松"},{"day": "Day 2","text": "蜈支洲岛一日（潜水 / 海底观光）"},{"day": "Day 3","text": "天涯海角 或 椰梦长廊 → 第一市场海鲜"},{"day": "Day 4","text": "呀诺达雨林 或 免税城购物"}],"tips": ["岛屿门票含往返船，水上项目另计","海鲜建议市场买酒店加工","强防晒，防水手机袋实用","旺季酒店提前锁价","关注台风路径"],"questions": [],"content": null,"url": null,"highlights": ["亚龙湾 / 海棠湾海滩","蜈支洲岛","呀诺达雨林"],"pitfalls": ["关注台风路径","旺季酒店提前锁价","水上项目另计费"]},{"id": 27,"title": "东京京都关西关东入门","author": "编辑推荐","likes": 0,"source": "editor","dest": "日本 · 东京 / 京都","duration": "6–8天","categories": ["境外"],"emoji": "🗼","gradient": "g9","season": "3–4月樱花、11月红叶；避开黄金周","excerpt": "浅草寺、涩谷、清水寺、伏见稻荷：第一次访日的黄金组合。","route": [{"day": "东京 3–4天","text": "浅草 → 东京晴空塔 → 涩谷 · 新宿 → 迪士尼或团队实验室（可选）"},{"day": "京都 2–3天","text": "清水寺 → 祇园 → 伏见稻荷千本鸟居 → 岚山"}],"tips": ["交通：Suica / ICOCA 交通卡","药妆与电器可对比退税点","京都寺庙多，穿舒适步行鞋","提前预约热门餐厅","遵守垃圾分类与安静礼仪"],"questions": [],"content": null,"url": null,"highlights": ["浅草 / 涩谷","清水寺 / 伏见稻荷","岚山"],"pitfalls": ["避开黄金周","京都寺庙多，穿舒适步行鞋"]},{"id": 28,"title": "曼谷清迈泰北泰南氛围","author": "编辑推荐","likes": 0,"source": "editor","dest": "泰国 · 曼谷 / 清迈","duration": "5–7天","categories": ["境外"],"emoji": "🛕","gradient": "g13","season": "11–2月干季最舒适；雨季景点人少价低","excerpt": "大皇宫、考山路、清迈尼人村与美食街头：性价比假期。","route": [{"day": "曼谷","text": "大皇宫 · 玉佛寺 → 郑王庙 → 夜市（拉差达 / 亚洲）"},{"day": "清迈","text": "古城寺庙骑行 → 周日夜市 → 可选大象保护营（拒表演）"}],"tips": ["办好签证或免签政策以官方为准","街边小吃选人气摊","寺庙着装需遮肩膝","Grab 打车方便","注意财物与景区「自愿捐赠」陷阱"],"questions": [],"content": null,"url": null,"highlights": ["大皇宫 · 玉佛寺","郑王庙","清迈周日夜市"],"pitfalls": ["注意财物与景区「自愿捐赠」陷阱","寺庙着装需遮肩膝"]},{"id": 29,"title": "首尔韩流与古宫","author": "编辑推荐","likes": 0,"source": "editor","dest": "韩国 · 首尔","duration": "4–5天","categories": ["境外"],"emoji": "🎎","gradient": "g11","season": "3–5月、9–11月舒适；冬季可滑雪周边","excerpt": "景福宫、明洞、弘大与汉江公园：逛街美食与古意并存。","route": [{"day": "Day 1–2","text": "景福宫 · 北村韩屋 → 仁寺洞"},{"day": "Day 3","text": "明洞购物 → 南山塔"},{"day": "Day 4","text": "弘大 · 合井 → 汉江公园野餐"},{"day": "Day 5","text": "可选釜山或济州延伸"}],"tips": ["T-money 交通卡通用","韩妆试色与退税流程熟悉一下","宫苑可穿韩服免费入园（部分）","地铁标识清晰","辛拉面与炸鸡啤酒经典"],"questions": [],"content": null,"url": null,"highlights": ["景福宫 · 北村韩屋","明洞 / 弘大","汉江公园"],"pitfalls": []},{"id": 30,"title": "新加坡花园城市速览","author": "编辑推荐","likes": 0,"source": "editor","dest": "新加坡","duration": "3–4天","categories": ["境外"],"emoji": "🦁","gradient": "g12","season": "全年皆可，雨季阵雨多但很快过去","excerpt": "滨海湾花园、圣淘沙、牛车水：高效干净的城市度假。","route": [{"day": "Day 1","text": "滨海湾金沙 → 花园城市（Supertree）夜场"},{"day": "Day 2","text": "圣淘沙 / 环球影城"},{"day": "Day 3","text": "牛车水 · 阿拉伯街 → 乌节路"},{"day": "Day 4","text": "动物园或滨海人工岛"}],"tips": ["地铁 MRT 极其方便","口香糖禁令等法规需遵守","餐饮贵，可选食阁性价比高","天气湿热，备换洗衣物","电子入境卡提前填"],"questions": [],"content": null,"url": null,"highlights": ["滨海湾花园 Supertree 夜场","圣淘沙 / 环球影城","食阁性价比高"],"pitfalls": ["餐饮贵，可选食阁","遵守口香糖禁令等法规"]},{"id": 31,"title": "巴黎艺术与塞纳河","author": "编辑推荐","likes": 0,"source": "editor","dest": "法国 · 巴黎","duration": "4–5天","categories": ["境外"],"emoji": "🗼","gradient": "g5","season": "4–6月、9–10月宜人；夏季游客爆满","excerpt": "卢浮宫、埃菲尔、蒙马特：艺术之都经典打卡。","route": [{"day": "Day 1","text": "埃菲尔铁塔 → 塞纳河游船 → 战神广场日落"},{"day": "Day 2","text": "卢浮宫（半日够经典三宝）→ 杜乐丽 → 奥赛（可选）"},{"day": "Day 3","text": "蒙马特圣心堂 → 拾艺街 → 歌剧院区域逛街"},{"day": "Day 4","text": "凡尔赛一日 或 拉丁区咖啡馆"}],"tips": ["博物馆闭馆日多在周二，提前查","地铁 + 步行组合最佳","小心小偷高发区","餐厅午餐套餐更划算","提前网购热门票避免排队"],"questions": [],"content": null,"url": null,"highlights": ["埃菲尔铁塔 / 塞纳河游船","卢浮宫","蒙马特圣心堂"],"pitfalls": ["博物馆闭馆日多在周二，提前查","小心小偷高发区"]},{"id": 32,"title": "罗马废墟与梵蒂冈","author": "编辑推荐","likes": 0,"source": "editor","dest": "意大利 · 罗马","duration": "3–4天","categories": ["境外"],"emoji": "🏛️","gradient": "g6","season": "4–6月、9–10月最佳；盛夏炎热干燥","excerpt": "斗兽场、许愿池、梵蒂冈博物馆：永恒之城密度极高。","route": [{"day": "Day 1","text": "斗兽场 · 古罗马广场 → 威尼斯广场"},{"day": "Day 2","text": "梵蒂冈博物馆 · 西斯廷 → 圣彼得大教堂"},{"day": "Day 3","text": "特莱维喷泉 → 西班牙阶梯 → 万神殿"},{"day": "Day 4","text": "可选一日庞贝或佛罗伦萨火车往返"}],"tips": ["斗兽场与梵蒂冈务必预约","着装进教堂需遮肩膝","喷泉边喝水免费且安全（饮用喷泉）","小心「友谊手绳」骗局","Gelato 选天然配色摊"],"questions": [],"content": null,"url": null,"highlights": ["斗兽场 · 古罗马广场","梵蒂冈博物馆 · 西斯廷","特莱维喷泉"],"pitfalls": ["斗兽场与梵蒂冈务必预约","小心「友谊手绳」骗局","着装进教堂需遮肩膝"]},{"id": 33,"title": "瑞士雪山火车之旅","author": "编辑推荐","likes": 0,"source": "editor","dest": "瑞士","duration": "5–7天","categories": ["境外"],"emoji": "🏔️","gradient": "g14","season": "6–9月徒步；冬春季滑雪与冰雪童话","excerpt": "因特拉肯、少女峰、琉森湖：明信片场景连续剧。","route": [{"day": "经典","text": "苏黎世 / 日内瓦入境 → 琉森 → 因特拉肯 → 少女峰地区 → 策马特（可选）"}],"tips": ["Swiss Travel Pass 视行程划算度计算","山顶天气多变，分层穿衣","预算较高，超市买午餐可省","火车准点率极高","少女峰可改克莱内夏伊德格省预算"],"questions": [],"content": null,"url": null,"highlights": ["琉森","因特拉肯 / 少女峰","火车准点率极高"],"pitfalls": ["预算较高，超市买午餐可省","山顶天气多变，分层穿衣"]},{"id": 34,"title": "冰岛环岛极光与冰川","author": "编辑推荐","likes": 0,"source": "editor","dest": "冰岛","duration": "7–10天","categories": ["境外"],"emoji": "🌌","gradient": "g18","season": "6–8月午夜太阳；9–3月追极光（天气看脸）","excerpt": "金圈、黑沙滩、冰川徒步与极光：地球边缘的震撼。","route": [{"day": "金圈","text": "辛格维利尔 → 盖锡尔 → 黄金瀑布"},{"day": "南岸","text": "黑沙滩 → 杰古沙龙冰湖 → 可选冰川徒步"},{"day": "延伸","text": "环岛或西峡湾需更多天数与四驱经验"}],"tips": ["租车注意风保险与碎石险","天气 App 紧盯，道路可能关闭","极光无保证，多留几个夜晚","物资贵，入境可带部分食品","尊重自然，勿越屏障拍照"],"questions": [],"content": null,"url": null,"highlights": ["金圈（辛格维利尔 / 盖锡尔 / 黄金瀑布）","黑沙滩 / 杰古沙龙冰湖","极光（季节）"],"pitfalls": ["极光无保证，多留几个夜晚","租车注意风保险与碎石险","天气导致道路可能关闭"]},{"id": 35,"title": "新西兰南岛风光","author": "编辑推荐","likes": 0,"source": "editor","dest": "新西兰 · 南岛","duration": "8–12天","categories": ["境外"],"emoji": "🥝","gradient": "g8","season": "12–3月暖季；冬季南岛滑雪场开放","excerpt": "皇后镇、米尔福德峡湾、马特胡峰：大自然拉满片。","route": [{"day": "示意","text": "基督城 → 特卡波 / 普卡基 → 皇后镇 → 米尔福德 → 弗朗兹约瑟夫冰川（可选）"}],"tips": ["自驾为主，注意靠左行驶","营地与民宿提前订","防蚊液（南岛部分区域）","峡湾天气多变，备雨具","签证与生物检疫严格，勿带鲜货"],"questions": [],"content": null,"url": null,"highlights": ["皇后镇","米尔福德峡湾","马特胡峰一带风光"],"pitfalls": ["自驾注意靠左行驶","签证与生物检疫严格，勿带鲜货"]},{"id": 36,"title": "马尔代夫岛礁度假","author": "编辑推荐","likes": 0,"source": "editor","dest": "马尔代夫","duration": "4–6天","categories": ["境外"],"emoji": "🏝️","gradient": "g16","season": "12–4月旱季海水更清；雨季价格更友好","excerpt": "水屋、浮潜与私人沙滩：彻底躺平的海岛假期。","route": [{"day": "节奏","text": "抵达马累转水飞 / 快艇上岛 → 浮潜 → 日落钓 → 水上餐厅（可选）"}],"tips": ["全包套餐算清含不含浮潜与酒水","选岛看位置：北马累环礁交通方便","强防晒与reef-safe防晒霜","尊重伊斯兰文化着装（马累市区）","蜜月可问酒店布置"],"questions": [],"content": null,"url": null,"highlights": ["水屋 / 浮潜","私人沙滩日落"],"pitfalls": ["全包套餐算清含不含浮潜与酒水","马累市区尊重伊斯兰文化着装"]},{"id": 37,"title": "昆明+大理+丽江6天旅游攻略","author": "泰开💕乐芭","likes": 7716,"source": "xiaohongshu","dest": "昆明 · 大理 · 丽江","duration": "6天","categories": ["西南"],"emoji": "🏔️","gradient": "g3","season": "春秋最佳","excerpt": "昆明花市夜市 → 大理古城海西 → 丽江雪山蓝月谷，六天经典滇西线。","route": [{"day": "Day 1 昆明","text": "翠湖 → 滇池 → 海洪湿地 → 斗南花市 → 双桥夜市"},{"day": "Day 2–3 大理","text": "大理古城 → 龙龛码头 → S弯 → 苍洱大道 → 喜洲"},{"day": "Day 4–6 丽江","text": "丽江古城 + 束河 → 白沙 → 玉龙雪山云杉坪 / 蓝月谷"}],"tips": ["昆明→大理高铁 145–155 元，提前买","大理→丽江坐大巴比高铁方便","昆明住火车站附近；大理、丽江住古城附近，别住古城里","斗南花市晚市 22:30 后，外面买花约 10 元 3–4 把"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69a88061000000002203937a","highlights": ["白沙古镇（能看雪山人少）","云杉坪","蓝月谷","海西骑行","龙龛码头"],"pitfalls": ["别住大理古城里","丽江古城、束河商业化重，晚上逛更好","龙龛码头人多，往前走几步","伴手礼货比三家","避雷五花肉卷芝士火鸡面、舂鸡脚"]},{"id": 38,"title": "云南5天4晚人均1k攻略","author": "吱吱喵喵","likes": 4558,"source": "xiaohongshu","dest": "大理 · 丽江 · 香格里拉","duration": "5天4晚 · 人均约1k","categories": ["西南"],"emoji": "🌄","gradient": "g12","season": "注意冬季云杉坪草木枯黄","excerpt": "人均一千玩转大理海西、丽江雪山日照金山与香格里拉松赞林寺。","route": [{"day": "Day 1","text": "大理站官方巴士 5 元到古城"},{"day": "Day 2","text": "龙龛码头 → 共享电车海西廊道（才村 / S湾 / 廊桥）→ 喜洲 → 19:30 大巴丽江"},{"day": "Day 3","text": "甘海子看日照金山 → 云杉坪 → 蓝月谷"},{"day": "Day 4","text": "高铁香格里拉（车上约 40 分钟可看虎跳峡）→ 独克宗 → 松赞林寺 → 龟山公园转经筒"},{"day": "Day 5","text": "返程"}],"tips": ["海西廊道不能开车，用共享电车","看日照金山提前 30–40 分钟到，氧气和门票先买","香格里拉选供氧酒店"],"questions": [],"url": "https://www.xiaohongshu.com/explore/695e6c82000000002103e860","highlights": ["日照金山","云杉坪","松赞林寺","高铁上看虎跳峡"],"pitfalls": ["云杉坪冬季草是枯的","海西不能开车"]},{"id": 39,"title": "北京五天四夜旅游攻略","author": "欢乐大摆锤","likes": 3286,"source": "xiaohongshu","dest": "北京","duration": "5天4夜","categories": ["华北"],"emoji": "🏯","gradient": "g9","season": "春秋最佳；热门场馆均需预约","excerpt": "升旗、国博、故宫到长城、雍和宫、颐和园，五天四夜经典皇城线。","route": [{"day": "Day 1","text": "天安门升旗（免费预约）→ 国博（免费预约）→ 故宫（60 元预约）→ 景山（2 元）→ 前门大栅栏"},{"day": "Day 2","text": "天坛联票 28 元 → 三里屯 → 798（免费）"},{"day": "Day 3","text": "八达岭（40 元预约；北京北 / 清河高铁 20–30 分钟或 877 路）"},{"day": "Day 4","text": "雍和宫 25 元 → 国子监孔庙 30 元 → 南锣鼓巷 → 什刹海 → 恭王府 40 元"},{"day": "Day 5","text": "颐和园 30 元 / 圆明园 25 元 / 玉渊潭 三选一"}],"tips": ["热门馆都要预约","长城放中间一天","景山正午后再去，否则光线太强"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69df526a000000002103852c","highlights": ["升旗","故宫","景山俯瞰","颐和园"],"pitfalls": ["不预约进不去","景山上午光线强"]},{"id": 40,"title": "第一次去北京保姆级攻略","author": "素以为绚兮","likes": 3002,"source": "xiaohongshu","dest": "北京","duration": "4天","categories": ["华北"],"emoji": "🗺️","gradient": "g14","season": "四季皆可，注意预约与步行量","excerpt": "四天覆盖故宫长城天坛颐和园，附住宿地铁线与必吃推荐。","route": [{"day": "Day 1","text": "天安门 → 故宫 → 景山 → 北海"},{"day": "Day 2","text": "颐和园 → 孔庙国子监 → 南锣 → 什刹海"},{"day": "Day 3","text": "八达岭 → 明十三陵 → 鸟巢水立方夜景"},{"day": "Day 4","text": "天坛 → 圆明园 → 清华北大（免费预约）"}],"tips": ["住宿优先 2 / 4 / 5 号线崇文门、前门附近","带身份证，穿舒服鞋","必吃烤鸭、炸酱面、铜锅涮肉"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a8abef60000000018019c81","highlights": ["故宫","长城","天坛","颐和园"],"pitfalls": ["不预约排队久","步行量大"]},{"id": 41,"title": "成都3天2夜人均800+","author": "Herocuii","likes": 9151,"source": "xiaohongshu","dest": "成都","duration": "3天2夜 · 人均800+","categories": ["西南"],"emoji": "🐼","gradient": "g12","season": "春秋舒适；熊猫基地务必早到","excerpt": "春熙路太古里吃逛 + 熊猫基地 + 青城山都江堰，人均八百出头。","route": [{"day": "Day 1","text": "春熙路 → IFS → 太古里 → 文殊院 → 望平街 → 九眼桥"},{"day": "Day 2","text": "熊猫基地 → 成都博物馆（免费）→ 宽窄巷子 → 东郊记忆 → 锦里"},{"day": "Day 3","text": "青城山 → 都江堰 → 南桥夜景"}],"tips": ["熊猫基地 7:30 前到，否则排队久","住春熙路附近；去青城山那天建议前一晚住过去","美食：玉林串串香 / 谭豆花 / 蹄花"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a7185c70000000005029814","highlights": ["IFS 七楼爬墙熊猫","早看熊猫","锦里夜灯笼","都江堰南桥夜景"],"pitfalls": ["下午熊猫睡觉","市区当天往返青城山、都江堰很赶"]},{"id": 42,"title": "J人6h整理成都手写攻略","author": "夜殇🥕","likes": 8731,"source": "xiaohongshu","dest": "成都","duration": "3天","categories": ["西南"],"emoji": "📝","gradient": "g8","season": "旺季提前半个月订酒店","excerpt": "手写详版：人民公园盖碗茶、玉林路、奎星楼街，附大量避坑。","route": [{"day": "Day 1","text": "春熙路 → IFS → 太古里 → 人民公园盖碗茶 → 玉林路"},{"day": "Day 2","text": "熊猫基地 55 元 → 东郊记忆 → 文殊院 → 武侯祠 50 元 → 锦里"},{"day": "Day 3","text": "成都博物馆 → 宽窄巷子 → 奎星楼街 → 青羊宫 10 元 → 泡桐树街"}],"tips": ["天府机场远，地铁 18 号线约 50 分钟；双流更近","住二环内地铁口即可，不一定住春熙路","旺季提前半个月订"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a9b9035000000002802c083","highlights": ["人民公园喝茶掏耳朵","玉林路晚上","奎星楼街","泡桐树街"],"pitfalls": ["春熙路卡通人偶合影要钱，别理","锦里、宽窄巷子小吃看看就好，去玉林路或建设路吃","文殊院门口算命别信","景区熊猫玩偶比超市贵","火锅等位超 1 小时换店","特产去超市或菜市场买","酒店多看差评实拍"]},{"id": 43,"title": "为了这15张图飞了一趟西安","author": "Angie","likes": 12000,"source": "xiaohongshu","dest": "西安","duration": "3天 · 出片机位","categories": ["西北"],"emoji": "📷","gradient": "g11","season": "夜景机位全天可拍，部分茶咖需点单","excerpt": "大雁塔、钟楼、广仁寺等免费 / 低价机位合集，专为出片党准备。","route": [{"day": "Day 1","text": "钟楼周边机位（开元商城 5 楼看钟楼夜景等）"},{"day": "Day 2","text": "大慈恩寺遗址公园北门 → 大雁塔 → 大悦城 4 楼 → 大唐不夜城"},{"day": "Day 3","text": "广仁寺 → 洒金桥 → 西安博物院 → 小雁塔"}],"tips": ["免费机位：大慈恩寺遗址公园北门、大雁塔南广场、大悦城 4 楼看大雁塔、开元商城 5 楼看钟楼夜景、广仁寺、安仁坊","永宁门城楼 54 元","第一次来兵马俑必看，可加华清宫、骊山、长恨歌"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a4a37b00000000011011663","highlights": ["兵马俑","大唐不夜城夜景","免费机位"],"pitfalls": ["部分茶咖机位需点单"]},{"id": 44,"title": "西安三天两晚实用攻略","author": "一个俗人","likes": 4834,"source": "xiaohongshu","dest": "西安","duration": "3天2晚","categories": ["西北"],"emoji": "terracotta","gradient": "g2","season": "春秋舒适；大唐不夜城务必晚上去","excerpt": "陕历博、兵马俑、长恨歌、城墙骑行，三天两晚实用排期。","route": [{"day": "Day 1","text": "陕历博（提前蹲点预约）→ 大雁塔 → 晚上大唐不夜城"},{"day": "Day 2","text": "兵马俑 120 元（门口现找导游 20–50 元可谈）→ 骊山（兵马俑票含，观光车 15 元）→ 华清宫 → 长恨歌（建议中区第一场）→ 钟鼓楼夜景"},{"day": "Day 3","text": "城墙（永宁门上可骑车）→ 西安博物院 / 小雁塔 → 碑林 85 元"}],"tips": ["美食：洒金桥 / 回民街 / 永兴坊都差不多","推荐甑糕、泡馍、biangbiang 面"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a100abe000000000702bf19","highlights": ["陕历博","长恨歌","城墙骑行","晚上的大唐不夜城"],"pitfalls": ["大唐不夜城白天没氛围，一定晚上去","钟鼓楼没必要买票上去，开元商城 4 楼免费看","兴庆宫爱心树除了拍照没什么，可不去","导游门口现找谈价"]},{"id": 45,"title": "新疆5日游手绘攻略","author": "一人食","likes": 5990,"source": "xiaohongshu","dest": "新疆","duration": "5天","categories": ["西北"],"emoji": "🏜️","gradient": "g13","season": "昼夜温差大，注意保暖","excerpt": "天池、沙漠公路、五彩滩、那拉提到赛里木湖，五日手绘北疆线。","route": [{"day": "Day 1","text": "乌鲁木齐国际大巴扎 → 红山夜市"},{"day": "Day 2","text": "天山天池 → S101 丹霞"},{"day": "Day 3","text": "S21 沙漠公路 → 五彩滩 → 布尔津夜市"},{"day": "Day 4","text": "那拉提空中草原 → 河谷草原 → 草原星空"},{"day": "Day 5","text": "赛里木湖环湖 → 果子沟大桥"}],"tips": ["昼夜温差大，注意保暖，多喝水"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a45c81b00000000150269ef","highlights": ["赛里木湖","那拉提","天池","五彩滩"],"pitfalls": ["行程跨度大，城市间衔接需自行规划"]},{"id": 46,"title": "新疆公交自由行详细路线消费清单","author": "山河笔鉴旅行攻略","likes": 479,"source": "xiaohongshu","dest": "新疆","duration": "7天 · 合计约3756元（含往返机票）","categories": ["西北"],"emoji": "🚌","gradient": "g6","season": "独库公路通行季留意路况与拥堵","excerpt": "七天公交游：吐鲁番到赛里木湖、喀拉峻、那拉提、独库南段，费用透明。","route": [{"day": "Day 1","text": "吐鲁番坎儿井 38 元 → 交河故城 70 元 → 葡萄沟"},{"day": "Day 2","text": "夜卧铺 → 赛里木湖 129 元"},{"day": "Day 3","text": "喀拉峻 140 元 → 八卦城"},{"day": "Day 4","text": "那拉提空中草原 135 元"},{"day": "Day 5","text": "盘龙古道 → 独库南段到库车"},{"day": "Day 6–7","text": "龟兹博物馆 / 巴州博物馆（免费）"}],"tips": ["合计约 3756 元含往返机票；不含机票不到 2000 元","那拉提门票管两天"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a6cc1fc0000000005031da4","highlights": ["赛里木湖","独库公路","喀拉峻"],"pitfalls": ["独库公路易堵车，作者因此取消喀什行程","八卦城太极坛展览馆 35 元口碑不好"]},{"id": 47,"title": "9天8晚关西微穷游攻略明细","author": "笑笑xixixi","likes": 2705,"source": "xiaohongshu","dest": "日本 · 关西","duration": "9天8晚 · 合计7274元","categories": ["境外"],"emoji": "🗼","gradient": "g9","season": "淡季价格更友好","excerpt": "京都青旅 + 大阪酒店 + 环球影城，明细到便利店早餐的关西微穷游。","route": [{"day": "行程","text": "京都 2 天 → 宇治 → 奈良 → 环球影城 → 大阪 2 天"}],"tips": ["合计 7274 元：机票 2758（中转）、签证 849、京都青旅约 124/晚、大阪酒店约 195/晚（淡季）、环球影城 324（关西周游券）、吃饭 870（便利店早餐约 20，松屋 / 吉野家约 35）","淡季才便宜","清水寺 500 日元","按行程选周游券"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6aa0fbaf000000002601519e","highlights": ["京都","宇治","奈良","阿倍野展望台"],"pitfalls": ["当地特色餐厅人均 100+ 易超预算","青旅可能遇吵闹室友"]},{"id": 48,"title": "东京+北海道7天6晚8000块","author": "环游是种趣","likes": 2359,"source": "xiaohongshu","dest": "日本 · 东京 / 北海道","duration": "7天6晚 · 约8000元","categories": ["境外"],"emoji": "❄️","gradient": "g14","season": "雪季；青池点灯等季节限定","excerpt": "东京夜景飞札幌，小樽、美瑛温泉与青池点灯，雪季七天约八千。","route": [{"day": "Day 1","text": "六本木 Hills 夜景"},{"day": "Day 2","text": "浅草寺 → 飞札幌"},{"day": "Day 3","text": "中岛公园滑雪 → First Love 取景地"},{"day": "Day 4","text": "钱函 → 小樽天狗山 → 运河 LeTAO"},{"day": "Day 5","text": "美瑛温泉 → 白须瀑布 → 青池点灯"},{"day": "Day 6","text": "美瑛 → 札幌大通公园"}],"tips": ["东京住浅草青旅约 198/晚","札幌东横含早","美瑛温泉酒店一泊二食，门口就是白须瀑布"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a92dddb0000000025012df0","highlights": ["小樽","青池点灯","美瑛温泉","六本木夜景"],"pitfalls": ["美瑛到旭川 JR 不能刷西瓜卡","一兰拉面取号后别离开现场，现场排反而快"]},{"id": 49,"title": "曼谷+芭提雅6天5晚带父母攻略","author": "小红薯的小白猴mo","likes": 4173,"source": "xiaohongshu","dest": "泰国 · 曼谷 / 芭提雅","duration": "6天5晚","categories": ["境外"],"emoji": "🏝️","gradient": "g18","season": "干季更舒适；注意末班船时间","excerpt": "带父母友好：格兰岛果冻海、真理寺、大皇宫郑王庙与夜市。","route": [{"day": "Day 1","text": "机场大巴去芭提雅"},{"day": "Day 2","text": "格兰岛（大船 30 泰铢；双条车去 Tien Beach，人少水清）"},{"day": "Day 3","text": "真理寺 → 回曼谷 → 朱拉隆功夜市"},{"day": "Day 4","text": "橙色旗船 21 泰铢 → 大皇宫 → 郑王庙 → ICONSIAM"},{"day": "Day 5","text": "三象神 → Jodd Fairs 夜市"},{"day": "Day 6","text": "机场快线返程"}],"tips": ["备 Grab / 谷歌地图 / BKK Rail","泰铢 + 支付宝 / 微信"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69b9709b000000002301ff97","highlights": ["Tien Beach 果冻海","真理寺","郑王庙","ICONSIAM 室内水上市场"],"pitfalls": ["镶金条大佛不推荐去","格兰岛下午 3 点回码头，17 点末班船","机场大巴现场买更灵活，别急着线上订","曼谷堵车，优先 BTS / MRT"]},{"id": 50,"title": "泰国3天3晚费用明细人均2697","author": "黑米Rémi","likes": 2068,"source": "xiaohongshu","dest": "泰国 · 曼谷 / 芭提雅","duration": "3天3晚 · 人均2697","categories": ["境外"],"emoji": "💰","gradient": "g13","season": "注意芭提雅回曼谷巴士售罄时间","excerpt": "酒店含早、大皇宫三象神、出海三岛团，人均 2697 费用拆解。","route": [{"day": "费用拆解","text": "酒店人均 346 含早；大皇宫 + 三象神 223；吃饭 461；打车 257（四人更省）；芭提雅出海三岛团 430 含接送浮潜"}],"tips": ["四人同行打车更省","出海三岛团含接送与浮潜"],"questions": [],"url": "https://www.xiaohongshu.com/explore/696e99280000000022009a92","highlights": ["大皇宫","三象神","出海三岛团","Som som seafood 海鲜"],"pitfalls": ["ICONSIAM 的 Ios'niyom 偏贵且难找（码头侧门进左转）","芭提雅回曼谷末班巴士 22 点，但 20 点票就卖完，需提前安排或拼车","Som som 两人点三个菜就够"]},{"id": 51,"title": "韩国3日不绕路游玩丨去韩国的姐妹码住！","author": "百国签证资讯","likes": 1776,"source": "xiaohongshu","dest": "韩国 · 首尔","duration": "3天","categories": ["境外"],"emoji": "🇰🇷","gradient": "g11","season": "四季皆可；宫苑注意周二休馆","excerpt": "首尔三日不绕路：古宫穿越 → 校园青春 → 江南扫街，景福宫到圣水洞一条线走完。","route": [{"day": "Day 1 古宫穿越","text": "景福宫（3000 韩元，9–17 点，周二休，穿韩服免费）→ 青瓦台 → 北村韩屋村 → 明洞（参鸡汤 / 辣炒年糕）→ 南山首尔塔（缆车往返约 15000 韩元，日落爱情锁）→ 梨泰院"},{"day": "Day 2 校园青春","text": "梨花女大 → 延世大 → 弘大（涂鸦墙）→ 汝矣岛汉江公园（炸鸡啤酒夕阳）→ 汉江游船（约 15000 韩元）→ 西村韩屋咖啡馆"},{"day": "Day 3 江南扫街","text": "东大门设计广场 → 圣水洞 → 清潭洞 → 狎鸥亭 → 新沙洞林荫道 → 三清洞"}],"tips": ["景福宫 3000 韩元，9–17 点，穿韩服免费入园","南山塔缆车往返约 15000 韩元，建议赶日落","汉江游船约 15000 韩元","明洞可吃参鸡汤、辣炒年糕","汝矣岛汉江公园适合炸鸡啤酒看夕阳"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a68262b0000000001032684","highlights": ["景福宫","北村韩屋村","南山塔日落","汝矣岛汉江公园","圣水洞"],"pitfalls": ["青瓦台需提前 1–4 周预约，带护照原件 + 预约码，周二休","景福宫周二休","北村韩屋村建议早 10 点前到，避开旅行团"]},{"id": 52,"title": "i人不会英语勇闯济州岛攻略","author": "乐乐","likes": 2195,"source": "xiaohongshu","dest": "韩国 · 济州岛","duration": "准备篇","categories": ["境外"],"emoji": "🏝️","gradient": "g18","season": "紫外线强，注意防晒；四季皆可","excerpt": "不会英语也能勇闯济州：换汇、支付、入境卡、流量卡、App 与垃圾处理全攻略。","route": [],"tips": ["韩元只能在中国银行兑换，且需提前预约","很多店支持微信 / 支付宝，公交也能刷支付宝","入境卡线下填更简单，自带笔","流量卡比全球通划算","紫外线强，注意防晒","很多酒店不提供一次性牙具，自行准备","没有共享充电宝，部分公交站可免费充电","App 推荐：Naver Map / Uber / Papago；不会英语韩语靠翻译比划也行"],"questions": [],"url": "https://www.xiaohongshu.com/explore/68ff20710000000003021181","highlights": [],"pitfalls": ["韩元兑换预约难，务必提前办","当地 Visa 借记卡可能用不上","街上垃圾桶很少还上锁，垃圾要带回酒店","很多店不收外带垃圾"]},{"id": 53,"title": "全屏照片！来新加坡旅游请直接复制这条路线","author": "不吃鲸在旅行","likes": 1133,"source": "xiaohongshu","dest": "新加坡","duration": "2天1夜 / 48小时","categories": ["境外"],"emoji": "🦁","gradient": "g12","season": "全年皆可，雨季阵雨多但很快过去","excerpt": "2天1夜红黄双线：小印度彩色房子、牛车水、滨海湾到福康宁与荷兰村，坐 Big Bus 比打车省心。","route": [{"day": "Day 1","text": "武吉士 → 小印度 → 苏丹回清真寺 → 珍珠坊 → 牛车水 → 金沙度假区 → 滨海湾花园"},{"day": "Day 2","text": "鱼尾狮公园 → 福康宁公园 → 旧禧街警察局 → Funan 商场 → 荷兰村"}],"tips": ["打车很贵，建议坐 48 小时 Big Bus（红黄两条线，随上随下，有中文讲解，露天敞篷）","住小印度希尔顿花园酒店，步行约 5 分钟到 Big Bus 站","小印度推荐 Muthu's curry","建议一天红线一天黄线"],"questions": [],"url": "https://www.xiaohongshu.com/explore/69b29e500000000004001373","highlights": ["小印度彩色房子 / 印度教堂 / 印度菜（作者最爱、觉得被忽略）","牛车水 / 唐人街：珍珠坊、佛牙寺、东亚餐室、组屋","福康宁公园","旧禧街警察局彩色老房子"],"pitfalls": ["打车很贵，不建议当主要交通","别以打车为主，改用 Big Bus 更省心"]},{"id": 54,"title": "8天7晚马来西亚反特种兵旅行","author": "斗大脸猫篷","likes": 5528,"source": "xiaohongshu","dest": "马来西亚 · 吉隆坡 / 仙本那 / 亚庇","duration": "8天7晚 · 人均约1万（含机票）","categories": ["境外"],"emoji": "🌴","gradient": "g13","season": "国庆出行人多但不算拥挤；海岛注意防晒","excerpt": "杭州出发国庆线：吉隆坡双子塔 → 仙本那跳岛水屋 → 亚庇日落，人均约一万含机票。","route": [{"day": "Day 1","text": "杭州 → 吉隆坡（厦门转机）"},{"day": "Day 2","text": "吉隆坡市区：肥肥蟹、逛吃、榴莲街、双子塔夜景"},{"day": "Day 3","text": "吉隆坡飞仙本那斗湖，晚上小镇海鲜"},{"day": "Day 4","text": "跳岛：玻璃海 + 浮潜"},{"day": "Day 5","text": "水屋拍照 + 海鲜"},{"day": "Day 6","text": "上午水屋 → 飞亚庇哥打京那巴鲁"},{"day": "Day 7","text": "亚庇市区游玩购物看日落"},{"day": "Day 8","text": "亚庇飞杭州返程"}],"tips": ["免签但要填入境卡","电话卡淘宝提前买，比国际漫游划算","备约 800 马币现金，大多可支付宝；Grab 可绑支付宝或付现金","人均约 10000 元（含国庆往返机票约 5000）","时间不够优先仙本那而不是亚庇","第一次出国选马来西亚，沟通相对无障碍"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a2faa8500000000160264db","highlights": ["仙本那跳岛玻璃海浮潜、水屋、小镇海鲜","亚庇日落","双子塔夜景 / 肥肥蟹 / 榴莲街"],"pitfalls": ["部分酒店退房需要现金押金","国际漫游比当地电话卡贵","国庆机票贵，整体预算要留足"]},{"id": 55,"title": "法国8日4223元+详细攻略","author": "中国速度背包82国","likes": 269,"source": "xiaohongshu","dest": "法国 · 巴黎 / 南法 / 蔚蓝海岸","duration": "8天 · 约4223元","categories": ["境外"],"emoji": "🗼","gradient": "g5","season": "春秋宜人；夏季游客爆满","excerpt": "巴黎 3 天 + 欧铁 5 天南法与蔚蓝海岸，全程青旅，总花费约 4223 元。","route": [{"day": "Day 1–3 巴黎","text": "迪士尼 → 卢浮宫 / 凡尔赛 / 巴黎圣母院 / 塞纳河 / 埃菲尔铁塔"},{"day": "Day 4","text": "图卢兹：主座教堂、加龙河畔、市政厅"},{"day": "Day 5","text": "蒙彼利埃 → 阿维尼翁（教皇宫、断桥）→ 马赛"},{"day": "Day 6","text": "马赛老港 → 阿尔勒梵高点位 → 里昂老城"},{"day": "Day 7","text": "戛纳 → 昂蒂布 → 尼斯天使湾"},{"day": "Day 8","text": "埃兹 → 摩纳哥 → 芒通"}],"tips": ["欧铁通票 90 天 4777 元，折合约 53 元/天","城际大巴可用 Flixbus","全程青旅住宿","牡蛎 / 生蚝必吃","城际怎么去用谷歌查"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6ad836d000000000320236a9","highlights": ["巴黎地标：卢浮宫、凡尔赛、埃菲尔、迪士尼","阿维尼翁教皇宫与断桥","蔚蓝海岸：戛纳、尼斯、埃兹、摩纳哥"],"pitfalls": ["欧铁通票剩余天数不退","巴黎前日内瓦大巴 238 元不含在 4223 总价里","坐错车会被拉到别的城市（作者曾上错火车到马赛），注意车次","D6 把马赛、阿尔勒、里昂排同一天非常赶"]},{"id": 56,"title": "大学生意大利5天4晚2000r实用攻略","author": "地理逃课生","likes": 2297,"source": "xiaohongshu","dest": "意大利 · 罗马 / 佛罗伦萨 / 威尼斯","duration": "5天4晚 · 约2000元（不含机票）","categories": ["境外"],"emoji": "🏛️","gradient": "g6","season": "春秋最佳；盛夏炎热干燥","excerpt": "大学生穷游线：罗马 → 梵蒂冈 → 佛罗伦萨 → 比萨 / 五渔村 → 威尼斯，不含机票约 2000 元。","route": [{"day": "Day 1","text": "抵罗马：斗兽场、特莱维喷泉、万神殿"},{"day": "Day 2","text": "梵蒂冈（圣彼得大教堂 + 博物馆）→ 晚上去佛罗伦萨"},{"day": "Day 3","text": "圣母百花 → 乌菲兹 → 米开朗基罗广场日落"},{"day": "Day 4","text": "比萨斜塔 → 五渔村（里奥马焦雷 + 马纳罗拉）→ 回佛罗伦萨"},{"day": "Day 5","text": "威尼斯圣马可广场 + 大运河 → 返程"}],"tips": ["米兰往返提前 3 个月约 3300 元；或飞布达佩斯再转 Ryanair","青旅：罗马火车站附近约 200/晚，佛罗伦萨约 180/晚，威尼斯住主岛外梅斯特雷（Mestre）约 170","城际全坐 Flixbus，交通合计约 500，比高铁省一半","斗兽场官网提前 1 个月订","梵蒂冈博物馆每月最后一个周日免费","市内全步行；餐饮靠 Coop 超市 + 街头小吃"],"questions": [],"url": "https://www.xiaohongshu.com/explore/690f61b90000000004007c0e","highlights": ["罗马古迹：斗兽场、许愿池、万神殿、梵蒂冈","佛罗伦萨米开朗基罗广场日落","五渔村","威尼斯圣马可 / 大运河"],"pitfalls": ["贡多拉太贵，远观拍照即可","2000 元不含机票，机票另算","白本护照申根签证不好办，有人建议先日韩"]},{"id": 57,"title": "瑞士五天四晚攻略","author": "Joy_Ning","likes": 1237,"source": "xiaohongshu","dest": "瑞士 · 日内瓦 / 因特拉肯 / 苏黎世","duration": "5天4晚","categories": ["境外"],"emoji": "🏔️","gradient": "g14","season": "山区看天气；晴天再上少女峰","excerpt": "日内瓦进苏黎世出，3 晚住因特拉肯：滑翔伞、布里恩茨湖、First 山与米伦小镇。","route": [{"day": "Day 1","text": "日内瓦湖大喷泉"},{"day": "Day 2","text": "因特拉肯滑翔伞 → 布里恩茨湖 Iseltwald（《爱的迫降》钢琴点）游船"},{"day": "Day 3","text": "First 山缆车 / 悬崖步道 / 滑板车下山"},{"day": "Day 4","text": "劳特布龙嫩瀑布 → 米伦小镇（晴天可上少女峰）"},{"day": "Day 5","text": "苏黎世 ETH / 林登霍夫 / 班霍夫大街"}],"tips": ["游船注意末班时间","山区看天气，少女峰可能雾中看不见","3 晚住因特拉肯最省事","日内瓦进、苏黎世出"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6a1185d80000000038020dbc","highlights": ["因特拉肯滑翔伞","布里恩茨湖 Iseltwald","First 山缆车 / 悬崖步道","米伦小镇"],"pitfalls": ["末班船易错过","天气差时山峰看不到，行程要留弹性"]},{"id": 58,"title": "第一次去冰岛能直接复制的六天攻略","author": "KK又跑去哪了","likes": 203,"source": "xiaohongshu","dest": "冰岛","duration": "自驾6天","categories": ["境外"],"emoji": "🌌","gradient": "g18","season": "每天查天气路况；南岸与冰洞受天气影响大","excerpt": "自驾六天：蓝湖、黄金圈、黑沙滩、蓝冰洞到斯奈山半岛，比五天更从容。","route": [{"day": "Day 1","text": "蓝湖温泉 → 辛格维利尔"},{"day": "Day 2","text": "黄金圈 Brúarfoss / 间歇泉 / 黄金瀑布 → 飞机残骸 → 塞里雅兰 / 斯科加瀑布 → 维克"},{"day": "Day 3","text": "黑沙滩 → 冰河湖游船 → 钻石沙滩"},{"day": "Day 4","text": "蓝冰洞 + 冰川徒步"},{"day": "Day 5","text": "斯奈山半岛：海豹滩 / 黑教堂 / 草帽山"},{"day": "Day 6","text": "雷克雅未克教堂 / 彩虹街"}],"tips": ["每天查天气路况","停车用 Parka","加油会预授权信用卡留额度，注意可用额度","冰洞提前订","黑沙滩别靠近浪","作者原计划 5 天太赶，改为 6 天更安全"],"questions": [],"url": "https://www.xiaohongshu.com/explore/6aafa19400000000120262cd","highlights": ["Brúarfoss","黑沙滩","蓝冰洞 + 冰川徒步","冰河湖 / 钻石沙滩"],"pitfalls": ["5 天太赶，夜间驾驶危险","加油预授权占信用卡额度","观鲸体验一般","黑沙滩海浪危险，勿靠近"]}];
+const CITIES = [{"p":"北京","c":"北京","r":"华北","e":"🏯","s":[["故宫博物院",1,"必预约，开馆入人少"],["八达岭长城",1,"经典但人多，工作日更好"],["慕田峪长城",1,"比八达岭人少景美"],["颐和园",1,"昆明湖春秋最美"],["天坛公园",1,"祈年殿早去清净"],["圆明园",1,"遗址氛围春日桃花"],["南锣鼓巷",0,"过度商业化，改烟袋斜街"],["雍和宫",1,"祈福人气高需排队"],["国家博物馆",1,"免费预约体量大"],["什刹海",1,"胡同夜景避开酒吧喧闹"],["恭王府",1,"和珅宅第花园精致"],["798艺术区",1,"免费文艺区"]]},{"p":"天津","c":"天津","r":"华北","e":"🏙️","s":[["古文化街",1,"小吃集中防宰客"],["天津之眼",1,"摩天轮夜景"],["五大道",1,"小洋楼漫步免费"],["意式风情区",1,"建筑出片餐饮偏贵"],["盘山",1,"蓟州山水留半天"],["瓷房子",0,"票贵内容薄看外观即可"]]},{"p":"河北","c":"保定","r":"华北","e":"🏞️","s":[["白洋淀",1,"荷花季防游船宰客"],["清西陵",1,"比东陵人少"],["野三坡",1,"拒马河夏季漂流"],["直隶总督署",1,"古城历史"]]},{"p":"河北","c":"唐山","r":"华北","e":"🏞️","s":[["唐山南湖",1,"生态公园夜景"],["清东陵",1,"清代皇陵"]]},{"p":"河北","c":"廊坊","r":"华北","e":"🏞️","s":[["京津近郊主题园",0,"多数性价比一般"]]},{"p":"河北","c":"张家口","r":"华北","e":"🏞️","s":[["崇礼滑雪场",1,"冬奥场地雪季热"],["大境门",1,"长城关口"],["草原天路",1,"夏秋自驾天气多变"]]},{"p":"河北","c":"承德","r":"华北","e":"🏞️","s":[["避暑山庄",1,"体量大留足时间"],["普宁寺",1,"外八庙大佛"],["塞罕坝",1,"秋季彩林"]]},{"p":"河北","c":"沧州","r":"华北","e":"🏞️","s":[["吴桥杂技大世界",1,"杂技之乡"]]},{"p":"河北","c":"石家庄","r":"华北","e":"🏞️","s":[["正定古城",1,"免费城墙隆兴寺"],["赵州桥",1,"古桥史意义大"],["抱犊寨",1,"近郊山景"]]},{"p":"河北","c":"秦皇岛","r":"华北","e":"🏞️","s":[["山海关",1,"天下第一关"],["北戴河",1,"夏季海滨人多价涨"],["鸽子窝公园",1,"观日出"],["阿那亚",1,"孤独图书馆预约难偏贵"]]},{"p":"河北","c":"衡水","r":"华北","e":"🏞️","s":[["衡水湖",1,"观鸟春秋佳"]]},{"p":"河北","c":"邢台","r":"华北","e":"🏞️","s":[["太行大峡谷邢台段",1,"红叶季出片"]]},{"p":"河北","c":"邯郸","r":"华北","e":"🏞️","s":[["娲皇宫",1,"悬崖古建出片"],["广府古城",1,"太极水城"]]},{"p":"河北","c":"雄安新区","r":"华北","e":"🏞️","s":[["雄安郊野公园",1,"新城区生态完善中"]]},{"p":"山西","c":"临汾","r":"华北","e":"🏛️","s":[["壶口瀑布",1,"汛期最震撼"],["洪洞大槐树",1,"寻根祭祖"]]},{"p":"山西","c":"吕梁","r":"华北","e":"🏛️","s":[["碛口古镇",1,"黄河古渡小众"],["庞泉沟",1,"自然保护区"]]},{"p":"山西","c":"大同","r":"华北","e":"🏛️","s":[["云冈石窟",1,"世界遗产必去"],["悬空寺",1,"恐高慎入"],["大同古城墙",1,"夜景好看"],["华严寺",1,"辽金古建"]]},{"p":"山西","c":"太原","r":"华北","e":"🏛️","s":[["晋祠",1,"古建园林必看"],["山西博物院",1,"免费青铜器强"],["汾河公园",1,"城市夜跑"],["纯阳宫",1,"市区小而美"]]},{"p":"山西","c":"忻州","r":"华北","e":"🏛️","s":[["五台山",1,"佛教名山香火旺偏商业"],["雁门关",1,"边塞关隘"]]},{"p":"山西","c":"晋中","r":"华北","e":"🏛️","s":[["平遥古城",1,"世界遗产住城里"],["乔家大院",0,"票贵人多改王家"],["王家大院",1,"规模大相对人少"],["绵山",1,"寒食文化"]]},{"p":"山西","c":"晋城","r":"华北","e":"🏛️","s":[["皇城相府",1,"官居古堡"],["王莽岭",1,"太行云海"]]},{"p":"山西","c":"朔州","r":"华北","e":"🏛️","s":[["应县木塔",1,"最高木塔不可登顶"]]},{"p":"山西","c":"运城","r":"华北","e":"🏛️","s":[["解州关帝庙",1,"武庙之祖"],["永乐宫",1,"壁画国宝"],["盐湖死海",1,"漂浮偏娱乐化"]]},{"p":"山西","c":"长治","r":"华北","e":"🏛️","s":[["太行大峡谷",1,"挂壁公路出片"],["八泉峡",1,"游船峡谷"]]},{"p":"山西","c":"阳泉","r":"华北","e":"🏛️","s":[["娘子关",1,"茶道关隘"]]},{"p":"内蒙古","c":"乌兰察布","r":"华北","e":"🐴","s":[["辉腾锡勒草原",1,"花季火爆"],["黄花沟",1,"山地草原"]]},{"p":"内蒙古","c":"乌海","r":"华北","e":"🐴","s":[["黄河沙漠风光",1,"河沙交汇"]]},{"p":"内蒙古","c":"兴安盟","r":"华北","e":"🐴","s":[["阿尔山",1,"火山温泉秋景绝"],["杜鹃湖",1,"花季限定"]]},{"p":"内蒙古","c":"包头","r":"华北","e":"🐴","s":[["五当召",1,"藏传寺院"],["南海公园",1,"城市湿地"]]},{"p":"内蒙古","c":"呼伦贝尔","r":"华北","e":"🐴","s":[["呼伦贝尔大草原",1,"夏季绿草期"],["莫尔道嘎",1,"原始森林火车"],["满洲里国门",1,"边境打卡"],["恩和民族乡",1,"俄式木屋"]]},{"p":"内蒙古","c":"呼和浩特","r":"华北","e":"🐴","s":[["大召寺",1,"草原古城寺"],["内蒙古博物院",1,"免费恐龙与草原"],["昭君墓",1,"昭君文化"],["希拉穆仁草原",1,"近郊略商业化"]]},{"p":"内蒙古","c":"巴彦淖尔","r":"华北","e":"🐴","s":[["乌梁素海",1,"观鸟湿地"]]},{"p":"内蒙古","c":"赤峰","r":"华北","e":"🐴","s":[["阿斯哈图石林",1,"花岗石林"],["克什克腾地质公园",1,"多样地貌"],["乌兰布统",1,"影视草原"]]},{"p":"内蒙古","c":"通辽","r":"华北","e":"🐴","s":[["大青沟",1,"沙漠绿洲峡谷"]]},{"p":"内蒙古","c":"鄂尔多斯","r":"华北","e":"🐴","s":[["响沙湾",1,"沙漠度假项目另收费多"],["成吉思汗陵",1,"蒙古圣地"],["库布其沙漠",1,"越野星空"]]},{"p":"内蒙古","c":"锡林郭勒盟","r":"华北","e":"🐴","s":[["锡林郭勒草原",1,"那达慕夏季"],["元上都遗址",1,"世界遗产偏考古"]]},{"p":"内蒙古","c":"阿拉善盟","r":"华北","e":"🐴","s":[["额济纳胡杨林",1,"金秋必冲"],["居延海",1,"胡杨季配套"],["腾格里沙漠",1,"露营星空"]]},{"p":"辽宁","c":"丹东","r":"东北","e":"🌊","s":[["鸭绿江断桥",1,"中朝界河"],["抗美援朝纪念馆",1,"免费预约"],["凤凰山",1,"山岳景区"]]},{"p":"辽宁","c":"大连","r":"东北","e":"🌊","s":[["星海广场",1,"海风大地标"],["老虎滩极地馆",1,"亲子票价不低"],["旅顺口",1,"历史军港"],["金石滩",1,"海岸地质"],["俄罗斯风情街",0,"商业空荡可路过"]]},{"p":"辽宁","c":"抚顺","r":"东北","e":"🌊","s":[["清永陵",1,"关外三陵"],["红河峡谷漂流",1,"夏季热门"]]},{"p":"辽宁","c":"朝阳","r":"东北","e":"🌊","s":[["鸟化石地质公园",1,"古生物特色"]]},{"p":"辽宁","c":"本溪","r":"东北","e":"🌊","s":[["本溪水洞",1,"地下长河"],["关门山",1,"红叶著名"]]},{"p":"辽宁","c":"沈阳","r":"东北","e":"🌊","s":[["沈阳故宫",1,"关外皇宫"],["张氏帅府",1,"民国建筑"],["北陵公园",1,"清昭陵"],["中街",0,"纯商业可路过"]]},{"p":"辽宁","c":"盘锦","r":"东北","e":"🌊","s":[["红海滩",1,"秋季赤碱蓬需看季节"],["盘锦湿地",1,"观鸟"]]},{"p":"辽宁","c":"营口","r":"东北","e":"🌊","s":[["月牙湾海滨",1,"夏季浴场"]]},{"p":"辽宁","c":"葫芦岛","r":"东北","e":"🌊","s":[["兴城古城",1,"明清+海滨"],["菊花岛",1,"船班看天气"]]},{"p":"辽宁","c":"辽阳","r":"东北","e":"🌊","s":[["白塔公园",1,"古城地标"]]},{"p":"辽宁","c":"铁岭","r":"东北","e":"🌊","s":[["莲花湖湿地",1,"城市生态"]]},{"p":"辽宁","c":"锦州","r":"东北","e":"🌊","s":[["笔架山",1,"天桥观潮汐"],["辽沈战役纪念馆",1,"红色教育"]]},{"p":"辽宁","c":"阜新","r":"东北","e":"🌊","s":[["海棠山",1,"摩崖造像"]]},{"p":"辽宁","c":"鞍山","r":"东北","e":"🌊","s":[["千山",1,"东北明山"],["玉佛苑",1,"巨型玉佛"]]},{"p":"吉林","c":"吉林市","r":"东北","e":"❄️","s":[["雾凇岛",1,"冬季看天气"],["松花湖",1,"夏游冬滑雪"],["北山公园",1,"庙会文化"]]},{"p":"吉林","c":"四平","r":"东北","e":"❄️","s":[["四平战役纪念馆",1,"红色教育"]]},{"p":"吉林","c":"延边州","r":"东北","e":"❄️","s":[["长白山北坡",1,"天池预约环保车"],["长白山西坡",1,"视角不同人少"],["延吉美食",1,"朝鲜族必吃"]]},{"p":"吉林","c":"松原","r":"东北","e":"❄️","s":[["查干湖",1,"冬捕季火爆"]]},{"p":"吉林","c":"白城","r":"东北","e":"❄️","s":[["莫莫格湿地",1,"观鸟天堂"]]},{"p":"吉林","c":"白山","r":"东北","e":"❄️","s":[["长白山南坡",1,"挑战更大"],["松花江漂流",1,"夏季"]]},{"p":"吉林","c":"辽源","r":"东北","e":"❄️","s":[["寒葱顶国家森林公园",1,"森林"]]},{"p":"吉林","c":"通化","r":"东北","e":"❄️","s":[["集安高句丽遗迹",1,"世界遗产"],["万绿谷",1,"避暑"]]},{"p":"吉林","c":"长春","r":"东北","e":"❄️","s":[["伪满皇宫",1,"历史沉重值得"],["净月潭",1,"森林氧吧"],["长影世纪城",1,"影视亲子"],["南湖公园",1,"市民休闲"]]},{"p":"黑龙江","c":"七台河","r":"东北","e":"🌲","s":[["万宝山",1,"郊游"]]},{"p":"黑龙江","c":"伊春","r":"东北","e":"🌲","s":[["汤旺河林海奇石",1,"森林石林"],["嘉荫恐龙公园",1,"地质特色"]]},{"p":"黑龙江","c":"佳木斯","r":"东北","e":"🌲","s":[["街津口赫哲乡",1,"民族风情"],["同江三江口",1,"江河交汇"]]},{"p":"黑龙江","c":"双鸭山","r":"东北","e":"🌲","s":[["九龙沟",1,"山地森林"]]},{"p":"黑龙江","c":"哈尔滨","r":"东北","e":"🌲","s":[["中央大街",1,"必逛马迭尔"],["索菲亚教堂",1,"夜景更美"],["冰雪大世界",1,"冬季票贵傍晚看灯"],["太阳岛",1,"雪博会季"],["老道外",1,"巴洛克小众"],["伏尔加庄园",0,"票贵人造俄式可删"]]},{"p":"黑龙江","c":"大兴安岭地区","r":"东北","e":"🌲","s":[["漠河北极村",1,"极光看脸夏不眠"],["洛古河源头",1,"黑龙江源"]]},{"p":"黑龙江","c":"大庆","r":"东北","e":"🌲","s":[["铁人王进喜纪念馆",1,"工业遗产"],["龙凤湿地",1,"城市湿地"]]},{"p":"黑龙江","c":"牡丹江","r":"东北","e":"🌲","s":[["镜泊湖",1,"吊水楼夏季"],["雪乡",0,"宰客风险高慎选"],["威虎山",1,"林海雪原"]]},{"p":"黑龙江","c":"绥化","r":"东北","e":"🌲","s":[["北林湿地",1,"城市周边"]]},{"p":"黑龙江","c":"鸡西","r":"东北","e":"🌲","s":[["兴凯湖",1,"界湖日出"]]},{"p":"黑龙江","c":"鹤岗","r":"东北","e":"🌲","s":[["名山旅游区",1,"黑龙江畔"]]},{"p":"黑龙江","c":"黑河","r":"东北","e":"🌲","s":[["瑷珲历史陈列馆",1,"近代史必看"],["中俄风情园",1,"边境风情"]]},{"p":"黑龙江","c":"齐齐哈尔","r":"东北","e":"🌲","s":[["扎龙湿地",1,"丹顶鹤春秋"]]},{"p":"上海","c":"上海","r":"华东","e":"🌃","s":[["外滩",1,"夜景免费王牌"],["东方明珠",0,"票贵不如上海中心（易踩雷）"],["上海中心大厦",1,"顶层观景更现代"],["豫园城隍庙",1,"园林精致小吃挤"],["武康路安福路",1,"海派弄堂出片"],["田子坊",0,"商业化重改武康路"],["迪士尼乐园",1,"早鸟票+APP排项"],["朱家角古镇",1,"近郊水乡半日"]]},{"p":"江苏","c":"南京","r":"华东","e":"🪷","s":[["中山陵",1,"台阶多量力而行"],["夫子庙秦淮河",1,"夜游提前买船票"],["南京博物院",1,"预约展品强"],["明孝陵",1,"世界遗产"],["总统府",1,"近代史密集"],["玄武湖",1,"免费湖景"],["老门东",1,"比夫子庙清净"]]},{"p":"江苏","c":"南通","r":"华东","e":"🪷","s":[["濠河",1,"环河风光"],["狼山",1,"佛教名山"]]},{"p":"江苏","c":"宿迁","r":"华东","e":"🪷","s":[["洪泽湖湿地",1,"生态观光"],["项王故里",1,"楚汉文化"]]},{"p":"江苏","c":"常州","r":"华东","e":"🪷","s":[["恐龙园",1,"亲子向强"],["天宁寺",1,"古刹"]]},{"p":"江苏","c":"徐州","r":"华东","e":"🪷","s":[["云龙湖",1,"城市名片"],["汉文化景区",1,"汉墓兵马俑"],["户部山",1,"古城美食"]]},{"p":"江苏","c":"扬州","r":"华东","e":"🪷","s":[["瘦西湖",1,"春日最美"],["东关街",1,"美食人多"],["个园",1,"四季假山"],["何园",1,"晚清园林"]]},{"p":"江苏","c":"无锡","r":"华东","e":"🪷","s":[["鼋头渚",1,"樱花季需预约"],["灵山胜境",1,"大佛香火商业并存"],["惠山古镇",1,"免费区可逛"],["南长街",1,"运河夜生活"]]},{"p":"江苏","c":"泰州","r":"华东","e":"🪷","s":[["溱湖",1,"湿地麋鹿"],["凤城河",1,"城市夜游"]]},{"p":"江苏","c":"淮安","r":"华东","e":"🪷","s":[["周恩来纪念馆",1,"红色+淮扬"],["河下古镇",1,"小众古巷"]]},{"p":"江苏","c":"盐城","r":"华东","e":"🪷","s":[["中华麋鹿园",1,"生态观兽"],["丹顶鹤保护区",1,"冬季候鸟"]]},{"p":"江苏","c":"苏州","r":"华东","e":"🪷","s":[["拙政园",1,"园林代表早入园"],["狮子林",0,"人挤套路多可删"],["平江路",1,"免费水巷"],["山塘街",0,"夜景商业重"],["寒山寺",1,"夜半钟声"],["虎丘",1,"斜塔票不低"],["周庄",0,"商业化重改同里"],["同里古镇",1,"相对从容"]]},{"p":"江苏","c":"连云港","r":"华东","e":"🪷","s":[["花果山",1,"西游文化"],["连岛",1,"海滨浴场"]]},{"p":"江苏","c":"镇江","r":"华东","e":"🪷","s":[["金山寺",1,"白娘子传说"],["西津渡",1,"古街夜景"],["焦山",1,"江中碑林"]]},{"p":"浙江","c":"丽水","r":"华东","e":"🌸","s":[["古堰画乡",1,"油画古镇"],["云和梯田",1,"云海季"],["遂昌金矿",1,"探洞"]]},{"p":"浙江","c":"台州","r":"华东","e":"🌸","s":[["天台山",1,"天台宗祖庭"],["神仙居",1,"玻璃栈道出片"],["临海古城",1,"江南长城"]]},{"p":"浙江","c":"嘉兴","r":"华东","e":"🌸","s":[["乌镇西栅",0,"夜景值得东栅可省"],["西塘",1,"住一晚更好"],["南湖",1,"红船"]]},{"p":"浙江","c":"宁波","r":"华东","e":"🌸","s":[["天一阁",1,"藏书楼"],["老外滩",1,"夜景餐饮"],["东钱湖",1,"近郊湖"],["溪口雪窦山",1,"蒋氏故里"]]},{"p":"浙江","c":"杭州","r":"华东","e":"🌸","s":[["西湖",1,"免费骑行最浪漫"],["灵隐寺",1,"早去飞来峰另票"],["西溪湿地",1,"芦苇季美"],["宋城",1,"千古情演出为主"],["龙井村",1,"茶园品鉴慎砍价"],["河坊街",0,"游客小吃可路过"],["千岛湖",1,"留一日选正规船"]]},{"p":"浙江","c":"温州","r":"华东","e":"🌸","s":[["雁荡山",1,"灵峰夜景独特"],["楠溪江",1,"古村漂流"],["江心屿",1,"市区江岛"]]},{"p":"浙江","c":"湖州","r":"华东","e":"🌸","s":[["南浔古镇",1,"比乌镇从容"],["莫干山",1,"民宿避暑周末贵"],["太湖度假区",1,"滨湖骑行"]]},{"p":"浙江","c":"绍兴","r":"华东","e":"🌸","s":[["鲁迅故里",1,"免费区多"],["沈园",1,"小而美"],["安昌古镇",1,"腊肠黄酒"],["东湖",1,"乌篷船"]]},{"p":"浙江","c":"舟山","r":"华东","e":"🌸","s":[["普陀山",1,"佛教名山需预约"],["嵊泗列岛",1,"小众海岛"],["东极岛",1,"日出船班看天气"]]},{"p":"浙江","c":"衢州","r":"华东","e":"🌸","s":[["江郎山",1,"三爿石"],["孔氏南宗家庙",1,"儒学南渡"]]},{"p":"浙江","c":"金华","r":"华东","e":"🌸","s":[["横店影视城",1,"亲子影视可删"],["双龙洞",1,"溶洞"],["诸葛八卦村",1,"格局独特"]]},{"p":"安徽","c":"亳州","r":"华东","e":"⛰️","s":[["花戏楼",1,"戏曲砖雕"],["曹操地下运兵道",1,"三国"]]},{"p":"安徽","c":"六安","r":"华东","e":"⛰️","s":[["天堂寨",1,"大别山瀑布"],["大别山主峰",1,"红军+山水"]]},{"p":"安徽","c":"合肥","r":"华东","e":"⛰️","s":[["李鸿章故居",1,"晚清史"],["包公园",1,"包拯文化"],["三河古镇",1,"近郊一日"],["安徽博物院",1,"免费预约"]]},{"p":"安徽","c":"安庆","r":"华东","e":"⛰️","s":[["天柱山",1,"花岗岩奇峰"],["振风塔",1,"长江边"]]},{"p":"安徽","c":"宣城","r":"华东","e":"⛰️","s":[["敬亭山",1,"诗山"],["桃花潭",1,"汪伦送别"],["绩溪龙川",1,"宗祠古村"]]},{"p":"安徽","c":"宿州","r":"华东","e":"⛰️","s":[["皇藏峪",1,"皖北山林"]]},{"p":"安徽","c":"池州","r":"华东","e":"⛰️","s":[["九华山",1,"地藏道场"],["升金湖",1,"候鸟"]]},{"p":"安徽","c":"淮北","r":"华东","e":"⛰️","s":[["隋唐大运河博物馆",1,"新馆值得"]]},{"p":"安徽","c":"淮南","r":"华东","e":"⛰️","s":[["八公山",1,"豆腐文化"]]},{"p":"安徽","c":"滁州","r":"华东","e":"⛰️","s":[["琅琊山醉翁亭",1,"古文经典地"],["凤阳明中都",1,"遗址公园"]]},{"p":"安徽","c":"芜湖","r":"华东","e":"⛰️","s":[["方特",1,"亲子主题"],["鸠兹古镇",1,"夜景灯光"]]},{"p":"安徽","c":"蚌埠","r":"华东","e":"⛰️","s":[["淮河风光带",1,"滨水"]]},{"p":"安徽","c":"铜陵","r":"华东","e":"⛰️","s":[["天井湖",1,"城市湖景"]]},{"p":"安徽","c":"阜阳","r":"华东","e":"⛰️","s":[["颍州西湖",1,"湿地"]]},{"p":"安徽","c":"马鞍山","r":"华东","e":"⛰️","s":[["采石矶",1,"李白足迹"],["李白纪念馆",1,"诗酒文化"]]},{"p":"安徽","c":"黄山","r":"华东","e":"⛰️","s":[["黄山风景区",1,"早入山防滑索道排队久"],["宏村",1,"早进村人少"],["西递",1,"比宏村少商业"],["屯溪老街",0,"小吃商业短暂逛"],["呈坎",1,"八卦村小众"]]},{"p":"福建","c":"三明","r":"华东","e":"🏝️","s":[["泰宁大金湖",1,"丹霞游船"],["格氏栲",1,"森林"]]},{"p":"福建","c":"南平","r":"华东","e":"🏝️","s":[["武夷山",1,"九曲溪竹筏必做"],["大红袍景区",1,"茶文化"]]},{"p":"福建","c":"厦门","r":"华东","e":"🏝️","s":[["鼓浪屿",1,"船票预约步行岛"],["曾厝垵",1,"文创海风"],["环岛路",1,"骑行出片"],["南普陀寺",1,"香火旺"],["厦大",1,"校园需预约"],["中山路",0,"商业街可短暂"]]},{"p":"福建","c":"宁德","r":"华东","e":"🏝️","s":[["太姥山",1,"花岗岩峰林"],["三都澳",1,"海湾"]]},{"p":"福建","c":"泉州","r":"华东","e":"🏝️","s":[["开元寺",1,"东西塔"],["西街",1,"烟火气"],["清净寺",1,"海上丝路"],["崇武古城",1,"海防石城"]]},{"p":"福建","c":"漳州","r":"华东","e":"🏝️","s":[["土楼南靖云水谣",1,"世遗土楼"],["东山岛",1,"海岛"],["火山岛",1,"地质"]]},{"p":"福建","c":"福州","r":"华东","e":"🏝️","s":[["三坊七巷",1,"免费古坊巷"],["鼓山",1,"近郊登山"],["西湖公园",1,"市民休闲"],["平潭岛",1,"海蚀奇观需专程"]]},{"p":"福建","c":"莆田","r":"华东","e":"🏝️","s":[["湄洲岛",1,"妈祖祖庙"]]},{"p":"福建","c":"龙岩","r":"华东","e":"🏝️","s":[["永定土楼",1,"世遗"],["古田会议旧址",1,"红色"]]},{"p":"江西","c":"上饶","r":"华东","e":"🏯","s":[["三清山",1,"花岗岩峰林世遗"],["婺源",1,"油菜花春季爆火人多"],["龟峰",1,"丹霞"]]},{"p":"江西","c":"九江","r":"华东","e":"🏯","s":[["庐山",1,"避暑名山索道分区"],["鄱阳湖",1,"候鸟冬季"],["庐山恋电影院",1,"情怀打卡"]]},{"p":"江西","c":"南昌","r":"华东","e":"🏯","s":[["滕王阁",1,"名楼需登阁票"],["秋水广场",1,"夜景喷泉免费"],["八一起义纪念馆",1,"红色免费"]]},{"p":"江西","c":"吉安","r":"华东","e":"🏯","s":[["井冈山",1,"红色+山水"],["渼陂古村",1,"古村"]]},{"p":"江西","c":"宜春","r":"华东","e":"🏯","s":[["明月山",1,"温泉山水"],["温汤镇",1,"富硒温泉"]]},{"p":"江西","c":"抚州","r":"华东","e":"🏯","s":[["大觉山",1,"漂流"],["汤显祖纪念馆一带",1,"戏曲文化"]]},{"p":"江西","c":"新余","r":"华东","e":"🏯","s":[["仙女湖",1,"湖岛"]]},{"p":"江西","c":"景德镇","r":"华东","e":"🏯","s":[["古窑民俗博览区",1,"陶瓷活态"],["陶溪川",1,"文创夜市"],["御窑博物馆",1,"新馆值得"]]},{"p":"江西","c":"萍乡","r":"华东","e":"🏯","s":[["武功山",1,"云海草地露营热"]]},{"p":"江西","c":"赣州","r":"华东","e":"🏯","s":[["通天岩",1,"石窟"],["郁孤台",1,"宋城文化"]]},{"p":"江西","c":"鹰潭","r":"华东","e":"🏯","s":[["龙虎山",1,"丹霞道都竹筏"]]},{"p":"山东","c":"东营","r":"华东","e":"🌊","s":[["黄河入海口",1,"湿地观鸟需专线"]]},{"p":"山东","c":"临沂","r":"华东","e":"🌊","s":[["蒙山",1,"沂蒙山水"],["竹泉村",1,"古村"]]},{"p":"山东","c":"威海","r":"华东","e":"🌊","s":[["刘公岛",1,"甲午海战史"],["成山头",1,"天尽头"],["那香海",1,"海滨"]]},{"p":"山东","c":"德州","r":"华东","e":"🌊","s":[["苏禄王墓",1,"海上丝路遗迹"]]},{"p":"山东","c":"日照","r":"华东","e":"🌊","s":[["万平口",1,"免费海滩"],["灯塔风景区",1,"日出"]]},{"p":"山东","c":"枣庄","r":"华东","e":"🌊","s":[["台儿庄古城",1,"运河古城夜景"],["抱犊崮",1,"山岳"]]},{"p":"山东","c":"泰安","r":"华东","e":"🌊","s":[["泰山",1,"夜爬看日出经典"],["岱庙",1,"山下必配"]]},{"p":"山东","c":"济南","r":"华东","e":"🌊","s":[["趵突泉",1,"泉水代表"],["大明湖",1,"荷花季"],["芙蓉街",0,"小吃卫生一般可短暂"],["千佛山",1,"近郊山"],["宽厚里",1,"夜生活"]]},{"p":"山东","c":"济宁","r":"华东","e":"🌊","s":[["曲阜三孔",1,"孔庙孔府孔林"],["微山湖",1,"荷花湿地"]]},{"p":"山东","c":"淄博","r":"华东","e":"🌊","s":[["周村古商城",1,"旱码头"],["博山陶瓷琉璃",1,"传统工艺"],["聊斋城",1,"蒲松龄文化"]]},{"p":"山东","c":"滨州","r":"华东","e":"🌊","s":[["魏氏庄园",1,"古庄园"]]},{"p":"山东","c":"潍坊","r":"华东","e":"🌊","s":[["杨家埠",1,"年画风筝"],["青州古城",1,"古城"]]},{"p":"山东","c":"烟台","r":"华东","e":"🌊","s":[["蓬莱阁",1,"海市蜃楼传说"],["长岛",1,"海岛需船"],["张裕酒文化博物馆",1,"葡萄酒"]]},{"p":"山东","c":"聊城","r":"华东","e":"🌊","s":[["东昌湖",1,"江北水城"],["山陕会馆",1,"古建"]]},{"p":"山东","c":"菏泽","r":"华东","e":"🌊","s":[["曹州牡丹园",1,"花季限定爆火"]]},{"p":"山东","c":"青岛","r":"华东","e":"🌊","s":[["栈桥",1,"经典海滨"],["八大关",1,"慢走别墅区"],["崂山",1,"留半天以上"],["啤酒博物馆",1,"青岛啤酒文化"],["信号山",1,"俯瞰夜景"],["第一海水浴场",0,"人多水质一般改二浴"]]},{"p":"河南","c":"三门峡","r":"华北","e":"🏯","s":[["函谷关",1,"老子出关"],["天鹅湖",1,"冬候鸟"]]},{"p":"河南","c":"信阳","r":"华北","e":"🏯","s":[["南湾湖",1,"茶岛"],["鸡公山",1,"避暑建筑群"]]},{"p":"河南","c":"南阳","r":"华北","e":"🏯","s":[["武侯祠",1,"躬耕地"],["老界岭",1,"避暑"]]},{"p":"河南","c":"周口","r":"华北","e":"🏯","s":[["太昊陵",1,"人祖祭典"],["老子故里鹿邑",1,"道家"]]},{"p":"河南","c":"商丘","r":"华北","e":"🏯","s":[["商丘古城",1,"应天书院"],["芒砀山",1,"汉梁王墓"]]},{"p":"河南","c":"安阳","r":"华北","e":"🏯","s":[["殷墟",1,"甲骨文遗址世界遗产"],["红旗渠",1,"人工天河精神"]]},{"p":"河南","c":"平顶山","r":"华北","e":"🏯","s":[["尧山",1,"山地风景"],["香山寺",1,"观音文化"]]},{"p":"河南","c":"开封","r":"华北","e":"🏯","s":[["清明上河园",1,"夜演大宋东京"],["开封府",1,"包公文化"],["鼓楼夜市",1,"小吃集中注意卫生"],["铁塔公园",1,"北宋铁塔"]]},{"p":"河南","c":"新乡","r":"华北","e":"🏯","s":[["八里沟",1,"太行峡谷"],["关山地质公园",1,"峰林"]]},{"p":"河南","c":"洛阳","r":"华北","e":"🏯","s":[["龙门石窟",1,"世界遗产必去"],["白马寺",1,"释源"],["应天门",1,"夜景灯光"],["老君山",1,"金顶云海需一日"],["洛邑古城",1,"夜景出片"]]},{"p":"河南","c":"济源","r":"华北","e":"🏯","s":[["王屋山",1,"愚公移山"],["小浪底",1,"水利风光"]]},{"p":"河南","c":"漯河","r":"华北","e":"🏯","s":[["沙澧河风景区",1,"城市滨水"]]},{"p":"河南","c":"濮阳","r":"华北","e":"🏯","s":[["戚城文物景区",1,"历史"]]},{"p":"河南","c":"焦作","r":"华北","e":"🏯","s":[["云台山",1,"北方峡谷代表票价不低"],["青天河",1,"小众替代"]]},{"p":"河南","c":"许昌","r":"华北","e":"🏯","s":[["曹魏古城",1,"三国"],["花木兰故里一带",1,"文化"]]},{"p":"河南","c":"郑州","r":"华北","e":"🏯","s":[["少林寺",1,"嵩山一日线经典，景区商业化注意"],["河南博物院",1,"免费预约强"],["二七塔",1,"地标"],["嵩山少室",1,"与少林同游"]]},{"p":"河南","c":"驻马店","r":"华北","e":"🏯","s":[["嵖岈山",1,"西游取景"],["金顶山",1,"山地"]]},{"p":"河南","c":"鹤壁","r":"华北","e":"🏯","s":[["淇河",1,"南极村风情"]]},{"p":"湖北","c":"十堰","r":"华中","e":"🌉","s":[["武当山",1,"道教名山金顶"],["丹江口",1,"南水北调源头风光"]]},{"p":"湖北","c":"咸宁","r":"华中","e":"🌉","s":[["三国赤壁",1,"武赤壁"],["温泉",1,"温泉小镇"]]},{"p":"湖北","c":"孝感","r":"华中","e":"🌉","s":[["双峰山",1,"山地"],["董永公园",1,"孝文化"]]},{"p":"湖北","c":"宜昌","r":"华中","e":"🌉","s":[["三峡大坝",1,"预约参观"],["三峡人家",1,"峡江风情"],["屈原故里",1,"文化"]]},{"p":"湖北","c":"恩施州","r":"华中","e":"🌉","s":[["恩施大峡谷",1,"石英砂峰墙"],["腾龙洞",1,"溶洞"],["坪坝营",1,"避暑"]]},{"p":"湖北","c":"武汉","r":"华中","e":"🌉","s":[["黄鹤楼",1,"名楼必登"],["东湖",1,"绿道骑行免费感强"],["户部巷",0,"游客小吃卫生一般（易踩雷）"],["湖北省博",1,"编钟越王剑必看"],["汉口江滩",1,"夜跑江景"],["晴川阁",1,"与黄鹤楼隔江"],["黎黄陂路",1,"历史建筑"]]},{"p":"湖北","c":"荆州","r":"华中","e":"🌉","s":[["荆州古城墙",1,"完好古城"],["博物馆",1,"越王剑相关展"]]},{"p":"湖北","c":"荆门","r":"华中","e":"🌉","s":[["明显陵",1,"世遗帝陵"],["漳河",1,"水库风光"]]},{"p":"湖北","c":"襄阳","r":"华中","e":"🌉","s":[["襄阳古城",1,"城墙夜景"],["古隆中",1,"三国"]]},{"p":"湖北","c":"鄂州","r":"华中","e":"🌉","s":[["西山",1,"城市山"]]},{"p":"湖北","c":"随州","r":"华中","e":"🌉","s":[["炎帝故里",1,"寻根"],["曾侯乙墓遗址相关",1,"编钟出处地文化"]]},{"p":"湖北","c":"黄冈","r":"华中","e":"🌉","s":[["东坡赤壁",1,"文赤壁"],["武穴长江风光",1,"滨江"]]},{"p":"湖北","c":"黄石","r":"华中","e":"🌉","s":[["矿山公园",1,"工业遗产"]]},{"p":"湖南","c":"娄底","r":"湖南","e":"🌶️","s":[["湄江",1,"丹霞"],["曾国藩故居",1,"历史"]]},{"p":"湖南","c":"岳阳","r":"湖南","e":"🌶️","s":[["岳阳楼",1,"名楼洞庭"],["君山岛",1,"湘妃文化"],["东洞庭湖",1,"候鸟"]]},{"p":"湖南","c":"常德","r":"湖南","e":"🌶️","s":[["桃花源",1,"陶渊明意境"],["柳叶湖",1,"城市湖"]]},{"p":"湖南","c":"张家界","r":"湖南","e":"🌶️","s":[["武陵源森林公园",1,"核心必去预约助手小程序"],["天门山",1,"玻璃栈道西线经典"],["大峡谷玻璃桥",1,"票价不低可按兴趣"],["黄龙洞",1,"溶洞"],["凤凰古城可联线",1,"见湘西"]]},{"p":"湖南","c":"怀化","r":"湖南","e":"🌶️","s":[["黔阳古城",1,"小众古城"],["通道皇都侗寨",1,"侗文化"]]},{"p":"湖南","c":"株洲","r":"湖南","e":"🌶️","s":[["炎帝陵",1,"寻根"],["神农城",1,"城市文旅"]]},{"p":"湖南","c":"永州","r":"湖南","e":"🌶️","s":[["阳明山",1,"山地避暑"],["柳子庙",1,"柳宗元文化"],["东安舜皇山",1,"森林"]]},{"p":"湖南","c":"湘潭","r":"湖南","e":"🌶️","s":[["韶山",1,"毛主席故里红色"],["彭德怀纪念馆",1,"红色"]]},{"p":"湖南","c":"湘西州","r":"湖南","e":"🌶️","s":[["凤凰古城",1,"夜景江边少进店"],["芙蓉镇",1,"挂壁小镇"],["矮寨奇观",1,"德夯+大桥"],["边城茶峒",1,"沈从文意境"]]},{"p":"湖南","c":"益阳","r":"湖南","e":"🌶️","s":[["安化茶马古道",1,"黑茶"],["花乡农家",1,"乡村"]]},{"p":"湖南","c":"衡阳","r":"湖南","e":"🌶️","s":[["衡山",1,"南岳祝融峰"],["东洲岛",1,"城市"]]},{"p":"湖南","c":"邵阳","r":"湖南","e":"🌶️","s":[["崀山",1,"丹霞世遗"],["武冈城墙",1,"古城"]]},{"p":"湖南","c":"郴州","r":"湖南","e":"🌶️","s":[["东江湖",1,"雾漫小东江清晨"],["莽山",1,"森林"]]},{"p":"湖南","c":"长沙","r":"湖南","e":"🌶️","s":[["岳麓山岳麓书院",1,"南门去书院东门索道"],["橘子洲",1,"观光车学生半价"],["湖南省博",1,"马王堆周一闭馆需预约"],["IFS七楼露台",1,"搜7号门免费"],["杜甫江阁",1,"夜景登阁需预约"],["坡子街",1,"美食"],["文和友",0,"排队久走海信电梯可免部分队"]]},{"p":"广东","c":"东莞","r":"华南","e":"🌴","s":[["华为松山湖",1,"园区预约"],["鸦片战争博物馆",1,"虎门"]]},{"p":"广东","c":"中山","r":"华南","e":"🌴","s":[["孙中山故居",1,"历史"],["岐江公园",1,"工业改造"]]},{"p":"广东","c":"云浮","r":"华南","e":"🌴","s":[["新兴国恩寺",1,"禅宗六祖"]]},{"p":"广东","c":"佛山","r":"华南","e":"🌴","s":[["祖庙",1,"黄飞鸿文化"],["岭南天地",1,"文创美食"],["西樵山",1,"山地"]]},{"p":"广东","c":"广州","r":"华南","e":"🌴","s":[["广州塔",1,"夜景地标"],["陈家祠",1,"岭南建筑"],["沙面",1,"免费漫步"],["珠江夜游",1,"选正规船"],["永庆坊",1,"粤剧+文创"],["白云山",1,"市民登山"],["北京路",0,"纯购物可短暂"]]},{"p":"广东","c":"惠州","r":"华南","e":"🌴","s":[["双月湾",1,"海滨"],["罗浮山",1,"道教名山"],["西湖",1,"城市"]]},{"p":"广东","c":"揭阳","r":"华南","e":"🌴","s":[["揭阳楼",1,"新地标"],["黄岐山",1,"登山"]]},{"p":"广东","c":"梅州","r":"华南","e":"🌴","s":[["客天下",1,"客家文化园"],["雁南飞",1,"茶田"]]},{"p":"广东","c":"汕头","r":"华南","e":"🌴","s":[["南澳岛",1,"海岛骑行"],["小公园开埠区",1,"骑楼"]]},{"p":"广东","c":"汕尾","r":"华南","e":"🌴","s":[["红海湾",1,"海滨"],["凤山祖庙",1,"玄武山"]]},{"p":"广东","c":"江门","r":"华南","e":"🌴","s":[["开平碉楼",1,"世遗"],["上下川岛",1,"海岛"]]},{"p":"广东","c":"河源","r":"华南","e":"🌴","s":[["万绿湖",1,"水质优良"],["叶园",1,"客家"]]},{"p":"广东","c":"深圳","r":"华南","e":"🌴","s":[["世界之窗",0,"人造微缩票贵可删"],["欢乐谷",1,"亲子"],["大梅沙",1,"海滨人多"],["莲花山",1,"小平像免费"],["华侨城创意园",1,"文创"],["较场尾",1,"民宿海风"]]},{"p":"广东","c":"清远","r":"华南","e":"🌴","s":[["连州地下河",1,"溶洞"],["黄腾峡",1,"漂流夏季热"]]},{"p":"广东","c":"湛江","r":"华南","e":"🌴","s":[["东海岛",1,"海滩"],["湖光岩",1,"火山湖"]]},{"p":"广东","c":"潮州","r":"华南","e":"🌴","s":[["广济桥",1,"湘子桥"],["牌坊街",1,"美食古城"],["韩文公祠",1,"韩愈"]]},{"p":"广东","c":"珠海","r":"华南","e":"🌴","s":[["长隆海洋王国",1,"亲子强"],["情侣路",1,"海滨骑行"],["外伶仃岛",1,"海岛"]]},{"p":"广东","c":"肇庆","r":"华南","e":"🌴","s":[["鼎湖山",1,"氧吧"],["七星岩",1,"城中喀斯特"]]},{"p":"广东","c":"茂名","r":"华南","e":"🌴","s":[["放鸡岛",1,"浮潜"],["中国第一滩",1,"海滨"]]},{"p":"广东","c":"阳江","r":"华南","e":"🌴","s":[["海陵岛",1,"十里银滩"],["闸坡",1,"海滨"]]},{"p":"广东","c":"韶关","r":"华南","e":"🌴","s":[["丹霞山",1,"世界地质公园"],["南华寺",1,"禅宗"]]},{"p":"广西","c":"北海","r":"华南","e":"🛶","s":[["银滩",1,"免费海滩人多"],["涠洲岛",1,"火山岛需船班"],["老街",1,"骑楼"]]},{"p":"广西","c":"南宁","r":"华南","e":"🛶","s":[["青秀山",1,"城市绿肺"],["南湖",1,"夜景"],["三街两巷",1,"古城美食"]]},{"p":"广西","c":"崇左","r":"华南","e":"🛶","s":[["德天跨国瀑布",1,"中越瀑布气势"],["明仕田园",1,"漓江替代感"]]},{"p":"广西","c":"来宾","r":"华南","e":"🛶","s":[["金秀大瑶山",1,"瑶族风情"]]},{"p":"广西","c":"柳州","r":"华南","e":"🛶","s":[["龙潭公园",1,"喀斯特城中"],["工业博物馆",1,"螺蛳粉文化旁"],["程阳侗寨可改三江",1,"见三江"]]},{"p":"广西","c":"桂林","r":"华南","e":"🛶","s":[["漓江竹筏",1,"杨堤到兴坪性价比高"],["两江四湖",1,"夜游"],["象鼻山",1,"城徽"],["银子岩",1,"溶洞"],["龙脊梯田",1,"龙胜需一日"]]},{"p":"广西","c":"梧州","r":"华南","e":"🛶","s":[["骑楼城",1,"老城"],["龙母庙",1,"民俗"]]},{"p":"广西","c":"河池","r":"华南","e":"🛶","s":[["巴马",1,"长寿乡偏康养"],["刘三姐故里宜州",1,"民歌"]]},{"p":"广西","c":"玉林","r":"华南","e":"🛶","s":[["云天文化城",0,"争议人造景观慎入"],["佛子山",1,"山水"]]},{"p":"广西","c":"百色","r":"华南","e":"🛶","s":[["靖西通灵大峡谷",1,"峡谷瀑布"],["起义纪念馆",1,"红色"]]},{"p":"广西","c":"贵港","r":"华南","e":"🛶","s":[["平天山",1,"山地"]]},{"p":"广西","c":"贺州","r":"华南","e":"🛶","s":[["黄姚古镇",1,"小众古镇质感好"],["姑婆山",1,"森林"]]},{"p":"广西","c":"钦州","r":"华南","e":"🛶","s":[["三娘湾",1,"中华白海豚看缘分"]]},{"p":"广西","c":"防城港","r":"华南","e":"🛶","s":[["白浪滩",1,"海滨"],["江山半岛",1,"海岸"]]},{"p":"海南","c":"万宁","r":"华南","e":"🏖️","s":[["石梅湾",1,"冲浪"],["兴隆热带植物园",1,"热带"]]},{"p":"海南","c":"三亚","r":"华南","e":"🏖️","s":[["亚龙湾",1,"水质好偏度假贵"],["蜈支洲岛",1,"票含船水上项目另计"],["天涯海角",0,"商业打卡意义大于风景（易踩雷）"],["椰梦长廊",1,"免费骑行"],["呀诺达",1,"雨林"],["免税城",1,"购物"]]},{"p":"海南","c":"三沙","r":"华南","e":"🏖️","s":[["永兴岛等",1,"需特殊手续一般游客难达"]]},{"p":"海南","c":"东方","r":"华南","e":"🏖️","s":[["鱼鳞洲",1,"海岸"]]},{"p":"海南","c":"临高","r":"华南","e":"🏖️","s":[["临高角",1,"解放公园"]]},{"p":"海南","c":"乐东","r":"华南","e":"🏖️","s":[["尖峰岭",1,"热带雨林核心"]]},{"p":"海南","c":"保亭","r":"华南","e":"🏖️","s":[["槟榔谷",1,"非遗黎苗"],["七仙岭",1,"温泉"]]},{"p":"海南","c":"儋州","r":"华南","e":"🏖️","s":[["东坡书院",1,"贬谪文化"],["光村银滩",1,"小众海"]]},{"p":"海南","c":"定安","r":"华南","e":"🏖️","s":[["南丽湖",1,"淡水湖"]]},{"p":"海南","c":"屯昌","r":"华南","e":"🏖️","s":[["木色湖",1,"郊游"]]},{"p":"海南","c":"文昌","r":"华南","e":"🏖️","s":[["东郊椰林",1,"椰海"],["铜鼓岭",1,"海岸"]]},{"p":"海南","c":"昌江","r":"华南","e":"🏖️","s":[["霸王岭",1,"雨林徒步"]]},{"p":"海南","c":"海口","r":"华南","e":"🏖️","s":[["骑楼老街",1,"免费漫步"],["假日海滩",1,"市区海滨"],["火山口公园",1,"地质"],["海南省博",1,"免费"]]},{"p":"海南","c":"澄迈","r":"华南","e":"🏖️","s":[["福山咖啡文化镇",1,"咖啡"]]},{"p":"海南","c":"琼中","r":"华南","e":"🏖️","s":[["百花岭",1,"瀑布森林"]]},{"p":"海南","c":"琼海","r":"华南","e":"🏖️","s":[["博鳌亚洲论坛永久会址",1,"可参观区域"],["潭门镇",1,"海鲜"]]},{"p":"海南","c":"白沙","r":"华南","e":"🏖️","s":[["邦溪保护区",1,"生态"]]},{"p":"海南","c":"陵水","r":"华南","e":"🏖️","s":[["分界洲岛",1,"浮潜票含船"],["清水湾",1,"海滨"]]},{"p":"重庆","c":"重庆","r":"西南","e":"🏙️","s":[["洪崖洞",1,"必看夜景白天普通"],["李子坝轻轨穿楼",1,"2号线免费早去"],["解放碑",0,"纯购物可路过"],["磁器口古镇",0,"商业化重小吃一般"],["鹅岭二厂",1,"文创拍照"],["武隆天生三桥",1,"阿凡达取景一日"],["仙女山",1,"草原避暑冬可玩雪"],["长江索道",1,"过江夜景更美"],["大足石刻",1,"世界遗产需专程"],["白公馆渣滓洞",1,"红色教育"]]},{"p":"四川","c":"乐山","r":"西南","e":"🐼","s":[["乐山大佛",1,"船上看性价比高"],["峨眉山",1,"金顶云海需两日"],["嘉定坊",1,"夜景"]]},{"p":"四川","c":"内江","r":"西南","e":"🐼","s":[["张大千纪念馆",1,"书画"]]},{"p":"四川","c":"凉山州","r":"西南","e":"🐼","s":[["邛海",1,"西昌湖景"],["泸沽湖四川侧",1,"女儿国风情"],["螺髻山",1,"温泉"]]},{"p":"四川","c":"南充","r":"西南","e":"🐼","s":[["阆中古城",1,"风水古城住一晚"],["朱德故居",1,"仪陇红色"]]},{"p":"四川","c":"宜宾","r":"西南","e":"🐼","s":[["兴文石海",1,"喀斯特"],["蜀南竹海",1,"竹海骑行"],["李庄古镇",1,"抗战文化"]]},{"p":"四川","c":"巴中","r":"西南","e":"🐼","s":[["光雾山",1,"红叶季"],["恩阳古镇",1,"古镇"]]},{"p":"四川","c":"广元","r":"西南","e":"🐼","s":[["剑门关",1,"蜀道难"],["翠云廊",1,"古柏"]]},{"p":"四川","c":"广安","r":"西南","e":"🐼","s":[["邓小平故里",1,"红色"]]},{"p":"四川","c":"德阳","r":"西南","e":"🐼","s":[["三星堆博物馆",1,"必预约国宝"],["绵竹年画村",1,"年画"]]},{"p":"四川","c":"成都","r":"西南","e":"🐼","s":[["熊猫基地",1,"越早越好下午不活跃"],["宽窄巷子",0,"商业重改玉林奎星楼"],["锦里",0,"小吃看看就好（易踩雷）"],["武侯祠",1,"三国"],["杜甫草堂",1,"诗圣"],["都江堰",1,"半日够"],["青城山",1,"与都江堰联线"],["成都博物馆",1,"免费预约"],["春熙路太古里",1,"IFS爬墙熊猫出片"]]},{"p":"四川","c":"攀枝花","r":"西南","e":"🐼","s":[["二滩",1,"金沙江风光"],["格萨拉",1,"彝区风光"]]},{"p":"四川","c":"泸州","r":"西南","e":"🐼","s":[["泸州老窖旅游区",1,"白酒文化"],["尧坝古镇",1,"古镇"]]},{"p":"四川","c":"甘孜州","r":"西南","e":"🐼","s":[["稻城亚丁",1,"高原需适应"],["海螺沟",1,"低海拔冰川"],["新都桥",1,"光影天堂"],["墨石公园",1,"丹巴附近"],["丹巴藏寨",1,"甲居"],["塔公草原",1,"雅拉雪山"]]},{"p":"四川","c":"眉山","r":"西南","e":"🐼","s":[["三苏祠",1,"苏东坡"],["瓦屋山",1,"山地"]]},{"p":"四川","c":"绵阳","r":"西南","e":"🐼","s":[["北川羌城",1,"震后新城+老县城纪念"],["李白故居",1,"江油"]]},{"p":"四川","c":"自贡","r":"西南","e":"🐼","s":[["恐龙博物馆",1,"恐龙之乡"],["彩灯博物馆",1,"灯会季"]]},{"p":"四川","c":"资阳","r":"西南","e":"🐼","s":[["安岳石刻",1,"小众石刻精品"]]},{"p":"四川","c":"达州","r":"西南","e":"🐼","s":[["巴山大峡谷",1,"峡谷"]]},{"p":"四川","c":"遂宁","r":"西南","e":"🐼","s":[["死海",1,"漂浮娱乐"],["灵泉寺",1,"佛教"]]},{"p":"四川","c":"阿坝州","r":"西南","e":"🐼","s":[["九寨沟",1,"必预约限流"],["黄龙",1,"钙化彩池"],["四姑娘山",1,"徒步登山"],["达古冰川",1,"索道冰川"],["若尔盖草原",1,"花湖"],["马尔康松岗",1,"藏寨"]]},{"p":"四川","c":"雅安","r":"西南","e":"🐼","s":[["碧峰峡",1,"熊猫基地外放"],["喇叭河",1,"看野生动物"],["蒙顶山",1,"茶文化"]]},{"p":"贵州","c":"六盘水","r":"西南","e":"💧","s":[["乌蒙大草原",1,"高海拔草原"]]},{"p":"贵州","c":"安顺","r":"西南","e":"💧","s":[["黄果树瀑布",1,"穿防滑鞋水量看季节"],["龙宫",1,"溶洞游船"],["屯堡天龙",1,"屯堡文化"]]},{"p":"贵州","c":"毕节","r":"西南","e":"💧","s":[["织金洞",1,"溶洞王者"],["百里杜鹃",1,"花季限定"],["草海",1,"威宁观鸟"]]},{"p":"贵州","c":"贵阳","r":"西南","e":"💧","s":[["甲秀楼",1,"城市地标"],["青岩古镇",1,"近郊"],["黔灵山",1,"野生猕猴注意防抢"],["花溪公园",1,"城市休闲"]]},{"p":"贵州","c":"遵义","r":"西南","e":"💧","s":[["遵义会议会址",1,"红色必看"],["赤水丹霞",1,"瀑布群"],["茅台镇",1,"酱酒需预约管控"]]},{"p":"贵州","c":"铜仁","r":"西南","e":"💧","s":[["梵净山",1,"世遗红云金顶预约"],["镇远古镇",1,"舞阳河"]]},{"p":"贵州","c":"黔东南州","r":"西南","e":"💧","s":[["西江千户苗寨",1,"夜景美注意商业"],["肇兴侗寨",1,"鼓楼大歌"],["镇远联线",1,"见铜仁"],["凯里民族博物馆",1,"文化"]]},{"p":"贵州","c":"黔南州","r":"西南","e":"💧","s":[["荔波小七孔",1,"经典留足一天"],["大七孔",1,"可联线"],["平塘天眼景区",1,"外观科普"]]},{"p":"贵州","c":"黔西南州","r":"西南","e":"💧","s":[["万峰林",1,"喀斯特田园"],["马岭河峡谷",1,"地缝"]]},{"p":"云南","c":"临沧","r":"西南","e":"🏔️","s":[["翁丁佤寨",1,"原始部落风貌"],["勐库",1,"茶山"]]},{"p":"云南","c":"丽江","r":"西南","e":"🏔️","s":[["丽江古城",0,"商业化重晚上逛更好"],["束河古镇",0,"类似古城偏商业（易踩雷）"],["玉龙雪山",1,"吸氧防晒高反"],["蓝月谷",1,"雪山配套"],["白沙古镇",1,"人少见雪山"],["泸沽湖",1,"环湖需时"]]},{"p":"云南","c":"保山","r":"西南","e":"🏔️","s":[["腾冲热海",1,"地热"],["和顺古镇",1,"侨乡质感好"],["火山地质公园",1,"火山锥"]]},{"p":"云南","c":"大理州","r":"西南","e":"🏔️","s":[["大理古城",0,"别住古城里商业重"],["洱海",1,"生态环保骑行/包车"],["喜洲古镇",1,"扎染白族"],["双廊",0,"人多客栈贵可路过"],["苍山",1,"索道云海"],["龙龛码头S弯",1,"海西出片"]]},{"p":"云南","c":"德宏州","r":"西南","e":"🏔️","s":[["勐焕大金塔",1,"芒市"],["一寨两国",1,"瑞丽边境"]]},{"p":"云南","c":"怒江州","r":"西南","e":"🏔️","s":[["虎跳峡可跨区",1,"徒步经典"],["丙中洛",1,"桃花季人少质感"],["石月亮",1,"峡谷奇观"]]},{"p":"云南","c":"文山州","r":"西南","e":"🏔️","s":[["普者黑",1,"荷花舟楫"],["坝美",1,"世外桃源船进"]]},{"p":"云南","c":"昆明","r":"西南","e":"🏔️","s":[["滇池",1,"海洪湿地更好"],["石林",1,"喀斯特经典"],["斗南花市",1,"晚市买花便宜"],["翠湖",1,"红嘴鸥冬季"],["云南省博",1,"免费"]]},{"p":"云南","c":"昭通","r":"西南","e":"🏔️","s":[["大山包",1,"黑颈鹤冬季"]]},{"p":"云南","c":"普洱","r":"西南","e":"🏔️","s":[["茶马古道景区",1,"普洱茶"],["那柯里",1,"古镇"]]},{"p":"云南","c":"曲靖","r":"西南","e":"🏔️","s":[["彩色沙林",1,"沙雕地貌"],["珠江源",1,"寻源"]]},{"p":"云南","c":"楚雄","r":"西南","e":"🏔️","s":[["彝人古镇",1,"夜景商业"],["元谋土林",1,"地貌"]]},{"p":"云南","c":"玉溪","r":"西南","e":"🏔️","s":[["抚仙湖",1,"深水湖水质好"],["哀牢山",1,"云海"]]},{"p":"云南","c":"红河州","r":"西南","e":"🏔️","s":[["建水古城",1,"文庙学政考棚"],["元阳梯田",1,"日出云海必看季"],["弥勒",1,"温泉酒庄"]]},{"p":"云南","c":"西双版纳州","r":"西南","e":"🏔️","s":[["中科院植物园",1,"热带植物强"],["野象谷",1,"看象看缘分"],["傣族园",1,"泼水商业化重"],["星光夜市",1,"美食"]]},{"p":"云南","c":"迪庆州","r":"西南","e":"🏔️","s":[["香格里拉独克宗",1,"古城供氧酒店"],["松赞林寺",1,"小布达拉"],["普达措",1,"高原湿地"],["梅里雪山",1,"转经看日照金山"],["虎跳峡",1,"徒步"]]},{"p":"西藏","c":"山南","r":"西南","e":"🛕","s":[["雍布拉康",1,"首座宫殿"],["羊卓雍错",1,"拉萨一日经典"],["桑耶寺",1,"首座寺院"]]},{"p":"西藏","c":"拉萨","r":"西南","e":"🛕","s":[["布达拉宫",1,"务必提前很久预约"],["大昭寺",1,"八廓街转经"],["八廓街",1,"顺时针缓慢适应"],["色拉寺",1,"辩经"],["纳木错",1,"高反明显量力"]]},{"p":"西藏","c":"日喀则","r":"西南","e":"🛕","s":[["扎什伦布寺",1,"班禅驻锡"],["珠峰大本营",1,"需边防证高反强"],["萨迦寺",1,"花寺"]]},{"p":"西藏","c":"昌都","r":"西南","e":"🛕","s":[["强巴林寺",1,"康区重镇"],["然乌湖",1,"川藏线明珠"]]},{"p":"西藏","c":"林芝","r":"西南","e":"🛕","s":[["雅鲁藏布大峡谷",1,"桃花季火爆"],["巴松错",1,"湖景"],["鲁朗林海",1,"高原牧场"],["南迦巴瓦",1,"看山看云"]]},{"p":"西藏","c":"那曲","r":"西南","e":"🛕","s":[["纳木错北岸",1,"高海拔荒凉壮美"],["色林错",1,"西藏第一大湖"]]},{"p":"西藏","c":"阿里地区","r":"西南","e":"🛕","s":[["冈仁波齐",1,"转山圣地极艰苦"],["玛旁雍错",1,"圣湖"],["古格王朝遗址",1,"土林王城"],["班公湖",1,"鸟岛"]]},{"p":"陕西","c":"咸阳","r":"西北","e":"terracotta","s":[["乾陵",1,"武则天梁山"],["茂陵",1,"汉武帝"],["袁家村",0,"网红过度商业工作日或改"]]},{"p":"陕西","c":"商洛","r":"西北","e":"terracotta","s":[["金丝峡",1,"峡谷"],["牛背梁",1,"秦岭"]]},{"p":"陕西","c":"安康","r":"西北","e":"terracotta","s":[["南宫山",1,"山地"],["燕翔洞",1,"溶洞"]]},{"p":"陕西","c":"宝鸡","r":"西北","e":"terracotta","s":[["法门寺",1,"佛指舍利"],["太白山",1,"秦岭主峰"],["青铜器博物院",1,"免费强"]]},{"p":"陕西","c":"延安","r":"西北","e":"terracotta","s":[["宝塔山",1,"红色地标"],["延安革命纪念馆",1,"免费"],["壶口瀑布陕西侧",1,"与山西隔河"]]},{"p":"陕西","c":"榆林","r":"西北","e":"terracotta","s":[["镇北台",1,"长城第一台"],["红碱淖",1,"沙漠湖"],["米脂窑洞",1,"黄土风情"]]},{"p":"陕西","c":"汉中","r":"西北","e":"terracotta","s":[["武侯墓祠",1,"三国"],["黎坪",1,"红叶"],["青木川古镇",1,"小众"]]},{"p":"陕西","c":"渭南","r":"西北","e":"terracotta","s":[["华山",1,"西峰索道过夜看日出"],["同州湖",1,"城市"]]},{"p":"陕西","c":"西安","r":"西北","e":"terracotta","s":[["兵马俑",1,"早班车门口导游可谈价"],["城墙骑行",1,"傍晚光线好"],["大雁塔大唐不夜城",1,"一定晚上去白天没氛围"],["陕西历史博物馆",1,"预约极难提前抢"],["钟鼓楼",0,"没必要买票上开元商城免费看（易踩雷）"],["回民街",0,"游客店多改洒金桥永兴坊"],["华清宫",1,"可看长恨歌"],["西安博物院小雁塔",1,"相对人少"],["广仁寺",1,"免费出片"]]},{"p":"陕西","c":"铜川","r":"西北","e":"terracotta","s":[["耀州窑博物馆",1,"陶瓷"],["药王山",1,"孙思邈"]]},{"p":"甘肃","c":"临夏州","r":"西北","e":"🏜️","s":[["炳灵寺",1,"黄河石窟"],["刘家峡",1,"恐龙国家地质"]]},{"p":"甘肃","c":"兰州","r":"西北","e":"🏜️","s":[["黄河母亲像",1,"滨河路骑行"],["中山桥",1,"夜景"],["甘肃省博",1,"马踏飞燕"],["白塔山",1,"俯瞰黄河"]]},{"p":"甘肃","c":"嘉峪关","r":"西北","e":"🏜️","s":[["嘉峪关关城",1,"长城西端经典"],["悬臂长城",1,"配套"]]},{"p":"甘肃","c":"天水","r":"西北","e":"🏜️","s":[["麦积山石窟",1,"泥塑精美"],["伏羲庙",1,"寻根"]]},{"p":"甘肃","c":"定西","r":"西北","e":"🏜️","s":[["贵清山",1,"山地"]]},{"p":"甘肃","c":"平凉","r":"西北","e":"🏜️","s":[["崆峒山",1,"道教名山"]]},{"p":"甘肃","c":"庆阳","r":"西北","e":"🏜️","s":[["北石窟寺",1,"石窟"],["周祖陵",1,"农耕"]]},{"p":"甘肃","c":"张掖","r":"西北","e":"🏜️","s":[["七彩丹霞",1,"日落最美需预约观光车"],["平山湖大峡谷",1,"小众壮阔"],["马蹄寺",1,"石窟临松"]]},{"p":"甘肃","c":"敦煌","r":"西北","e":"🏜️","s":[["莫高窟",1,"务必门票网提前抢含数字中心"],["鸣沙山月牙泉",1,"日落骑骆驼"],["雅丹魔鬼城",1,"风蚀地貌"],["玉门关阳关",1,"丝路关隘"],["敦煌博物馆",1,"补课"]]},{"p":"甘肃","c":"武威","r":"西北","e":"🏜️","s":[["雷台汉墓",1,"铜奔马出土地文化"],["白塔寺",1,"凉州会谈"]]},{"p":"甘肃","c":"甘南州","r":"西北","e":"🏜️","s":[["拉卜楞寺",1,"藏传名寺"],["扎尕那",1,"石城村庄出片"],["郎木寺",1,"边境小镇"],["桑科草原",1,"夏季"]]},{"p":"甘肃","c":"白银","r":"西北","e":"🏜️","s":[["黄河石林",1,"峡谷地貌"]]},{"p":"甘肃","c":"酒泉","r":"西北","e":"🏜️","s":[["酒泉卫星发射中心旅游",1,"需预约特殊"],["夜光杯博物馆一带",1,"文化"]]},{"p":"甘肃","c":"金昌","r":"西北","e":"🏜️","s":[["火星基地景区",1,"戈壁出片偏主题"]]},{"p":"甘肃","c":"陇南","r":"西北","e":"🏜️","s":[["官鹅沟",1,"山水"],["万象洞",1,"溶洞"]]},{"p":"青海","c":"果洛州","r":"西北","e":"🏔️","s":[["年保玉则",1,"圣山徒步艰苦"]]},{"p":"青海","c":"海东","r":"西北","e":"🏔️","s":[["瞿昙寺",1,"小众精美"],["互助土族故土园",1,"土族风情"]]},{"p":"青海","c":"海北州","r":"西北","e":"🏔️","s":[["祁连卓尔山",1,"油画风光"],["原子城",1,"两弹基地纪念"]]},{"p":"青海","c":"海南州","r":"西北","e":"🏔️","s":[["青海湖二郎剑",1,"环湖经典人多"],["黑马河",1,"看日出"],["倒淌河",1,"地理奇观打卡"]]},{"p":"青海","c":"海西州","r":"西北","e":"🏔️","s":[["茶卡盐湖",1,"镜子天看天气人多"],["大柴旦翡翠湖",1,"出片相对人少"],["水上雅丹",1,"冷湖奇观"],["察尔汗盐桥",1,"盐湖公路"],["昆仑山口",1,"高原纪念"]]},{"p":"青海","c":"玉树州","r":"西北","e":"🏔️","s":[["结古寺",1,"震后重建"],["隆宝滩",1,"黑颈鹤"],["文成公主庙",1,"沿途"]]},{"p":"青海","c":"西宁","r":"西北","e":"🏔️","s":[["塔尔寺",1,"藏传黄教"],["青海省博",1,"免费"],["东关清真大寺",1,"清真美食旁"],["南山公园",1,"俯瞰"]]},{"p":"青海","c":"黄南州","r":"西北","e":"🏔️","s":[["坎布拉",1,"丹霞黄河"],["同仁热贡",1,"唐卡艺术"]]},{"p":"宁夏","c":"中卫","r":"西北","e":"🌵","s":[["沙坡头",1,"沙漠黄河星空项目多另收费"],["腾格里沙漠露营",1,"看天气"]]},{"p":"宁夏","c":"吴忠","r":"西北","e":"🌵","s":[["黄河大峡谷",1,"青铜峡"],["中华黄河坛",1,"文化"]]},{"p":"宁夏","c":"固原","r":"西北","e":"🌵","s":[["六盘山",1,"红军长征纪念"],["须弥山石窟",1,"石窟"]]},{"p":"宁夏","c":"石嘴山","r":"西北","e":"🌵","s":[["沙湖",1,"沙水苇鸟"]]},{"p":"宁夏","c":"银川","r":"西北","e":"🌵","s":[["镇北堡西部影城",1,"边走边看电影感"],["西夏王陵",1,"东方金字塔"],["承天寺塔",1,"市区"],["贺兰山岩画",1,"远古岩画"],["阅海公园",1,"城市湿地"]]},{"p":"新疆","c":"乌鲁木齐","r":"西北","e":"🏜️","s":[["国际大巴扎",1,"必逛夜景出片"],["红山公园",1,"城市制高点免费感"],["天山天池",1,"高山湖夏季佳需留时"],["新疆维吾尔自治区博物馆",1,"免费预约干尸与丝路"],["人民公园",1,"市民休闲"],["乌拉泊古城",0,"遗迹较少可路过"],["妖魔山",1,"日落俯瞰市区"]]},{"p":"新疆","c":"五家渠","r":"西北","e":"🏜️","s":[["青湖",1,"近乌市休闲"]]},{"p":"新疆","c":"伊犁州","r":"西北","e":"🏜️","s":[["那拉提空中草原",1,"票区多可只选一项"],["喀拉峻",1,"世遗五花草甸"],["果子沟大桥",1,"赛里木湖联线出片"],["伊犁河夜景",1,"伊宁"],["六星街",1,"伊宁小众"],["霍尔果斯",1,"边境口岸"],["唐布拉",1,"百里画廊"],["夏塔古道",1,"徒步艰难季限"]]},{"p":"新疆","c":"克孜勒苏州","r":"西北","e":"🏜️","s":[["卡拉库里湖",1,"公格尔峰倒影"],["石头城",1,"塔什库尔干"],["慕士塔格",1,"冰山之父"]]},{"p":"新疆","c":"克拉玛依","r":"西北","e":"🏜️","s":[["世界魔鬼城",1,"风蚀雅丹日落"],["克拉玛依河",1,"城市水道"]]},{"p":"新疆","c":"北屯","r":"西北","e":"🏜️","s":[["阿勒泰门户城市",1,"去喀纳斯中转"],["玛布依风景区",1,"额尔齐斯河"]]},{"p":"新疆","c":"博尔塔拉州","r":"西北","e":"🏜️","s":[["赛里木湖",1,"北疆蓝眼泪环湖"],["怪石峪",1,"地质"]]},{"p":"新疆","c":"双河","r":"西北","e":"🏜️","s":[["博州新城区",1,"配套赛里木湖"]]},{"p":"新疆","c":"可克达拉","r":"西北","e":"🏜️","s":[["伊犁河畔",1,"兵团新城"]]},{"p":"新疆","c":"吐鲁番","r":"西北","e":"🏜️","s":[["火焰山",1,"观光偏打卡"],["坎儿井",1,"水利奇迹值得"],["交河故城",1,"世界遗产震撼"],["葡萄沟",1,"避暑品尝注意店家"],["库木塔格沙漠",1,"城边沙漠"]]},{"p":"新疆","c":"和田地区","r":"西北","e":"🏜️","s":[["和田博物馆",1,"玉与丝路"],["夜市",1,"烤包子抓饭"],["尼雅遗址外围",1,"需许可"]]},{"p":"新疆","c":"哈密","r":"西北","e":"🏜️","s":[["回王陵",1,"伊斯兰建筑"],["鸣沙山哈密",1,"沙漠"],["东天山",1,"巴里坤草原联线"]]},{"p":"新疆","c":"喀什地区","r":"西北","e":"🏜️","s":[["喀什古城",1,"夜景烟火气浓"],["艾提尕尔清真寺",1,"宗教尊重着装"],["香妃墓",1,"历史"],["帕米尔高原塔县",1,"盘龙古道小南湖"],["巴楚沙漠",1,"途经"]]},{"p":"新疆","c":"图木舒克","r":"西北","e":"🏜️","s":[["唐王城遗址一带",1,"历史"]]},{"p":"新疆","c":"塔城地区","r":"西北","e":"🏜️","s":[["巴尔鲁克山",1,"草原"],["驼铃梦坡",1,"沙漠"]]},{"p":"新疆","c":"巴音郭楞州","r":"西北","e":"🏜️","s":[["巴音布鲁克",1,"九曲十八弯日落"],["博斯腾湖",1,"内地湖感"],["轮台沙漠公路",1,"塔中景观"],["楼兰故城外围",1,"需许可极艰苦"],["罗布人村寨",1,"主题偏商业"]]},{"p":"新疆","c":"新星","r":"西北","e":"🏜️","s":[["哈密周边",1,"兵团"]]},{"p":"新疆","c":"昆玉","r":"西北","e":"🏜️","s":[["和田河",1,"玉石文化"]]},{"p":"新疆","c":"昌吉州","r":"西北","e":"🏜️","s":[["天山天池也可归阜康",1,"见乌市线路"],["江布拉克",1,"麦田油菜花季出片"],["古海温泉",1,"康养"]]},{"p":"新疆","c":"白杨市","r":"西北","e":"🏜️","s":[["阿拉山口",1,"边境风城"]]},{"p":"新疆","c":"石河子","r":"西北","e":"🏜️","s":[["军垦博物馆",1,"屯垦文化"],["将军山",1,"城市"]]},{"p":"新疆","c":"胡杨河","r":"西北","e":"🏜️","s":[["胡杨林",1,"秋季"]]},{"p":"新疆","c":"铁门关","r":"西北","e":"🏜️","s":[["博斯腾湖门户",1,"库尔勒近郊"]]},{"p":"新疆","c":"阿克苏地区","r":"西北","e":"🏜️","s":[["天山神秘大峡谷",1,"红层峡谷"],["库车王府",1,"龟兹文化"],["克孜尔千佛洞",1,"石窟需预约"],["托木尔峰景区",1,"冰川"]]},{"p":"新疆","c":"阿勒泰地区","r":"西北","e":"🏜️","s":[["喀纳斯湖",1,"三湾经典人多价高"],["禾木村",1,"晨雾出片住一晚"],["白哈巴村",1,"边境需边防证"],["五彩滩",1,"布尔津日落免费感强"],["可可托海",1,"地质三号矿脉"],["独库公路北段",1,"6-10月开放易堵车"]]},{"p":"新疆","c":"阿拉尔","r":"西北","e":"🏜️","s":[["三五九旅纪念馆",1,"军垦红色"]]},{"p":"台湾","c":"台东","r":"华东","e":"🏝️","s":[["三仙台",1,"跨海拱桥"],["池上伯朗大道",1,"稻田"],["鹿野高台",1,"热气球季"]]},{"p":"台湾","c":"台中","r":"华东","e":"🏝️","s":[["逢甲夜市",1,"美食"],["高美湿地",1,"夕阳风车"],["宫原眼科",1,"甜品打卡偏商业"]]},{"p":"台湾","c":"台北","r":"华东","e":"🏝️","s":[["故宫博物院台北",1,"文物强需预约"],["象山",1,"俯瞰台北101免费"],["台北101",1,"观景票贵可看外立面"],["九份",1,"老街山城人挤"],["北投温泉",1,"泡汤"],["士林夜市",0,"游客价高改饶河或宁夏"]]},{"p":"台湾","c":"台南","r":"华东","e":"🏝️","s":[["安平古堡",1,"历史"],["赤崁楼",1,"荷据遗迹"],["花园夜市",1,"在地美食"]]},{"p":"台湾","c":"嘉义","r":"华东","e":"🏝️","s":[["阿里山",1,"森林铁路看天气"],["奋起湖",1,"便当"]]},{"p":"台湾","c":"基隆","r":"华东","e":"🏝️","s":[["和平岛",1,"海蚀"],["庙口夜市",1,"美食"]]},{"p":"台湾","c":"宜兰","r":"华东","e":"🏝️","s":[["罗东夜市",1,"美食"],["几米广场",1,"卡通"],["苏澳冷泉",1,"特色"]]},{"p":"台湾","c":"新北","r":"华东","e":"🏝️","s":[["十分瀑布",1,"平溪线"],["野柳地质公园",1,"女王头"],["淡水老街",1,"夕阳"]]},{"p":"台湾","c":"新竹","r":"华东","e":"🏝️","s":[["城隍庙小吃",1,"美食"],["南寮渔港",1,"骑行"]]},{"p":"台湾","c":"桃园","r":"华东","e":"🏝️","s":[["大溪老街",1,"豆干"],["虎头山",1,"公园"]]},{"p":"台湾","c":"澎湖","r":"华东","e":"🏝️","s":[["双心石沪",1,"潮间带看潮汐"],["吉贝屿",1,"水上活动"]]},{"p":"台湾","c":"花莲","r":"华东","e":"🏝️","s":[["太鲁阁",1,"峡谷世遗级"],["七星潭",1,"卵石海岸"],["清水断崖",1,"公路风景"]]},{"p":"台湾","c":"金门","r":"华东","e":"🏝️","s":[["莒光楼",1,"战地风情"],["陈景兰洋楼",1,"侨资建筑"]]},{"p":"台湾","c":"马祖","r":"华东","e":"🏝️","s":[["北竿芹壁",1,"聚落"],["蓝眼泪",1,"季节看缘分"]]},{"p":"台湾","c":"高雄","r":"华东","e":"🏝️","s":[["驳二艺术特区",1,"文创"],["西子湾",1,"夕阳"],["打狗英国领事馆",1,"历史"]]},{"p":"香港","c":"香港","r":"华南","e":"🌃","s":[["维多利亚港",1,"天星小轮+海傍夜景免费王牌"],["太平山顶",1,"黄昏上山夜景"],["大馆",1,"中环古建筑文创免费区多"],["庙街夜市",0,"游客感重可改湾仔"],["迪士尼香港",1,"比上海小亲子"],["海洋公园",1,"可按兴趣"],["尖沙咀海滨",1,"看维港对岸"],["大屿山天坛大佛",1,"昂坪360票不低"]]},{"p":"澳门","c":"澳门","r":"华南","e":"🎰","s":[["大三巴牌坊",1,"必打卡人挤早去"],["议事亭前地",1,"葡韵步行"],["妈阁庙",1,"历史"],["威尼斯人",0,"室内人造运河偏购物娱乐（易踩雷）"],["东望洋灯塔",1,"小众俯瞰"],["官也街",1,"蛋挞注意排队店"]]}];
+const PROV_ORDER = ["北京", "天津", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "重庆", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "台湾", "香港", "澳门"];
 
-let activeCat = "全部";
+let mode = "nation";
+let activeProv = "全部";
 let searchQ = "";
+let cityPage = 40;
+let openCities = new Set();
 
 function formatLikes(n) {
   if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, "") + "万";
   return n.toLocaleString("zh-CN");
 }
-
 function isEditor(g) { return g.source === "editor"; }
-
-function matches(g) {
-  const catOk = activeCat === "全部" || g.categories.includes(activeCat);
-  if (!catOk) return false;
-  if (!searchQ) return true;
-  const q = searchQ.toLowerCase();
-  const hay = [
-    g.title, g.author, g.dest, g.excerpt, g.duration, g.season || "",
-    ...(g.tips || []),
-    ...(g.questions || []),
-    ...(g.route || []).map(r => r.day + " " + r.text),
-    ...(g.highlights || []),
-    ...(g.pitfalls || []),
-    g.content || "",
-    ...(g.categories || []),
-    isEditor(g) ? "编辑推荐" : "小红书"
-  ].join(" ").toLowerCase();
-  return hay.includes(q);
-}
-
-function updateStats(list) {
-  document.getElementById("countNum").textContent = list.length;
-  const all = GUIDES;
-  document.getElementById("cnCount").textContent = all.filter(g => !g.categories.includes("境外")).length;
-  document.getElementById("intlCount").textContent = all.filter(g => g.categories.includes("境外")).length;
-  document.getElementById("xhsCount").textContent = all.filter(g => g.source === "xiaohongshu").length;
-  document.getElementById("edCount").textContent = all.filter(g => g.source === "editor").length;
-}
-
 function escapeHtml(s) {
   return String(s == null ? "" : s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;");
 }
 
-function render() {
-  const grid = document.getElementById("guideGrid");
-  const list = GUIDES.filter(matches);
-  updateStats(list);
+function guideMatches(g) {
+  if (!searchQ) return true;
+  const q = searchQ.toLowerCase();
+  const hay = [
+    g.title, g.author, g.dest, g.excerpt, g.duration, g.season || "",
+    ...(g.tips || []), ...(g.questions || []),
+    ...(g.route || []).map(r => r.day + " " + r.text),
+    ...(g.highlights || []), ...(g.pitfalls || []),
+    g.content || "", ...(g.categories || []),
+    isEditor(g) ? "编辑推荐" : "小红书"
+  ].join(" ").toLowerCase();
+  return hay.includes(q);
+}
 
+function cityMatches(c) {
+  if (activeProv !== "全部" && c.p !== activeProv) return false;
+  if (!searchQ) return true;
+  const q = searchQ.toLowerCase();
+  const hay = [c.p, c.c, c.r, ...c.s.map(x => x[0] + " " + x[2])].join(" ").toLowerCase();
+  return hay.includes(q);
+}
+
+function updateStats() {
+  const matchedCities = CITIES.filter(cityMatches);
+  const spots = matchedCities.flatMap(c => c.s);
+  const provs = new Set(matchedCities.map(c => c.p));
+  document.getElementById("statProv").textContent = (activeProv === "全部" && !searchQ) ? 34 : provs.size;
+  document.getElementById("statCity").textContent = matchedCities.length;
+  document.getElementById("statSpot").textContent = spots.length;
+  document.getElementById("statWorth").textContent = spots.filter(s => s[1] === 1).length;
+  document.getElementById("statPit").textContent = spots.filter(s => s[1] === 0).length;
+  let guidesCount;
+  if (mode === "intl") guidesCount = GUIDES.filter(g => g.categories.includes("境外") && guideMatches(g)).length;
+  else if (mode === "guides") guidesCount = GUIDES.filter(guideMatches).length;
+  else guidesCount = GUIDES.length;
+  document.getElementById("statGuide").textContent = guidesCount;
+}
+
+function renderGuides(list) {
+  const grid = document.getElementById("guideGrid");
   if (!list.length) {
-    grid.innerHTML = `<div class="empty"><div class="big">🔎</div><p>没有找到匹配的攻略，换个关键词试试吧</p></div>`;
+    grid.innerHTML = '<div class="empty"><div class="big">🔎</div><p>没有找到匹配的攻略</p></div>';
     return;
   }
-
   grid.innerHTML = list.map(g => {
     const badge = isEditor(g)
-      ? `<span class="editor-badge">⭐ 编辑推荐</span>`
-      : `<span class="likes">❤️ ${formatLikes(g.likes)}</span><span>@${escapeHtml(g.author)}</span>`;
-    return `
-    <article class="card" data-id="${g.id}" tabindex="0" role="button" aria-label="查看攻略：${escapeHtml(g.title)}">
-      <div class="card-cover ${g.gradient}">
-        <span class="emoji">${g.emoji}</span>
-        <span class="tag">${escapeHtml(g.duration)}</span>
-      </div>
-      <div class="card-body">
-        <h3 class="card-title">${escapeHtml(g.title)}</h3>
-        <div class="card-meta">${badge}</div>
-        <p class="card-excerpt">${escapeHtml(g.excerpt)}</p>
-        <div class="card-footer">
-          <span class="dest-pill">📍 ${escapeHtml(g.dest)}</span>
-          <span>点击查看 →</span>
-        </div>
-      </div>
-    </article>`;
+      ? '<span class="editor-badge">⭐ 编辑推荐</span>'
+      : '<span class="likes">❤️ ' + formatLikes(g.likes) + '</span><span>@' + escapeHtml(g.author) + '</span>';
+    return (
+      '<article class="card" data-id="' + g.id + '" tabindex="0" role="button" aria-label="查看攻略：' + escapeHtml(g.title) + '">' +
+      '<div class="card-cover ' + g.gradient + '"><span class="emoji">' + g.emoji + '</span><span class="tag">' + escapeHtml(g.duration) + '</span></div>' +
+      '<div class="card-body"><h3 class="card-title">' + escapeHtml(g.title) + '</h3><div class="card-meta">' + badge + '</div>' +
+      '<p class="card-excerpt">' + escapeHtml(g.excerpt) + '</p>' +
+      '<div class="card-footer"><span class="dest-pill">📍 ' + escapeHtml(g.dest) + '</span><span>点击查看 →</span></div></div></article>'
+    );
   }).join("");
-
   grid.querySelectorAll(".card").forEach(el => {
     const open = () => openModal(+el.dataset.id);
     el.addEventListener("click", open);
@@ -1300,99 +1436,206 @@ function render() {
   });
 }
 
+function spotHtml(s) {
+  const ok = s[1] === 1;
+  const mark = ok ? '<span class="spot-mark worth">✅值得去</span>' : '<span class="spot-mark pit">⚠️踩雷</span>';
+  return '<div class="spot-item">' + mark + '<div class="spot-body"><div class="spot-name">' + escapeHtml(s[0]) +
+    '</div><div class="spot-tip">' + escapeHtml(s[2]) + '<span class="badge-src">编辑精选</span></div></div></div>';
+}
+
+function renderCityList(list, mount, autoOpenOnSearch) {
+  if (!list.length) {
+    mount.innerHTML = '<div class="empty"><div class="big">🔎</div><p>没有找到匹配的城市 / 景点</p></div>';
+    return;
+  }
+  const shouldOpen = autoOpenOnSearch && !!searchQ;
+  mount.innerHTML = list.map((c, idx) => {
+    const key = c.p + "|" + c.c;
+    const isOpen = openCities.has(key) || (shouldOpen && idx < 8);
+    const worth = c.s.filter(s => s[1]===1).length;
+    const pit = c.s.filter(s => s[1]===0).length;
+    return (
+      '<div class="city-card ' + (isOpen ? "open" : "") + '" data-key="' + escapeHtml(key) + '">' +
+      '<div class="city-head" role="button" tabindex="0" aria-expanded="' + isOpen + '">' +
+      '<span class="city-emoji">' + c.e + '</span><div class="city-info">' +
+      '<div class="city-name">' + escapeHtml(c.c) + ' <span style="font-weight:500;color:var(--muted);font-size:13px">' + escapeHtml(c.p) + '</span></div>' +
+      '<div class="city-sub">' + c.s.length + ' 个主要景点 · ✅' + worth + ' · ⚠️' + pit + ' · ' + escapeHtml(c.r) + '</div>' +
+      '</div><span class="city-chevron">›</span></div>' +
+      '<div class="spot-list">' + c.s.map(spotHtml).join("") + '</div></div>'
+    );
+  }).join("");
+  mount.querySelectorAll(".city-head").forEach(head => {
+    const card = head.parentElement;
+    const key = card.dataset.key;
+    const toggle = () => {
+      card.classList.toggle("open");
+      if (card.classList.contains("open")) openCities.add(key); else openCities.delete(key);
+      head.setAttribute("aria-expanded", card.classList.contains("open"));
+    };
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    });
+  });
+}
+
+function renderNation() {
+  const root = document.getElementById("nationView");
+  const matched = CITIES.filter(cityMatches);
+
+  if (activeProv === "全部" && !searchQ) {
+    const counts = {}, spotCounts = {};
+    CITIES.forEach(c => {
+      counts[c.p] = (counts[c.p] || 0) + 1;
+      spotCounts[c.p] = (spotCounts[c.p] || 0) + c.s.length;
+    });
+    root.innerHTML =
+      '<div class="prov-grid" id="provGrid">' +
+      PROV_ORDER.map(p =>
+        '<button type="button" class="prov-tile" data-jump="' + escapeHtml(p) + '">' +
+        '<div class="pn">' + escapeHtml(p) + '</div>' +
+        '<div class="pc">' + (counts[p]||0) + ' 城 · ' + (spotCounts[p]||0) + ' 景</div></button>'
+      ).join("") +
+      '</div><p class="view-hint">或点上方省份标签；也可直接搜索「乌鲁木齐」「喀纳斯」等</p>' +
+      '<h3 style="text-align:center;margin:8px 0 14px;font-size:16px;color:var(--muted)">热门城市速览（可展开）</h3>' +
+      '<div class="city-list" id="cityList"></div>';
+    const hotNames = ["北京","上海","广州","深圳","成都","重庆","杭州","西安","南京","武汉","长沙","乌鲁木齐","拉萨","昆明","桂林","厦门","青岛","哈尔滨","三亚","苏州","丽江","张家界","敦煌","喀什地区","伊犁州","阿勒泰地区"];
+    const hot = [];
+    hotNames.forEach(n => {
+      const hit = CITIES.find(c => c.c === n || c.c.indexOf(n) === 0);
+      if (hit && hot.indexOf(hit) < 0) hot.push(hit);
+    });
+    renderCityList(hot, document.getElementById("cityList"), false);
+    root.querySelectorAll(".prov-tile").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeProv = btn.dataset.jump;
+        document.querySelectorAll("#provFilters .chip").forEach(c => {
+          c.classList.toggle("active", c.dataset.prov === activeProv);
+        });
+        cityPage = 40; openCities.clear(); render();
+        window.scrollTo({ top: document.getElementById("provFilters").offsetTop - 8, behavior: "smooth" });
+      });
+    });
+    return;
+  }
+
+  root.innerHTML = '<div class="city-list" id="cityList"></div><button type="button" class="load-more" id="loadMore">加载更多城市</button>';
+  const slice = matched.slice(0, cityPage);
+  renderCityList(slice, document.getElementById("cityList"), true);
+  const more = document.getElementById("loadMore");
+  if (matched.length <= cityPage) more.style.display = "none";
+  else {
+    more.style.display = "block";
+    more.textContent = "加载更多（还有 " + (matched.length - cityPage) + " 城）";
+    more.onclick = () => { cityPage += 40; render(); };
+  }
+}
+
+function render() {
+  updateStats();
+  const nation = document.getElementById("nationView");
+  const grid = document.getElementById("guideGrid");
+  const hint = document.getElementById("viewHint");
+  const provBox = document.getElementById("provFilters");
+
+  if (mode === "nation") {
+    nation.style.display = "";
+    grid.style.display = "none";
+    provBox.style.display = "";
+    hint.textContent = (activeProv === "全部" && !searchQ)
+      ? "点省份磁贴或上方标签；城市卡片可展开看 ✅值得去 / ⚠️踩雷"
+      : (searchQ ? ("搜索「" + searchQ + "」的结果") : (activeProv + " · 点击城市展开景点"));
+    renderNation();
+  } else if (mode === "guides") {
+    nation.style.display = "none";
+    grid.style.display = "";
+    provBox.style.display = "none";
+    hint.textContent = "小红书笔记 + 编辑推荐长线攻略（含路线与贴士）";
+    renderGuides(GUIDES.filter(guideMatches));
+  } else {
+    nation.style.display = "none";
+    grid.style.display = "";
+    provBox.style.display = "none";
+    hint.textContent = "境外精选攻略";
+    renderGuides(GUIDES.filter(g => g.categories.includes("境外") && guideMatches(g)));
+  }
+}
+
 function openModal(id) {
   const g = GUIDES.find(x => x.id === id);
   if (!g) return;
-
   document.getElementById("modalTitle").textContent = g.title;
-
-  let html = `<div class="modal-meta">`;
-  if (isEditor(g)) {
-    html += `<span class="editor-badge">⭐ 编辑推荐</span>`;
-  } else {
-    html += `<span class="likes">📕 小红书</span>`;
-    html += `<span>✍️ ${escapeHtml(g.author)}</span>`;
-    html += `<span class="likes">❤️ ${formatLikes(g.likes)} 赞</span>`;
+  let html = '<div class="modal-meta">';
+  if (isEditor(g)) html += '<span class="editor-badge">⭐ 编辑推荐</span>';
+  else {
+    html += '<span class="likes">📕 小红书</span>';
+    html += '<span>✍️ ' + escapeHtml(g.author) + '</span>';
+    html += '<span class="likes">❤️ ' + formatLikes(g.likes) + ' 赞</span>';
   }
-  html += `
-      <span>📍 ${escapeHtml(g.dest)}</span>
-      <span>⏱️ ${escapeHtml(g.duration)}</span>
-      <span>🗓️ ${escapeHtml(g.season || "四季皆可")}</span>
-      <span>🏷️ ${escapeHtml((g.categories||[]).join(" · "))}</span>
-    </div>`;
-
-  if (g.content) {
-    html += `<div class="section-title">📝 内容概要</div><div class="content-block">${escapeHtml(g.content)}</div>`;
-  }
-
+  html += '<span>📍 ' + escapeHtml(g.dest) + '</span><span>⏱️ ' + escapeHtml(g.duration) +
+    '</span><span>🗓️ ' + escapeHtml(g.season || "四季皆可") + '</span><span>🏷️ ' +
+    escapeHtml((g.categories||[]).join(" · ")) + '</span></div>';
+  if (g.content) html += '<div class="section-title">📝 内容概要</div><div class="content-block">' + escapeHtml(g.content) + '</div>';
   if (g.route && g.route.length) {
-    html += `<div class="section-title">🗺️ 推荐路线 / 亮点</div>`;
-    html += g.route.map(r => `<div class="route-day"><strong>${escapeHtml(r.day)}</strong>${escapeHtml(r.text)}</div>`).join("");
+    html += '<div class="section-title">🗺️ 推荐路线 / 亮点</div>';
+    html += g.route.map(r => '<div class="route-day"><strong>' + escapeHtml(r.day) + '</strong>' + escapeHtml(r.text) + '</div>').join("");
   }
-
   if (g.tips && g.tips.length) {
-    html += `<div class="section-title">✨ 实用贴士（交通 / 住宿 / 省钱）</div><ul class="tip-list">`;
-    html += g.tips.map(t => `<li>${escapeHtml(t)}</li>`).join("");
-    html += `</ul>`;
+    html += '<div class="section-title">✨ 实用贴士（交通 / 住宿 / 省钱）</div><ul class="tip-list">';
+    html += g.tips.map(t => '<li>' + escapeHtml(t) + '</li>').join("") + '</ul>';
   }
-
-  // ✅ 值得去 / ⚠️ 踩雷 — every modal
   const highs = Array.isArray(g.highlights) ? g.highlights : [];
   const pits = Array.isArray(g.pitfalls) ? g.pitfalls : [];
-  html += `<div class="section-title worth">✅ 值得去 / 必玩</div>`;
-  if (highs.length) {
-    html += `<ul class="worth-list">` + highs.map(t => `<li>${escapeHtml(t)}</li>`).join("") + `</ul>`;
-  } else {
-    html += `<div class="pitfall-empty">暂无单独标注，可参考上方路线与贴士</div>`;
-  }
-  html += `<div class="section-title pitfall">⚠️ 踩雷 / 避坑</div>`;
-  if (pits.length) {
-    html += `<ul class="pitfall-list">` + pits.map(t => `<li>${escapeHtml(t)}</li>`).join("") + `</ul>`;
-  } else {
-    html += `<div class="pitfall-empty">暂无踩雷记录</div>`;
-  }
-
+  html += '<div class="section-title worth">✅ 值得去 / 必玩</div>';
+  if (highs.length) html += '<ul class="worth-list">' + highs.map(t => '<li>' + escapeHtml(t) + '</li>').join("") + '</ul>';
+  else html += '<div class="pitfall-empty">暂无单独标注，可参考上方路线与贴士</div>';
+  html += '<div class="section-title pitfall">⚠️ 踩雷 / 避坑</div>';
+  if (pits.length) html += '<ul class="pitfall-list">' + pits.map(t => '<li>' + escapeHtml(t) + '</li>').join("") + '</ul>';
+  else html += '<div class="pitfall-empty">暂无踩雷记录</div>';
   if (g.questions && g.questions.length) {
-    html += `<div class="section-title">💬 用户最关心</div><ul class="q-list">`;
-    html += g.questions.map(q => `<li>${escapeHtml(q)}</li>`).join("");
-    html += `</ul>`;
+    html += '<div class="section-title">💬 用户最关心</div><ul class="q-list">';
+    html += g.questions.map(q => '<li>' + escapeHtml(q) + '</li>').join("") + '</ul>';
   }
-
-  if (g.season) {
-    html += `<div class="section-title">🌤️ 最佳季节</div><div class="content-block">${escapeHtml(g.season)}</div>`;
-  }
-
-  if (isEditor(g)) {
-    html += `<div class="editor-note">⭐ 本篇为平台编辑推荐，非小红书原笔记</div>`;
-  } else if (g.url) {
-    html += `<a class="xhs-link" href="${escapeHtml(g.url)}" target="_blank" rel="noopener noreferrer">📕 打开小红书原笔记</a>`;
-  }
-
+  if (g.season) html += '<div class="section-title">🌤️ 最佳季节</div><div class="content-block">' + escapeHtml(g.season) + '</div>';
+  if (isEditor(g)) html += '<div class="editor-note">⭐ 本篇为平台编辑推荐，非小红书原笔记</div>';
+  else if (g.url) html += '<a class="xhs-link" href="' + escapeHtml(g.url) + '" target="_blank" rel="noopener noreferrer">📕 打开小红书原笔记</a>';
   document.getElementById("modalBody").innerHTML = html;
-  const backdrop = document.getElementById("modalBackdrop");
-  backdrop.classList.add("open");
+  document.getElementById("modalBackdrop").classList.add("open");
   document.body.style.overflow = "hidden";
 }
-
 function closeModal() {
   document.getElementById("modalBackdrop").classList.remove("open");
   document.body.style.overflow = "";
 }
 
-document.getElementById("filters").addEventListener("click", e => {
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    mode = btn.dataset.mode;
+    cityPage = 40;
+    render();
+  });
+});
+document.getElementById("provFilters").addEventListener("click", e => {
   const btn = e.target.closest(".chip");
   if (!btn) return;
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  document.querySelectorAll("#provFilters .chip").forEach(c => c.classList.remove("active"));
   btn.classList.add("active");
-  activeCat = btn.dataset.cat;
+  activeProv = btn.dataset.prov;
+  cityPage = 40;
+  openCities.clear();
+  if (mode !== "nation") {
+    mode = "nation";
+    document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === "nation"));
+  }
   render();
 });
-
 document.getElementById("searchInput").addEventListener("input", e => {
   searchQ = e.target.value.trim();
+  cityPage = 80;
   render();
 });
-
 document.getElementById("closeModal").addEventListener("click", closeModal);
 document.getElementById("modalBackdrop").addEventListener("click", e => {
   if (e.target === e.currentTarget) closeModal();
@@ -1400,6 +1643,9 @@ document.getElementById("modalBackdrop").addEventListener("click", e => {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeModal();
 });
+
+render();
+
 
 /* ===== 台台影视 Cinematic Intro + Web Audio ===== */
 (function () {
